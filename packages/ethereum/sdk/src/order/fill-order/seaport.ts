@@ -5,7 +5,7 @@ import { SeaportItemType } from "@rarible/ethereum-api-client/build/models/Seapo
 import type { BigNumber } from "@rarible/types"
 import { toBigNumber, EVM_ZERO_ADDRESS } from "@rarible/types"
 import type { Asset, Part } from "@rarible/ethereum-api-client"
-import { toBn } from "@rarible/utils/build/bn"
+import { toBn } from "@rarible/utils"
 import type { AssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import { BigNumber as BigNumberUtils } from "@rarible/utils"
 import axios from "axios"

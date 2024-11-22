@@ -4,7 +4,7 @@ import type { AssetType } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import { getFungibleBalanceSimple } from "@rarible/flow-sdk"
 import { FLOW_ENV_CONFIG as ENV_CONFIG } from "@rarible/flow-sdk"
-import { toBn } from "@rarible/utils/build/bn"
+import { toBn } from "@rarible/utils"
 import { getFlowCurrencyFromAssetType } from "./common/get-flow-currency-from-asset-type"
 import { parseFlowAddressFromUnionAddress } from "./common/converters"
 

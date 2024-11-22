@@ -49,4 +49,4 @@ export class AptosWalletCore implements AptosWalletInterface {
   }
 }
 
-export { WalletCore }
+export type { WalletCore }

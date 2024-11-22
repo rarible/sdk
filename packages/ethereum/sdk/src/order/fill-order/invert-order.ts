@@ -1,7 +1,7 @@
 import type { Address, EVMAddress, Word } from "@rarible/types"
 import { toBigNumber, toWord } from "@rarible/types"
-import type { BigNumberValue } from "@rarible/utils/build/bn"
-import { toBn } from "@rarible/utils/build/bn"
+import type { BigNumberValue } from "@rarible/utils"
+import { toBn } from "@rarible/utils"
 import type { SimpleOrder } from "../types"
 import { isNft } from "../is-nft"
 

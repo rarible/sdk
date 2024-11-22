@@ -1,5 +1,5 @@
 import { toEVMAddress } from "@rarible/types"
-import { toBn } from "@rarible/utils/build/bn"
+import { toBn } from "@rarible/utils"
 import type { Asset, EVMAddress, Part } from "@rarible/ethereum-api-client"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { RaribleSdk } from "../../../../../index"

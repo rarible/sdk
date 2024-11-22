@@ -2,7 +2,7 @@ import { Action } from "@rarible/action"
 import type { TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
 import { get_address, mint } from "@rarible/tezos-sdk"
-import { toBn } from "@rarible/utils/build/bn"
+import { toBn } from "@rarible/utils"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import { Blockchain, CollectionType } from "@rarible/api-client"
 import type { HasCollection, HasCollectionId, PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"

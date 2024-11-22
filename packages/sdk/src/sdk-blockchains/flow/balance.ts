@@ -1,7 +1,7 @@
 import type { UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import type { FlowSdk } from "@rarible/flow-sdk"
-import { toBn } from "@rarible/utils/build/bn"
+import { toBn } from "@rarible/utils"
 import type { Maybe } from "@rarible/types"
 import type { FlowWallet } from "@rarible/sdk-wallet"
 import type { FlowEnv, FlowNetwork } from "@rarible/flow-sdk"

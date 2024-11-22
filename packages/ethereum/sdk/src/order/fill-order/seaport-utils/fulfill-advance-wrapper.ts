@@ -1,4 +1,4 @@
-import type { BigNumberValue } from "@rarible/utils/build/bn"
+import type { BigNumberValue } from "@rarible/utils"
 import { EVM_ZERO_ADDRESS } from "@rarible/types"
 import type { EVMAddress } from "@rarible/types"
 import type { EthereumContract } from "@rarible/ethereum-provider"

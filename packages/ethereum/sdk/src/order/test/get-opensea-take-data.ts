@@ -1,5 +1,5 @@
-import type { BigNumberValue } from "@rarible/utils/build/bn"
-import { toBn } from "@rarible/utils/build/bn"
+import type { BigNumberValue } from "@rarible/utils"
+import { toBn } from "@rarible/utils"
 
 export function getOpenseaEthTakeData(amount: BigNumberValue) {
   const sellerAmount = toBn(amount).multipliedBy("0.975")
