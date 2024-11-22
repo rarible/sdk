@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.12](https://github.com/rarible/sdk/compare/v0.13.69-beta.11...v0.13.69-beta.12) (2024-11-22)
+
+### Features
+
+- **PLTF-774:** berachain support ([#687](https://github.com/rarible/sdk/issues/687)) ([7cf0433](https://github.com/rarible/sdk/commit/7cf0433964aae1b4af8f8e469014712189bf001c))
+- **PLTF-778:** support node env for esm build ([#685](https://github.com/rarible/sdk/issues/685)) ([51f0f89](https://github.com/rarible/sdk/commit/51f0f899fd6607399ec94014931ba94946ef7519))
+
 ## [0.13.69-beta.11](https://github.com/rarible/sdk/compare/v0.13.69-beta.10...v0.13.69-beta.11) (2024-11-13)
 
 **Note:** Version bump only for package @rarible/aptos-wallet

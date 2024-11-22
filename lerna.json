@@ -1,6 +1,6 @@
 {
   "packages": ["packages/**/*"],
-  "version": "0.13.69-beta.11",
+  "version": "0.13.69-beta.12",
   "npmClient": "yarn",
   "command": {
     "publish": {
