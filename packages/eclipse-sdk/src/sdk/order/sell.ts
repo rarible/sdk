@@ -20,11 +20,11 @@ import type { ITransactionPreparedInstructions } from "../../common/transactions
 
 export interface ISellRequest {
   connection: Connection
-  marketIdentifier: PublicKey // need to setup, Sergey will help to crate, will be constant
+  marketIdentifier: PublicKey
   signer: SolanaSigner
-  extraAccountParams?: WnsAccountParams //dont need
+  extraAccountParams?: WnsAccountParams
   nftMint: PublicKey
-  paymentMint: PublicKey // currency, for test s can use nftMint address
+  paymentMint: PublicKey
   price: BigNumber // per item
   tokensAmount: number
 }

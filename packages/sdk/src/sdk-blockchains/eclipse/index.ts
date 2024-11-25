@@ -44,7 +44,7 @@ export function createEclipseSdk(
       fill: { prepare: nonImplementedAction },
       buy: new MethodWithPrepare(orderService.buyBasic, orderService.fill),
       batchBuy: new MethodWithPrepare(notImplemented, nonImplementedAction),
-      acceptBid: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
+      acceptBid: new MethodWithPrepare(orderService.acceptBidBasic, orderService.fill),
       sell: new MethodWithPrepare(orderService.sellBasic, orderService.sell),
       sellUpdate: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
       bid: new MethodWithPrepare(orderService.bidBasic, orderService.bid),

@@ -27,7 +27,7 @@ import { isAssetType } from "../../common/get-currency-asset-type"
 import type { CurrencyType } from "../../common/domain"
 import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import { getPreparedOrder } from "../solana/common/order"
-import type { BuySimplifiedRequest } from "../../types/order/fill/simplified"
+import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import { getNftContractAddress } from "../../common/utils"
 import type { PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
 import { getCurrencies } from "../solana/common/currencies"
@@ -74,6 +74,7 @@ export class EclipseOrder {
     this.bid = this.bid.bind(this)
     this.bidBasic = this.bidBasic.bind(this)
     this.cancelBasic = this.cancelBasic.bind(this)
+    this.acceptBidBasic = this.acceptBidBasic.bind(this)
   }
 
   async sell(): Promise<PrepareSellInternalResponse> {
@@ -280,6 +281,11 @@ export class EclipseOrder {
   }
 
   async buyBasic(request: BuySimplifiedRequest): Promise<IBlockchainTransaction> {
+    const response = await this.fill(request)
+    return response.submit(request)
+  }
+
+  async acceptBidBasic(request: AcceptBidSimplifiedRequest): Promise<IBlockchainTransaction> {
     const response = await this.fill(request)
     return response.submit(request)
   }
