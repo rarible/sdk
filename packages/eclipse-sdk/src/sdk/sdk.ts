@@ -7,6 +7,8 @@ import type { IEclipseNftSdk } from "./nft/nft"
 import { EclipseNftSdk } from "./nft/nft"
 import type { IEclipseAccountSdk } from "./account/account"
 import { EclipseAccountSdk } from "./account/account"
+import type { IEclipseOrderSdk } from "./order/order"
+import { EclipseOrderSdk } from "./order/order"
 
 export interface IEclipseSdkConfig {
   connection: {
@@ -22,6 +24,7 @@ export class EclipseSdk {
 
   public readonly balances: IEclipseBalancesSdk
   public readonly nft: IEclipseNftSdk
+  public readonly order: IEclipseOrderSdk
   public readonly account: IEclipseAccountSdk
 
   constructor(
@@ -32,9 +35,10 @@ export class EclipseSdk {
     this.debugLogger = new DebugLogger(debug)
 
     this.balances = new EclipseBalancesSdk(connection)
-    this.account = new EclipseAccountSdk(connection)
+    this.account = new EclipseAccountSdk(connection, this.debugLogger)
 
     this.nft = new EclipseNftSdk(connection, this.debugLogger, this.account)
+    this.order = new EclipseOrderSdk(connection, this.debugLogger)
   }
 
   static create(config: IEclipseSdkConfig): EclipseSdk {

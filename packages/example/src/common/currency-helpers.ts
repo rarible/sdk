@@ -49,6 +49,11 @@ const aptosNative = {
   blockchain: Blockchain.APTOS,
 } as const
 
+const eclipseNative = {
+  "@type": "CURRENCY_NATIVE",
+  blockchain: Blockchain.ECLIPSE,
+} as const
+
 export type CurrencyOption =
   | {
       type: "NATIVE"
@@ -92,6 +97,9 @@ export function getCurrency(
       throw new Error("Unsupported option subtype")
     case Blockchain.SOLANA:
       if (type === "NATIVE") return solanaNative
+      throw new Error("Unsupported blockchain or asset type")
+    case Blockchain.ECLIPSE:
+      if (type === "NATIVE") return eclipseNative
       throw new Error("Unsupported blockchain or asset type")
     case Blockchain.FLOW:
       if (type === "NATIVE") return flowNative
@@ -403,6 +411,11 @@ export function getCurrencyOptions(
       case Blockchain.APTOS:
         if (currency.type === "NATIVE") {
           return { type: "NATIVE", label: "APT", blockchain: Blockchain.APTOS }
+        }
+        return []
+      case Blockchain.ECLIPSE:
+        if (currency.type === "NATIVE") {
+          return { type: "NATIVE", label: "ETH", blockchain: Blockchain.ECLIPSE }
         }
         return []
       default:

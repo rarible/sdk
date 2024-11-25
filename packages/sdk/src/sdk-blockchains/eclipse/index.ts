@@ -7,15 +7,16 @@ import { nonImplementedAction, notImplemented } from "../../common/not-implement
 import { MethodWithPrepare } from "../../types/common"
 import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import { OriginFeeSupport } from "../../types/order/fill/domain"
-import type { ISolanaSdkConfig } from "../solana/domain"
 import { EclipseBalance } from "./balance"
 import { EclipseNft } from "./nft"
+import { EclipseOrder } from "./order"
+import type { IEclipseSdkConfig } from "./domain"
 
 export function createEclipseSdk(
   wallet: Maybe<SolanaWallet>,
   apis: IApisSdk,
   cluster: Cluster,
-  config: ISolanaSdkConfig | undefined,
+  config: IEclipseSdkConfig,
 ): IRaribleInternalSdk {
   const sdk = EclipseSdk.create({
     connection: {
@@ -27,6 +28,7 @@ export function createEclipseSdk(
   })
   const balanceService = new EclipseBalance(sdk, wallet, apis)
   const nftService = new EclipseNft(sdk, wallet, apis)
+  const orderService = new EclipseOrder(sdk, wallet, apis, config)
 
   return {
     nft: {
@@ -40,14 +42,14 @@ export function createEclipseSdk(
     },
     order: {
       fill: { prepare: nonImplementedAction },
-      buy: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
+      buy: new MethodWithPrepare(orderService.buyBasic, orderService.fill),
       batchBuy: new MethodWithPrepare(notImplemented, nonImplementedAction),
       acceptBid: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
-      sell: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
+      sell: new MethodWithPrepare(orderService.sellBasic, orderService.sell),
       sellUpdate: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
-      bid: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
+      bid: new MethodWithPrepare(orderService.bidBasic, orderService.bid),
       bidUpdate: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
-      cancel: nonImplementedAction,
+      cancel: orderService.cancelBasic,
     },
     balances: {
       getBalance: balanceService.getBalance,
