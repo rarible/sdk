@@ -60,3 +60,7 @@
 //     1000 * 60 * 30,
 //   )
 // })
+
+describe.skip("Tests", () => {
+  test("Empty test for linter", () => {})
+})

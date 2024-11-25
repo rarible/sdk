@@ -411,3 +411,7 @@
 //     await sdk.confirmTransaction(cancelTx2, "confirmed")
 //   })
 // })
+
+describe.skip("Tests", () => {
+  test("Empty test for linter", () => {})
+})

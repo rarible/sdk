@@ -97,3 +97,7 @@
 //     await checkEscrowBalance(buyerWallet, 0.11)
 //   })
 // })
+
+describe.skip("Tests", () => {
+  test("Empty test for linter", () => {})
+})

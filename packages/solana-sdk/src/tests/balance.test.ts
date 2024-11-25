@@ -20,3 +20,7 @@
 //     expect(parseFloat(balance.toString())).toBeGreaterThanOrEqual(1)
 //   })
 // })
+
+describe.skip("Tests", () => {
+  test("Empty test for linter", () => {})
+})
