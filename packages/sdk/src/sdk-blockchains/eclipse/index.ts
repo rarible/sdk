@@ -25,7 +25,7 @@ export function createEclipseSdk(
     },
     debug: false,
   })
-  const balanceService = new EclipseBalance(sdk, wallet)
+  const balanceService = new EclipseBalance(sdk, wallet, apis)
   const nftService = new EclipseNft(sdk, wallet, apis)
 
   return {
