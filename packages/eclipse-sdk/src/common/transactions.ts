@@ -131,7 +131,6 @@ export async function sendSignedTransaction(
       throw new Error(JSON.stringify(simulateResult.err))
     }
     logger?.error("Got this far.")
-    throw new Error("Transaction failed")
   } finally {
     done = true
   }

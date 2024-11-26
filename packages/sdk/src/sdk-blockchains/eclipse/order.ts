@@ -23,7 +23,7 @@ import {
 import type { IApisSdk } from "../../domain"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
-import { isAssetType } from "../../common/get-currency-asset-type"
+import { isAssetType, isNativeCurrencyAssetType, isTokenCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { CurrencyType } from "../../common/domain"
 import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import { getPreparedOrder } from "../solana/common/order"
@@ -34,6 +34,7 @@ import { getCurrencies } from "../solana/common/currencies"
 import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
 import { extractPublicKey } from "./common/address-converters"
 import type { IEclipseSdkConfig } from "./domain"
+import type { TokenCurrencyAssetType } from "@rarible/api-client/build/models/AssetType"
 
 function supportedCurrencies(): CurrencyType[] {
   return [{ blockchain: Blockchain.ECLIPSE, type: "NATIVE" }]
@@ -106,10 +107,16 @@ export class EclipseOrder {
     const nftMint = extractPublicKey(request.itemId)
     const amount = request.amount !== undefined ? request.amount : 1
 
-    const isNativeCurrency = isAssetType(request.currency) && request.currency["@type"] === "CURRENCY_NATIVE"
-    if (!isNativeCurrency) {
-      throw new Error("Sell orders only in native currency are supported")
+    const isNativeCurrency = isAssetType(request.currency) && isNativeCurrencyAssetType(request.currency)
+    const isCustomCurrency = isAssetType(request.currency) && isTokenCurrencyAssetType(request.currency)
+
+    if (!isNativeCurrency && !isCustomCurrency) {
+      throw new Error("Sell orders only in CURRENCY_NATIVE or CURRENCY_TOKEN are supported")
     }
+
+    const currency = isNativeCurrency
+      ? ECLIPSE_NATIVE_CURRENCY_ADDRESS
+      : (request.currency as TokenCurrencyAssetType).contract
 
     const result = await (
       await this.sdk.order.sell({
@@ -118,7 +125,7 @@ export class EclipseOrder {
         nftMint,
         price: new BigNumber(request.price),
         tokensAmount: amount,
-        paymentMint: new PublicKey(ECLIPSE_NATIVE_CURRENCY_ADDRESS),
+        paymentMint: new PublicKey(currency),
       })
     ).submit("processed")
 

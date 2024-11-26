@@ -113,9 +113,7 @@ export class EclipseOrderSdk implements IEclipseOrderSdk {
       marketIdentifier: request.marketIdentifier,
       signer: request.signer,
       nftMint: request.nftMint,
-      // todo Eclipse
-      // paymentMint: request.paymentMint,
-      paymentMint: new PublicKey("HY7ycsMQMKwn8eM8AT3M1Vx5SWnwcNMUDJH61dbwkorF"),
+      paymentMint: request.paymentMint,
       price: request.price,
       tokensAmount: request.tokensAmount,
       extraAccountParams: request.extraAccountParams,
@@ -132,9 +130,7 @@ export class EclipseOrderSdk implements IEclipseOrderSdk {
       marketIdentifier: request.marketIdentifier,
       signer: request.signer,
       nftMint: request.nftMint,
-      // todo Eclipse
-      // paymentMint: request.paymentMint,
-      paymentMint: new PublicKey("HY7ycsMQMKwn8eM8AT3M1Vx5SWnwcNMUDJH61dbwkorF"),
+      paymentMint: request.paymentMint,
       price: request.price,
       tokensAmount: request.tokensAmount,
     })
