@@ -5,6 +5,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 **Note:** Version bump only for package @rarible/connector-beacon
 
+**Note:** Version bump only for package @rarible/connector-beacon
+
 ## [0.13.69-beta.13](https://github.com/rarible/sdk/compare/v0.13.69-beta.12...v0.13.69-beta.13) (2024-11-27)
 
 **Note:** Version bump only for package @rarible/connector-beacon
