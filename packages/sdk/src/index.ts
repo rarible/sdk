@@ -96,7 +96,7 @@ export function createRaribleSdk(
     ),
     createEclipseSdk(filterWallet(wallet, WalletType.SOLANA), apis, blockchainConfig.solanaNetwork, {
       eclipseEndpoint: blockchainConfig.eclipseAddress,
-      ...config?.blockchain?.SOLANA,
+      eclipseMarketplaces: config?.blockchain?.SOLANA?.eclipseMarketplaces!,
     }),
     createImmutablexSdk(
       filterWallet(wallet, WalletType.IMMUTABLEX),
@@ -217,7 +217,7 @@ async function getSellItemData(
   apis: IApisSdk,
 ): Promise<{ item: Item; collection: Collection | undefined }> {
   const blockchain = extractBlockchain(itemId)
-  if ([Blockchain.APTOS, Blockchain.SOLANA].includes(blockchain)) {
+  if ([Blockchain.APTOS, Blockchain.SOLANA, Blockchain.ECLIPSE].includes(blockchain)) {
     const item = await apis.item.getItemById({ itemId })
     let collection
     const collectionId = item.collection || item.itemCollection?.id

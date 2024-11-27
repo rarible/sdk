@@ -16,7 +16,6 @@
       "@rarible/solana-common": ["./packages/solana-common/src"],
       "@rarible/aptos-sdk": ["./packages/aptos-sdk/src"],
       "@rarible/aptos-wallet": ["./packages/aptos-wallet/src"],
-      "@rarible/solana-sdk": ["./packages/solana-sdk/src"],
       "@rarible/solana-wallet": ["./packages/solana-wallet/src"],
       "@rarible/sdk-transaction": ["./packages/transaction/src"],
       "@rarible/sdk-wallet": ["./packages/wallet/src"]

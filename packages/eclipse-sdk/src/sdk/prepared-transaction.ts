@@ -10,7 +10,7 @@ export class PreparedTransaction {
     private readonly connection: Connection,
     public readonly data: ITransactionPreparedInstructions,
     public readonly signer: SolanaSigner,
-    private readonly logger: DebugLogger,
+    private readonly logger?: DebugLogger,
     public readonly onSubmit?: (tx: TransactionResult) => void,
   ) {}
 
@@ -25,6 +25,6 @@ export class PreparedTransaction {
     )
 
     this.onSubmit?.(res)
-    return res
+    return { ...res, orderId: this.data.orderId }
   }
 }

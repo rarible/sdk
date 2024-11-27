@@ -1,6 +1,7 @@
 import type {
   Commitment,
   Connection,
+  PublicKey,
   RpcResponseAndContext,
   SignatureStatus,
   SimulatedTransactionResponse,
@@ -17,6 +18,7 @@ import type { TransactionResult } from "../types"
 export interface ITransactionPreparedInstructions {
   instructions: TransactionInstruction[]
   signers: SolanaSigner[]
+  orderId?: PublicKey
 }
 
 export async function sendTransactionWithRetry(
@@ -129,7 +131,6 @@ export async function sendSignedTransaction(
       throw new Error(JSON.stringify(simulateResult.err))
     }
     logger?.error("Got this far.")
-    // throw new Error("Transaction failed")
   } finally {
     done = true
   }

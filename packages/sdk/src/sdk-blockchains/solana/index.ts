@@ -2,20 +2,13 @@ import type { Cluster } from "@solana/web3.js"
 import type { Maybe } from "@rarible/types"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
 import { SolanaSdk } from "@rarible/solana-sdk"
-import { Blockchain } from "@rarible/api-client"
 import { nonImplementedAction, notImplemented } from "@rarible/sdk-common"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
-import { Middlewarer } from "../../common/middleware/middleware"
-import { MetaUploader } from "../union/meta/upload-meta"
 import { MethodWithPrepare } from "../../types/common"
 import type { IMint } from "../../types/nft/mint"
 import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
+import { OriginFeeSupport } from "../../types/order/fill/domain"
 import type { ISolanaSdkConfig } from "./domain"
-import { SolanaNft } from "./nft"
-import { SolanaFill } from "./fill"
-import { SolanaOrder } from "./order"
-import { SolanaBalance } from "./balance"
-import { SolanaCollection } from "./collection"
 
 export function createSolanaSdk(
   wallet: Maybe<SolanaWallet>,
@@ -31,48 +24,48 @@ export function createSolanaSdk(
     },
     debug: false,
   })
-  const nftService = new SolanaNft(sdk, wallet, apis, config)
-  const balanceService = new SolanaBalance(sdk, wallet, apis, config)
-  const orderService = new SolanaOrder(sdk, wallet, apis, config)
-  const fillService = new SolanaFill(sdk, wallet, apis, config)
-  const { createCollectionBasic } = new SolanaCollection(sdk, wallet, apis, config)
-
-  const preprocessMeta = Middlewarer.skipMiddleware(nftService.preprocessMeta)
-  const metaUploader = new MetaUploader(Blockchain.SOLANA, preprocessMeta)
+  // const nftService = new SolanaNft(sdk, wallet, apis, config)
+  // const balanceService = new SolanaBalance(sdk, wallet, apis, config)
+  // const orderService = new SolanaOrder(sdk, wallet, apis, config)
+  // const fillService = new SolanaFill(sdk, wallet, apis, config)
+  // const { createCollectionBasic } = new SolanaCollection(sdk, wallet, apis, config)
+  //
+  // const preprocessMeta = Middlewarer.skipMiddleware(nftService.preprocessMeta)
+  // const metaUploader = new MetaUploader(Blockchain.SOLANA, preprocessMeta)
 
   return {
     nft: {
-      mint: new MethodWithPrepare(nftService.mintBasic, nftService.mint) as IMint,
-      burn: new MethodWithPrepare(nftService.burnBasic, nftService.burn),
-      transfer: new MethodWithPrepare(nftService.transferBasic, nftService.transfer),
+      mint: new MethodWithPrepare(nonImplementedAction, nonImplementedAction) as IMint,
+      burn: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
+      transfer: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
       generateTokenId: nonImplementedAction,
-      createCollection: createCollectionBasic,
-      preprocessMeta,
-      uploadMeta: metaUploader.uploadMeta,
+      createCollection: nonImplementedAction,
+      preprocessMeta: notImplemented,
+      uploadMeta: nonImplementedAction,
     },
     order: {
-      fill: { prepare: fillService.fill },
-      buy: new MethodWithPrepare(fillService.buyBasic, fillService.fill),
+      fill: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
+      buy: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
       batchBuy: new MethodWithPrepare(notImplemented, nonImplementedAction),
-      acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.fill),
-      sell: new MethodWithPrepare(orderService.sellBasic, orderService.sell),
-      sellUpdate: new MethodWithPrepare(orderService.sellUpdateBasic, orderService.sellUpdate),
-      bid: new MethodWithPrepare(orderService.bidBasic, orderService.bid),
-      bidUpdate: new MethodWithPrepare(orderService.bidUpdateBasic, orderService.bidUpdate),
-      cancel: orderService.cancelBasic,
+      acceptBid: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
+      sell: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
+      sellUpdate: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
+      bid: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
+      bidUpdate: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
+      cancel: nonImplementedAction,
     },
     balances: {
-      getBalance: balanceService.getBalance,
+      getBalance: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
       convert: nonImplementedAction,
       transfer: notImplemented,
-      getBiddingBalance: balanceService.getBiddingBalance,
-      depositBiddingBalance: balanceService.depositBiddingBalance,
-      withdrawBiddingBalance: balanceService.withdrawBiddingBalance,
+      getBiddingBalance: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
+      depositBiddingBalance: nonImplementedAction,
+      withdrawBiddingBalance: nonImplementedAction,
     },
     restriction: {
       canTransfer: nonImplementedAction,
       getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
-        return orderService.getFutureOrderFees()
+        return Promise.resolve({ baseFee: 0, originFeeSupport: OriginFeeSupport.NONE })
       },
     },
   }
