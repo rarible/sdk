@@ -78,13 +78,17 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 
   private async shouldUseV3(fees?: Part[]): Promise<boolean> {
     const originFees = (fees || []).reduce((sum, prev) => sum + prev.value, 0)
-    //should not use v3 as order doesn't have fees, so protocol also should not take any fees
-    if (originFees === 0) {
-      return false
+    //should not use v3 if order doesn't have fees, so protocol also should not take any fees
+    return this.shouldUseV3Simplified(originFees !== 0)
+  }
+
+  private async shouldUseV3Simplified(withOriginFees: boolean): Promise<boolean> {
+    if (withOriginFees) {
+      const baseFee = await this.getBaseFee(CURRENT_ORDER_TYPE_VERSION)
+      //if base fee is non-zero, then use v3 (with protocol fees), otherwise use v2 (without fees)
+      return baseFee !== 0
     }
-    const baseFee = await this.getBaseFee(CURRENT_ORDER_TYPE_VERSION)
-    //if base fee is non-zero, then use v3 (with protocol fees), otherwise use v2 (without fees)
-    return baseFee !== 0
+    return false
   }
 
   getAssetToApprove(inverted: SimpleRaribleV2Order) {
@@ -216,8 +220,9 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
    * If originFees are equal to zero, then protocol fee is not used, so will return 0
    * If originFees not provided we are thinking that protocol fee will be taken
    */
-  async getFillOrderBaseFee(_order: RaribleV2OrderFillRequest["order"], originFees?: Part[]): Promise<number> {
-    if (originFees === undefined || (await this.shouldUseV3(originFees))) {
+  async getFillOrderBaseFee(_order: RaribleV2OrderFillRequest["order"], withOriginFees?: boolean): Promise<number> {
+    const v3Required = await this.shouldUseV3Simplified(withOriginFees !== false)
+    if (v3Required) {
       return this.getBaseFee("RARIBLE_V2")
     }
     return 0

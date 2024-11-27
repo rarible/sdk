@@ -1,13 +1,13 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
+import type { Maybe } from "@rarible/types"
 import { toEVMAddress, toWord } from "@rarible/types"
 import type { OrderId } from "@rarible/api-client"
-import type { Maybe } from "@rarible/types"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import { extractBlockchain } from "@rarible/sdk-common"
 import type * as OrderCommon from "../../types/order/common"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
-import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
+import type { PrepareSellInternalRequest, PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { SellSimplifiedRequest, SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
 import { convertDateToTimestamp, getDefaultExpirationDateTimestamp } from "../../common/get-expiration-date"
 import { checkPayouts } from "../../common/check-payouts"
@@ -38,12 +38,13 @@ export class EthereumSell {
     this.sellUpdateBasic = this.sellUpdateBasic.bind(this)
   }
 
-  async sell(): Promise<PrepareSellInternalResponse> {
-    return this.sellDataV2()
+  async sell(req: PrepareSellInternalRequest): Promise<PrepareSellInternalResponse> {
+    return this.sellDataV2(req)
   }
 
   async sellBasic(request: SellSimplifiedRequest): Promise<OrderId> {
-    const prepare = await this.sell()
+    const blockchain = extractBlockchain(request.itemId)
+    const prepare = await this.sell({ blockchain, withOriginFees: request.withOriginFees })
     return prepare.submit(request)
   }
 
@@ -59,7 +60,10 @@ export class EthereumSell {
     }
   }
 
-  private async sellDataV2(): Promise<PrepareSellInternalResponse> {
+  private async sellDataV2(req: PrepareSellInternalRequest): Promise<PrepareSellInternalResponse> {
+    const defaultBaseFee = await this.sdk.order.getBaseOrderFee()
+    const shouldUseV3 = defaultBaseFee > 0 && req.withOriginFees !== false
+
     const sellAction = this.sdk.order.sell.around(
       async (sellFormRequest: OrderCommon.OrderInternalRequest) => {
         await checkWalletBlockchain(this.wallet, extractBlockchain(sellFormRequest.itemId))
@@ -69,9 +73,8 @@ export class EthereumSell {
           ? convertDateToTimestamp(sellFormRequest.expirationDate)
           : getDefaultExpirationDateTimestamp()
         const currencyAssetType = getCurrencyAssetType(sellFormRequest.currency)
-        const baseFee = await this.sdk.order.getBaseOrderFee("RARIBLE_V2")
         return {
-          type: baseFee === 0 ? "DATA_V2" : "DATA_V3",
+          type: shouldUseV3 ? "DATA_V3" : "DATA_V2",
           makeAssetType: {
             tokenId: tokenId,
             contract: toEVMAddress(contract),
@@ -96,7 +99,7 @@ export class EthereumSell {
       payoutsSupport: PayoutsSupport.MULTIPLE,
       maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
       supportedCurrencies: common.getSupportedCurrencies(),
-      baseFee: await this.sdk.order.getBaseOrderFee(),
+      baseFee: shouldUseV3 ? defaultBaseFee : 0,
       supportsExpirationDate: true,
       shouldTransferNft: false,
       submit: sellAction,

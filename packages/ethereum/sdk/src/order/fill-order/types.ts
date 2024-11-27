@@ -149,9 +149,9 @@ export interface OrderHandler<T extends FillOrderRequest> {
   /**
    * Calculates base fee for filling the order
    * @param order Order to fill
-   * @param originFees Fees which will be used to fill the order
+   * @param withOriginFees set to true if you plan to send origin fees with the order
    */
-  getFillOrderBaseFee(order: T["order"], originFees?: Part[]): Promise<number> | number
+  getFillOrderBaseFee(order: T["order"], withOriginFees?: boolean): Promise<number> | number
 
   getOrderFee(order: T["order"]): Promise<number> | number
 }
