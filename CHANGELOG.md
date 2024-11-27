@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.13](https://github.com/rarible/sdk/compare/v0.13.69-beta.12...v0.13.69-beta.13) (2024-11-27)
+
+### Features
+
+- fix yarn.lock ([c3237fe](https://github.com/rarible/sdk/commit/c3237fef87990ae7d7098e42e9276ec8260207e2))
+- get eclipse balance from api ([#683](https://github.com/rarible/sdk/issues/683)) ([3a585d2](https://github.com/rarible/sdk/commit/3a585d241663355aae3361dddd52f87f0d179491))
+
 **Note:** Version bump only for package root
 
 **Note:** Version bump only for package root
