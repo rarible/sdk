@@ -5,7 +5,7 @@ import type { PrepareOrderUpdateRequest } from "../common"
 import type { OrderUpdateRequest } from "../common"
 
 export type ISellSimplified = (request: SellSimplifiedRequest) => Promise<OrderId>
-export type SellSimplifiedRequest = PrepareOrderRequest & OrderRequest
+export type SellSimplifiedRequest = Omit<PrepareOrderRequest, "withOriginFees"> & OrderRequest
 
 export type ISellUpdateSimplified = (request: SellUpdateSimplifiedRequest) => Promise<OrderId>
 export type SellUpdateSimplifiedRequest = PrepareOrderUpdateRequest & OrderUpdateRequest

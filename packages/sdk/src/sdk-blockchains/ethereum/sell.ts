@@ -44,7 +44,8 @@ export class EthereumSell {
 
   async sellBasic(request: SellSimplifiedRequest): Promise<OrderId> {
     const blockchain = extractBlockchain(request.itemId)
-    const prepare = await this.sell({ blockchain, withOriginFees: request.withOriginFees })
+    const totalFees = (request.originFees || []).reduce((sum, it) => sum + it.value, 0)
+    const prepare = await this.sell({ blockchain, withOriginFees: totalFees > 0 })
     return prepare.submit(request)
   }
 
