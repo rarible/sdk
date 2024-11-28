@@ -25,7 +25,7 @@
     "@rarible/types": "~0.10.0-beta.3"
   },
   "peerDependencies": {
-    "@rarible/api-client": "1.111.0",
+    "@rarible/api-client": "1.113.102",
     "tslib": "^2.3.1"
   },
   "publishConfig": {
