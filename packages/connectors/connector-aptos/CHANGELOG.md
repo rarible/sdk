@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.14](https://github.com/rarible/sdk/compare/v0.13.69-beta.13...v0.13.69-beta.14) (2024-11-28)
+
+### Features
+
+- update api-client ([#690](https://github.com/rarible/sdk/issues/690)) ([229785a](https://github.com/rarible/sdk/commit/229785a4ba129053e5dfc8b72dd3630561fc76f8))
+
 ## [0.13.69-beta.13](https://github.com/rarible/sdk/compare/v0.13.69-beta.12...v0.13.69-beta.13) (2024-11-27)
 
 **Note:** Version bump only for package @rarible/connector-aptos
