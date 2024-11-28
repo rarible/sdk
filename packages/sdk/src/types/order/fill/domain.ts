@@ -23,9 +23,9 @@ type OrderIdRequest = {
 
 export type PrepareFillRequest = {
   /**
-   * Which originFees will be used to fill order
+   * Set to true if order will be created with origin fees specified
    */
-  originFees?: UnionPart[]
+  withOriginFees?: boolean
 } & (OrderRequest | OrderIdRequest)
 
 export enum OriginFeeSupport {

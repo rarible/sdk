@@ -196,7 +196,11 @@ function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
         await checkRoyalties(request.itemId, apis)
       }
 
-      const response = await sell.prepare({ ...request, blockchain: extractBlockchain(request.itemId) })
+      const response = await sell.prepare({
+        ...request,
+        blockchain: extractBlockchain(request.itemId),
+        withOriginFees: request.withOriginFees,
+      })
       return {
         ...response,
         maxAmount: item.supply,

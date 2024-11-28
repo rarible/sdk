@@ -1,5 +1,5 @@
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
-import type { EVMAddress, AssetType, OrderForm, Part } from "@rarible/ethereum-api-client"
+import type { EVMAddress, AssetType, OrderForm } from "@rarible/ethereum-api-client"
 import type { BigNumber } from "@rarible/utils"
 import type { Address, Maybe } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
@@ -131,9 +131,9 @@ export interface RaribleOrderSdk {
    * Get base fee for filling an order (this fee will be hold by the processing platform - in basis points)
    *
    * @param order Order which should be filled
-   * @param originFees Origin fees which will be used for filling the order (optional)
+   * @param withOriginFees set to true if you want to send origin fees for the order
    */
-  getFillOrderBaseFee(order: SimpleOrder, originFees?: Array<Part>): Promise<number>
+  getFillOrderBaseFee(order: SimpleOrder, withOriginFees?: boolean): Promise<number>
 
   /**
    * Get for buy pricing info from AMM

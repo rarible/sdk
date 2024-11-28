@@ -58,4 +58,8 @@ export type PrepareSellInternalRequest = {
    * Blockchain of request
    */
   blockchain: SupportedBlockchain
+  /**
+   * Set to true if order will be created with origin fees specified
+   */
+  withOriginFees?: boolean
 }

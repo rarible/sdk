@@ -1,7 +1,7 @@
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import { toEVMAddress } from "@rarible/types"
 import { Action } from "@rarible/action"
-import type { AssetType, EVMAddress, Part } from "@rarible/ethereum-api-client"
+import type { AssetType, EVMAddress } from "@rarible/ethereum-api-client"
 import type { Maybe } from "@rarible/types"
 import type { GetAmmBuyInfoRequest } from "@rarible/ethereum-api-client/build/apis/OrderControllerApi"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client/build/models"
@@ -303,12 +303,12 @@ export class OrderFiller {
     }
   }
 
-  async getFillOrderBaseFee(order: SimpleOrder, originFees?: Part[]): Promise<number> {
+  async getFillOrderBaseFee(order: SimpleOrder, withOriginFees?: boolean): Promise<number> {
     switch (order.type) {
       case "RARIBLE_V1":
         return this.v1Handler.getFillOrderBaseFee()
       case "RARIBLE_V2":
-        return this.v2Handler.getFillOrderBaseFee(order, originFees)
+        return this.v2Handler.getFillOrderBaseFee(order, withOriginFees)
       case "OPEN_SEA_V1":
         return this.openSeaHandler.getFillOrderBaseFee()
       case "SEAPORT_V1":

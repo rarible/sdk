@@ -19,6 +19,10 @@ export type PrepareOrderRequest = {
    * Item identifier to sell or bid
    */
   itemId: ItemId
+  /**
+   * Set to true if order will be created with origin fees specified
+   */
+  withOriginFees?: boolean
 }
 
 /**
