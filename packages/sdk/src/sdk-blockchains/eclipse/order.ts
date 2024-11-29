@@ -2,8 +2,7 @@ import type { Maybe } from "@rarible/types"
 import { toBigNumber, toItemId, toOrderId, toUnionContractAddress } from "@rarible/types"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
 import { Action } from "@rarible/action"
-import type { Order, OrderId } from "@rarible/api-client"
-import { Blockchain, OrderStatus } from "@rarible/api-client"
+import { Blockchain, Order, OrderId, OrderStatus } from "@rarible/api-client"
 import { PublicKey } from "@solana/web3.js"
 import type { EclipseSdk } from "@rarible/eclipse-sdk"
 import { ECLIPSE_NATIVE_CURRENCY_ADDRESS, PreparedTransaction } from "@rarible/eclipse-sdk"
@@ -35,6 +34,7 @@ import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
 import { extractPublicKey } from "./common/address-converters"
 import type { IEclipseSdkConfig } from "./domain"
 import type { TokenCurrencyAssetType } from "@rarible/api-client/build/models/AssetType"
+import { Item } from "@rarible/api-client/build/models"
 
 function supportedCurrencies(): CurrencyType[] {
   return [{ blockchain: Blockchain.ECLIPSE, type: "NATIVE" }]
@@ -141,23 +141,22 @@ export class EclipseOrder {
     if (!this.wallet) {
       throw new Error("Eclipse wallet not provided")
     }
-    if (!("itemId" in prepare)) {
-      throw new Error("No ItemId provided")
-    }
 
-    const item = await this.apis.item.getItemById({ itemId: prepare.itemId })
+    let item: Item | undefined
+    if ("itemId" in prepare) {
+      item = await this.apis.item.getItemById({ itemId: prepare.itemId })
+    }
 
     const submit = Action.create({
       id: "send-tx" as const,
       run: async (request: OrderRequest) => {
-        const mint = extractPublicKey(prepare.itemId)
         const amount = request.amount !== undefined ? request.amount : 1
 
         const result = await (
           await this.sdk.order.bid({
             marketIdentifier: getMarketplace(this.config),
             signer: this.wallet!.provider,
-            nftMint: mint,
+            nftMint: item ? extractPublicKey(item.id) : undefined,
             paymentMint: new PublicKey(ECLIPSE_NATIVE_CURRENCY_ADDRESS),
             price: new BigNumber(request.price).multipliedBy(amount),
             tokensAmount: amount,
@@ -171,8 +170,8 @@ export class EclipseOrder {
     const marketplace = await this.sdk.order.getMarketPlace({ marketIdentifier: getMarketplace(this.config) })
 
     return {
-      multiple: parseFloat(item.supply) > 1,
-      maxAmount: toBigNumber(item.supply),
+      multiple: item ? parseFloat(item.supply) > 1 : false,
+      maxAmount: item ? toBigNumber(item.supply) : toBigNumber(1),
       originFeeSupport: OriginFeeSupport.NONE,
       payoutsSupport: PayoutsSupport.NONE,
       maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
@@ -209,7 +208,7 @@ export class EclipseOrder {
           })
         ).submit("processed")
 
-        return new BlockchainSolanaTransaction(res, this.sdk)
+        return new BlockchainSolanaTransaction(res, this.sdk, Blockchain.ECLIPSE)
       },
     })
 
@@ -267,7 +266,7 @@ export class EclipseOrder {
 
         return await new PreparedTransaction(this.sdk.connection, data, this.wallet!.provider).submit("processed")
       },
-    }).after(tx => new BlockchainSolanaTransaction(tx, this.sdk))
+    }).after(tx => new BlockchainSolanaTransaction(tx, this.sdk, Blockchain.ECLIPSE))
 
     const marketplace = await this.sdk.order.getMarketPlace({ marketIdentifier: getMarketplace(this.config) })
 

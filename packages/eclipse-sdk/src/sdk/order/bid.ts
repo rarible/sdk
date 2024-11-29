@@ -19,7 +19,7 @@ export interface IBidRequest {
   connection: Connection
   marketIdentifier: PublicKey
   signer: SolanaSigner
-  nftMint: PublicKey
+  nftMint?: PublicKey
   paymentMint: PublicKey // currency token address
   price: BigNumber // per item
   tokensAmount: number
