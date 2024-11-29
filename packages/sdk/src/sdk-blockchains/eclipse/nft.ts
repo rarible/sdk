@@ -12,6 +12,7 @@ import type { PrepareTransferRequest, PrepareTransferResponse, TransferRequest }
 import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
 import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
 import { extractPublicKey } from "../solana/common/address-converters"
+import { Blockchain } from "@rarible/api-client"
 
 export class EclipseNft {
   constructor(
@@ -56,7 +57,7 @@ export class EclipseNft {
           })
           const tx = await prepare.submit("processed")
 
-          return new BlockchainSolanaTransaction(tx, this.sdk)
+          return new BlockchainSolanaTransaction(tx, this.sdk, Blockchain.ECLIPSE)
         },
       }),
     }
@@ -99,7 +100,7 @@ export class EclipseNft {
           })
           const tx = await prepare.submit("processed")
 
-          return new BlockchainSolanaTransaction(tx, this.sdk)
+          return new BlockchainSolanaTransaction(tx, this.sdk, Blockchain.ECLIPSE)
         },
       }),
     }

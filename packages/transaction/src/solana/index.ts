@@ -12,16 +12,18 @@ export interface ISolanaSdk {
 }
 
 export class BlockchainSolanaTransaction implements IBlockchainTransaction {
-  blockchain: Blockchain = Blockchain.SOLANA
+  blockchain: Blockchain
   cluster: string
   getSdk: () => ISolanaSdk
 
   constructor(
     public transaction: TransactionResult,
     sdk: ISolanaSdk,
+    blockchain: Blockchain = Blockchain.SOLANA,
   ) {
     this.cluster = sdk.cluster
     this.getSdk = () => sdk // to hide sdk from json.stringify
+    this.blockchain = blockchain
   }
 
   hash() {

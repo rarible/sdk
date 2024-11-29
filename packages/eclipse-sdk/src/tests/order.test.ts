@@ -38,7 +38,7 @@ describe.skip("eclipse order sdk", () => {
       signer: signerAndOwner,
       nftMint: mint,
       paymentMint: new PublicKey(ECLIPSE_NATIVE_CURRENCY_ADDRESS),
-      price: new BigNumber(1),
+      price: new BigNumber(0.00001),
       tokensAmount: amount,
       marketIdentifier,
     })
@@ -111,7 +111,7 @@ describe.skip("eclipse order sdk", () => {
         nftMint: mint,
         paymentMint: new PublicKey(ECLIPSE_NATIVE_CURRENCY_ADDRESS),
         marketIdentifier,
-        price: new BigNumber(1),
+        price: new BigNumber(0.00001),
         tokensAmount: 1,
       })
 

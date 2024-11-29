@@ -24,7 +24,7 @@ export interface ISellRequest {
 
 export interface IBidRequest {
   signer: SolanaSigner
-  nftMint: PublicKey
+  nftMint?: PublicKey
   paymentMint: PublicKey
   marketIdentifier: PublicKey
   price: BigNumber
@@ -138,7 +138,7 @@ export class EclipseOrderSdk implements IEclipseOrderSdk {
     return new PreparedTransaction(this.connection, instructions, request.signer, this.logger, () => {
       this.logger.log(
         "Bid token",
-        request.nftMint.toString(),
+        request.nftMint?.toString(),
         "with price",
         request.price,
         "and count",
