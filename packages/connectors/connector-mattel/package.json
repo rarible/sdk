@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-mattel",
-  "version": "0.13.69-beta.14",
+  "version": "0.13.69-beta.15",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -20,7 +20,7 @@
     "@magic-ext/flow": "~13.5.0",
     "@magic-ext/oidc": "~1.3.0",
     "@rarible/api-client": "1.113.102",
-    "@rarible/connector": "^0.13.69-beta.14",
+    "@rarible/connector": "^0.13.69-beta.15",
     "@rarible/types": "~0.10.0-beta.3"
   },
   "peerDependencies": {

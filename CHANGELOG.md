@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.15](https://github.com/rarible/sdk/compare/v0.13.69-beta.14...v0.13.69-beta.15) (2024-11-29)
+
+### Features
+
+- collection bids + return proper blockchain ([#691](https://github.com/rarible/sdk/issues/691)) ([d11bd83](https://github.com/rarible/sdk/commit/d11bd83f8642a4c0e7cac1b0df4e53bf75097c18))
+
 ## [0.13.69-beta.14](https://github.com/rarible/sdk/compare/v0.13.69-beta.13...v0.13.69-beta.14) (2024-11-28)
 
 ### Bug Fixes

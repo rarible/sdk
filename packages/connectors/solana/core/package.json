@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-solana",
-  "version": "0.13.69-beta.14",
+  "version": "0.13.69-beta.15",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -16,8 +16,8 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/connector": "^0.13.69-beta.14",
-    "@rarible/solana-common": "^0.13.69-beta.14"
+    "@rarible/connector": "^0.13.69-beta.15",
+    "@rarible/solana-common": "^0.13.69-beta.15"
   },
   "peerDependencies": {
     "@solana/web3.js": "^1.54.0",
