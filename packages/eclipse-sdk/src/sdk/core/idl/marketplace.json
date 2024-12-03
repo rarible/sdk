@@ -83,60 +83,7 @@
         },
         {
           "name": "initializer_payment_ta",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "initializer"
-              },
-              {
-                "kind": "account",
-                "path": "payment_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "payment_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "order_payment_ta",
@@ -335,60 +282,7 @@
         },
         {
           "name": "initializer_payment_ta",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "initializer"
-              },
-              {
-                "kind": "account",
-                "path": "payment_token_program"
-              },
-              {
-                "kind": "account",
-                "path": "payment_mint"
-              }
-            ],
-            "program": {
-              "kind": "const",
-              "value": [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89
-              ]
-            }
-          }
+          "writable": true
         },
         {
           "name": "order_payment_ta",
@@ -1100,6 +994,100 @@
       ]
     },
     {
+      "name": "modify_market",
+      "docs": [
+        "modify existing market"
+      ],
+      "discriminator": [
+        195,
+        49,
+        4,
+        91,
+        235,
+        161,
+        139,
+        178
+      ],
+      "accounts": [
+        {
+          "name": "initializer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "market_identifier"
+        },
+        {
+          "name": "market",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  114,
+                  107,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "market_identifier"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "event_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  95,
+                  95,
+                  101,
+                  118,
+                  101,
+                  110,
+                  116,
+                  95,
+                  97,
+                  117,
+                  116,
+                  104,
+                  111,
+                  114,
+                  105,
+                  116,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "ModifyMarketParams"
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "verify_mint",
       "docs": [
         "initializer a new market"
@@ -1266,6 +1254,26 @@
       "code": 6005,
       "name": "InvalidNft",
       "msg": "Invalid NFT for Market"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidRoyaltiesAccount",
+      "msg": "Invalid Royalties Account"
+    },
+    {
+      "code": 6007,
+      "name": "InvalidRoyaltyPercentage",
+      "msg": "Invalid Royalties Percentage"
+    },
+    {
+      "code": 6008,
+      "name": "TotalRoyaltyPercentageExceeded",
+      "msg": "Total Royalty Percentage Exceeded"
+    },
+    {
+      "code": 6009,
+      "name": "NotEnoughRemainingAccounts",
+      "msg": "Not Enough Remaining Accounts"
     }
   ],
   "types": [
@@ -1439,6 +1447,22 @@
           {
             "name": "verified",
             "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ModifyMarketParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "fee_recipient",
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_bps",
+            "type": "u64"
           }
         ]
       }

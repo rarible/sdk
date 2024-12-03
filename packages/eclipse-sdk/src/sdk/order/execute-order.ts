@@ -2,7 +2,7 @@ import type { AccountMeta, Connection } from "@solana/web3.js"
 import { ComputeBudgetProgram, PublicKey, SystemProgram, SYSVAR_INSTRUCTIONS_PUBKEY } from "@solana/web3.js"
 import type { SolanaSigner } from "@rarible/solana-common"
 import { BN } from "@coral-xyz/anchor"
-import { ASSOCIATED_TOKEN_PROGRAM_ID } from "@solana/spl-token"
+import { ASSOCIATED_TOKEN_PROGRAM_ID, getTokenMetadata, TOKEN_2022_PROGRAM_ID } from "@solana/spl-token"
 import { getProgramInstanceRaribleMarketplace } from "../core/marketplace-program"
 import type { WnsAccountParams } from "../utils"
 import {
@@ -14,7 +14,8 @@ import {
   getRemainingAccountsForMint,
   getTokenProgramFromMint,
 } from "../utils"
-import { ITransactionPreparedInstructions } from "../../common/transactions"
+import type { ITransactionPreparedInstructions } from "../../common/transactions"
+import type { DebugLogger } from "../../logger/debug-logger"
 
 export interface IFillOrderRequest {
   connection: Connection
@@ -25,14 +26,17 @@ export interface IFillOrderRequest {
   nftMint: PublicKey
 }
 
-export async function executeOrder(request: IFillOrderRequest): Promise<ITransactionPreparedInstructions> {
+export async function executeOrder(
+  request: IFillOrderRequest,
+  logger: DebugLogger,
+): Promise<ITransactionPreparedInstructions> {
   const marketProgram = getProgramInstanceRaribleMarketplace(request.connection)
   const eventAuthority = getEventAuthority()
 
   const taker = request.signer.publicKey
 
   const orderAddress = request.orderAddress
-  const nftMint = new PublicKey(request.nftMint)
+  const nftMint = request.nftMint
   const extraAccountParams = request.extraAccountParams
 
   const order = await fetchOrderByAddress(request.connection, orderAddress.toString())
@@ -88,6 +92,8 @@ export async function executeOrder(request: IFillOrderRequest): Promise<ITransac
     extraAccountParams,
   )
 
+  await fillRemainingAccountWithRoyalties(request, remainingAccounts, paymentTokenProgram, order.paymentMint, logger)
+
   const instruction = await marketProgram.methods
     .fillOrder(new BN(request.amountToFill))
     .accountsStrict({
@@ -126,5 +132,75 @@ export async function executeOrder(request: IFillOrderRequest): Promise<ITransac
   return {
     instructions,
     signers: [],
+  }
+}
+
+async function fillRemainingAccountWithRoyalties(
+  request: IFillOrderRequest,
+  remainingAccounts: AccountMeta[],
+  paymentTokenProgram: PublicKey,
+  paymentMint: PublicKey,
+  logger: DebugLogger,
+) {
+  const metadata = await getTokenMetadata(request.connection, request.nftMint, "confirmed", TOKEN_2022_PROGRAM_ID)
+
+  let hasRoyalties = false
+  let creatorsInfo: { pubkey: PublicKey; percentage: number }[] = []
+  let royaltyBasisPoints = 0
+
+  const additionalMetadata = metadata?.additionalMetadata
+  if (additionalMetadata && additionalMetadata.length > 0) {
+    for (const [key, value] of additionalMetadata) {
+      if (key === "royalty_basis_points") {
+        royaltyBasisPoints = parseInt(value, 10)
+        if (royaltyBasisPoints > 0) {
+          hasRoyalties = true
+        }
+      } else {
+        try {
+          const creatorPubkey = new PublicKey(key)
+          const percentage = parseInt(value, 10)
+          if (percentage > 0 && percentage <= 100) {
+            creatorsInfo.push({
+              pubkey: creatorPubkey,
+              percentage: percentage,
+            })
+          } else {
+            logger.log(`Invalid percentage for creator ${key}: ${value}`)
+          }
+        } catch (e) {
+          logger.log(`Invalid public key for royalties in additionalMetadata: ${key}`)
+        }
+      }
+    }
+  }
+
+  // Validate that total percentages add up to 100
+  const totalPercentage = creatorsInfo.reduce((acc, creator) => acc + creator.percentage, 0)
+  if (totalPercentage > 100) {
+    logger.log("Total royalties percentages exceed 100%, skipping the royalties")
+    hasRoyalties = false
+  }
+
+  if (hasRoyalties) {
+    for (const creatorInfo of creatorsInfo) {
+      remainingAccounts.push({
+        pubkey: creatorInfo.pubkey,
+        isSigner: false,
+        isWritable: true,
+      })
+
+      const creatorPaymentTa = getAtaAddress(
+        paymentMint.toBase58(),
+        creatorInfo.pubkey.toBase58(),
+        paymentTokenProgram.toBase58(),
+      )
+
+      remainingAccounts.push({
+        pubkey: creatorPaymentTa,
+        isSigner: false,
+        isWritable: true,
+      })
+    }
   }
 }
