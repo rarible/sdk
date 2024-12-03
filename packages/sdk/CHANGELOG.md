@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.17](https://github.com/rarible/sdk/compare/v0.13.69-beta.16...v0.13.69-beta.17) (2024-12-03)
+
+### Features
+
+- 0 base fee for seller ([#693](https://github.com/rarible/sdk/issues/693)) ([ff9db76](https://github.com/rarible/sdk/commit/ff9db761e1b857dfdfa5754c86e790428059d4c6))
+
 ## [0.13.69-beta.16](https://github.com/rarible/sdk/compare/v0.13.69-beta.15...v0.13.69-beta.16) (2024-12-03)
 
 **Note:** Version bump only for package @rarible/sdk
