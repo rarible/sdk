@@ -90,13 +90,12 @@ export class EclipseOrder {
       },
     })
 
-    const marketplace = await this.sdk.order.getMarketPlace({ marketIdentifier: getMarketplace(this.config) })
     return {
       originFeeSupport: OriginFeeSupport.NONE,
       payoutsSupport: PayoutsSupport.NONE,
       maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
       supportedCurrencies: supportedCurrencies(),
-      baseFee: marketplace.feeBps.toNumber(),
+      baseFee: 0,
       supportsExpirationDate: false,
       shouldTransferNft: false,
       submit: submit,
