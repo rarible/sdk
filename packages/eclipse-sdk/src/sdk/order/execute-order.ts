@@ -135,6 +135,31 @@ export async function executeOrder(
   }
 }
 
+function parseCreatorInfo(
+  key: string,
+  value: string,
+  creatorsInfo: {
+    pubkey: PublicKey
+    percentage: number
+  }[],
+  logger: DebugLogger,
+) {
+  try {
+    const creatorPubkey = new PublicKey(key)
+    const percentage = parseInt(value, 10)
+    if (percentage > 0 && percentage <= 100) {
+      creatorsInfo.push({
+        pubkey: creatorPubkey,
+        percentage: percentage,
+      })
+    } else {
+      logger.log(`Invalid percentage for creator ${key}: ${value}`)
+    }
+  } catch (e) {
+    logger.log(`Invalid public key for creator in additionalMetadata: ${key}`)
+  }
+}
+
 async function fillRemainingAccountWithRoyalties(
   request: IFillOrderRequest,
   remainingAccounts: AccountMeta[],
@@ -144,8 +169,13 @@ async function fillRemainingAccountWithRoyalties(
 ) {
   const metadata = await getTokenMetadata(request.connection, request.nftMint, "confirmed", TOKEN_2022_PROGRAM_ID)
 
+  if (!metadata) {
+    logger.log("Try to fill remaining accounts with royalties. No metadata found for the NFT mint")
+    return
+  }
+
   let hasRoyalties = false
-  let creatorsInfo: { pubkey: PublicKey; percentage: number }[] = []
+  const creatorsInfo: { pubkey: PublicKey; percentage: number }[] = []
   let royaltyBasisPoints = 0
 
   const additionalMetadata = metadata?.additionalMetadata
@@ -157,20 +187,7 @@ async function fillRemainingAccountWithRoyalties(
           hasRoyalties = true
         }
       } else {
-        try {
-          const creatorPubkey = new PublicKey(key)
-          const percentage = parseInt(value, 10)
-          if (percentage > 0 && percentage <= 100) {
-            creatorsInfo.push({
-              pubkey: creatorPubkey,
-              percentage: percentage,
-            })
-          } else {
-            logger.log(`Invalid percentage for creator ${key}: ${value}`)
-          }
-        } catch (e) {
-          logger.log(`Invalid public key for royalties in additionalMetadata: ${key}`)
-        }
+        parseCreatorInfo(key, value, creatorsInfo, logger)
       }
     }
   }
