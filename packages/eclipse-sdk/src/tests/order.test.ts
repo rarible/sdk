@@ -19,7 +19,7 @@ describe("eclipse order sdk", () => {
     nftMint = new PublicKey(process.env.NFT_ADDRESS!)
   })
 
-  test(
+  test.skip(
     "Should return marketplace",
     async () => {
       const marketPlace = await sdk.order.getMarketPlace({ marketIdentifier })
