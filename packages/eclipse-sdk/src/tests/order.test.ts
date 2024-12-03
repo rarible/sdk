@@ -7,29 +7,30 @@ import { createSdk } from "./common"
 
 const marketIdentifier = new PublicKey("ASSySjiXf9T8Mp6Qw7bKgymahRDzyroamBTTER3BaBHm")
 
-describe.skip("eclipse order sdk", () => {
+describe("eclipse order sdk", () => {
   const sdk = createSdk()
+  let signerAndOwner: SolanaKeypairWallet
+  let nftMint: PublicKey
 
-  test(
+  beforeEach(() => {
+    const keyfile = JSON.parse(fs.readFileSync(process.env.KEYPAIR_PATH!, "utf8"))
+    const signerKeypair = Keypair.fromSecretKey(new Uint8Array(keyfile))
+    signerAndOwner = SolanaKeypairWallet.fromKeypair(signerKeypair)
+    nftMint = new PublicKey(process.env.NFT_ADDRESS!)
+  })
+
+  test.skip(
     "Should return marketplace",
     async () => {
       const marketPlace = await sdk.order.getMarketPlace({ marketIdentifier })
       expect(marketPlace).toBeTruthy()
-      expect(marketPlace.feeBps).toEqual(1000)
-      expect(marketPlace.feeRecipient).toEqual("Fs2Rm7Y6yv1Fq26XL6WbFS2inBYhPyQY2XKZiitiySGf")
+      expect(marketPlace.feeBps.toNumber()).toEqual(1000)
+      expect(marketPlace.feeRecipient.toString()).toEqual("Fs2Rm7Y6yv1Fq26XL6WbFS2inBYhPyQY2XKZiitiySGf")
     },
     1000 * 60 * 30,
   )
 
-  function getSignerAndOwner() {
-    const keyfile = JSON.parse(fs.readFileSync(process.env.KEYPAIR_PATH!, "utf8"))
-    const signerKeypair = Keypair.fromSecretKey(new Uint8Array(keyfile))
-    return SolanaKeypairWallet.fromKeypair(signerKeypair)
-  }
-
   async function createSellOrder(mint: PublicKey) {
-    const signerAndOwner = getSignerAndOwner()
-
     const amount = 1
     const balance = await sdk.balances.getTokenBalance(signerAndOwner.publicKey, mint)
     expect(balance.eq(amount)).toEqual(true)
@@ -51,98 +52,80 @@ describe.skip("eclipse order sdk", () => {
     return sellTx
   }
 
-  test(
-    "Should create sell order",
-    async () => {
-      await createSellOrder(new PublicKey("CzmMhzr23NzUBe1Ai2VxBEPhC7gNJzZiBPCB2UWGJfSE"))
-    },
-    1000 * 60 * 30,
-  )
+  test.skip("Should create sell order", async () => {
+    await createSellOrder(nftMint)
+  })
 
-  test(
-    "Should cancel sell order",
-    async () => {
-      const mint = new PublicKey("CzmMhzr23NzUBe1Ai2VxBEPhC7gNJzZiBPCB2UWGJfSE")
-      const result = await createSellOrder(mint)
-      const signerAndOwner = getSignerAndOwner()
+  test.skip("Should cancel sell order", async () => {
+    const result = await createSellOrder(nftMint)
 
-      const cancelPrepare = await sdk.order.cancel({
-        signer: signerAndOwner,
-        orderAddress: result.orderId!,
-      })
+    const cancelPrepare = await sdk.order.cancel({
+      signer: signerAndOwner,
+      orderAddress: result.orderId!,
+    })
 
-      const cancelTx = await cancelPrepare.submit("max")
-      expect(cancelTx).toBeTruthy()
-      const txConfirm = await sdk.confirmTransaction(cancelTx.txId, "finalized")
-      expect(txConfirm).toBeTruthy()
-    },
-    1000 * 60 * 30,
-  )
+    const cancelTx = await cancelPrepare.submit("max")
+    expect(cancelTx).toBeTruthy()
+    const txConfirm = await sdk.confirmTransaction(cancelTx.txId, "finalized")
+    expect(txConfirm).toBeTruthy()
+  })
 
-  test(
-    "Should execute sell order",
-    async () => {
-      const mint = new PublicKey("CzmMhzr23NzUBe1Ai2VxBEPhC7gNJzZiBPCB2UWGJfSE")
-      const result = await createSellOrder(mint)
-      const signerAndOwner = getSignerAndOwner()
-      const buyPrepare = await sdk.order.executeOrder({
-        signer: signerAndOwner,
-        nftMint: mint,
-        orderAddress: result.orderId!,
-        amountToFill: 1,
-      })
+  test.skip("Should execute sell order", async () => {
+    const result = await createSellOrder(nftMint)
+    const buyPrepare = await sdk.order.executeOrder({
+      signer: signerAndOwner,
+      nftMint: nftMint,
+      orderAddress: result.orderId!,
+      amountToFill: 1,
+    })
 
-      const buyTx = await buyPrepare.submit("max")
-      expect(buyTx).toBeTruthy()
-      const buyTxConfirm = await sdk.confirmTransaction(result.txId, "finalized")
-      expect(buyTxConfirm).toBeTruthy()
-    },
-    1000 * 60 * 30,
-  )
+    const buyTx = await buyPrepare.submit("max")
+    expect(buyTx).toBeTruthy()
+    const buyTxConfirm = await sdk.confirmTransaction(result.txId, "finalized")
+    expect(buyTxConfirm).toBeTruthy()
+  })
 
-  test(
-    "Should create bid",
-    async () => {
-      const mint = new PublicKey("CzmMhzr23NzUBe1Ai2VxBEPhC7gNJzZiBPCB2UWGJfSE")
+  test.skip("Should create bid", async () => {
+    const prepare = await sdk.order.bid({
+      signer: signerAndOwner,
+      nftMint,
+      paymentMint: new PublicKey(ECLIPSE_NATIVE_CURRENCY_ADDRESS),
+      marketIdentifier,
+      price: new BigNumber(0.00001),
+      tokensAmount: 1,
+    })
 
-      const signerAndOwner = getSignerAndOwner()
-      const prepare = await sdk.order.bid({
-        signer: signerAndOwner,
-        nftMint: mint,
-        paymentMint: new PublicKey(ECLIPSE_NATIVE_CURRENCY_ADDRESS),
-        marketIdentifier,
-        price: new BigNumber(0.00001),
-        tokensAmount: 1,
-      })
+    const trx = await prepare.submit("max")
+    expect(trx).toBeTruthy()
+    const txConfirm = await sdk.confirmTransaction(trx.txId, "finalized")
+    expect(txConfirm).toBeTruthy()
+  })
 
-      const trx = await prepare.submit("max")
-      expect(trx).toBeTruthy()
-      const buyTxConfirm = await sdk.confirmTransaction(trx.txId, "finalized")
-      expect(buyTxConfirm).toBeTruthy()
-    },
-    1000 * 60 * 30,
-  )
+  test.skip("Should accept bid", async () => {
+    const bidPrepare = await sdk.order.bid({
+      signer: signerAndOwner,
+      nftMint,
+      paymentMint: new PublicKey(ECLIPSE_NATIVE_CURRENCY_ADDRESS),
+      marketIdentifier,
+      price: new BigNumber(0.00001),
+      tokensAmount: 1,
+    })
 
-  test(
-    "Should accept bid",
-    async () => {
-      const mint = new PublicKey("CzmMhzr23NzUBe1Ai2VxBEPhC7gNJzZiBPCB2UWGJfSE")
-      const orderAddress = new PublicKey("3gcMfJgEeQH7tjohfg75n3WuTT9wajMp4WySZSQeFEeY")
+    const bidTrx = await bidPrepare.submit("max")
+    expect(bidTrx).toBeTruthy()
+    const txConfirm = await sdk.confirmTransaction(bidTrx.txId, "finalized")
+    expect(txConfirm).toBeTruthy()
 
-      const signerAndOwner = getSignerAndOwner()
+    const acceptBidPrepare = await sdk.order.executeOrder({
+      signer: signerAndOwner,
+      nftMint,
+      orderAddress: bidTrx.orderId!,
+      amountToFill: 1,
+    })
 
-      const prepare = await sdk.order.executeOrder({
-        signer: signerAndOwner,
-        nftMint: mint,
-        orderAddress,
-        amountToFill: 1,
-      })
-
-      const trx = await prepare.submit("max")
-      expect(trx).toBeTruthy()
-      const confirm = await sdk.confirmTransaction(trx.txId, "finalized")
-      expect(confirm).toBeTruthy()
-    },
-    1000 * 60 * 30,
-  )
+    const trx = await acceptBidPrepare.submit("max")
+    expect(trx).toBeTruthy()
+    const confirm = await sdk.confirmTransaction(trx.txId, "finalized")
+    expect(confirm).toBeTruthy()
+  })
 })

@@ -163,14 +163,17 @@ export class EclipseOrderSdk implements IEclipseOrderSdk {
   }
 
   async executeOrder(request: IExecuteOrderRequest): Promise<PreparedTransaction> {
-    const instructions = await executeOrder({
-      connection: this.connection,
-      signer: request.signer,
-      nftMint: request.nftMint,
-      amountToFill: request.amountToFill,
-      orderAddress: request.orderAddress,
-      extraAccountParams: request.extraAccountParams,
-    })
+    const instructions = await executeOrder(
+      {
+        connection: this.connection,
+        signer: request.signer,
+        nftMint: request.nftMint,
+        amountToFill: request.amountToFill,
+        orderAddress: request.orderAddress,
+        extraAccountParams: request.extraAccountParams,
+      },
+      this.logger,
+    )
 
     return new PreparedTransaction(this.connection, instructions, request.signer, this.logger, () => {
       this.logger.log(

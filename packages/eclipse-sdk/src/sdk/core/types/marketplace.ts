@@ -66,59 +66,6 @@ export type Marketplace = {
         {
           name: "initializerPaymentTa"
           writable: true
-          pda: {
-            seeds: [
-              {
-                kind: "account"
-                path: "initializer"
-              },
-              {
-                kind: "account"
-                path: "paymentTokenProgram"
-              },
-              {
-                kind: "account"
-                path: "paymentMint"
-              },
-            ]
-            program: {
-              kind: "const"
-              value: [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89,
-              ]
-            }
-          }
         },
         {
           name: "orderPaymentTa"
@@ -276,59 +223,6 @@ export type Marketplace = {
         {
           name: "initializerPaymentTa"
           writable: true
-          pda: {
-            seeds: [
-              {
-                kind: "account"
-                path: "initializer"
-              },
-              {
-                kind: "account"
-                path: "paymentTokenProgram"
-              },
-              {
-                kind: "account"
-                path: "paymentMint"
-              },
-            ]
-            program: {
-              kind: "const"
-              value: [
-                140,
-                151,
-                37,
-                143,
-                78,
-                36,
-                137,
-                241,
-                187,
-                61,
-                16,
-                41,
-                20,
-                142,
-                13,
-                131,
-                11,
-                90,
-                19,
-                153,
-                218,
-                255,
-                16,
-                132,
-                4,
-                142,
-                123,
-                216,
-                219,
-                233,
-                248,
-                89,
-              ]
-            }
-          }
         },
         {
           name: "orderPaymentTa"
@@ -860,6 +754,64 @@ export type Marketplace = {
       ]
     },
     {
+      name: "modifyMarket"
+      docs: ["modify existing market"]
+      discriminator: [195, 49, 4, 91, 235, 161, 139, 178]
+      accounts: [
+        {
+          name: "initializer"
+          writable: true
+          signer: true
+        },
+        {
+          name: "marketIdentifier"
+        },
+        {
+          name: "market"
+          pda: {
+            seeds: [
+              {
+                kind: "const"
+                value: [109, 97, 114, 107, 101, 116]
+              },
+              {
+                kind: "account"
+                path: "marketIdentifier"
+              },
+            ]
+          }
+        },
+        {
+          name: "systemProgram"
+          address: "11111111111111111111111111111111"
+        },
+        {
+          name: "eventAuthority"
+          pda: {
+            seeds: [
+              {
+                kind: "const"
+                value: [95, 95, 101, 118, 101, 110, 116, 95, 97, 117, 116, 104, 111, 114, 105, 116, 121]
+              },
+            ]
+          }
+        },
+        {
+          name: "program"
+        },
+      ]
+      args: [
+        {
+          name: "params"
+          type: {
+            defined: {
+              name: "modifyMarketParams"
+            }
+          }
+        },
+      ]
+    },
+    {
       name: "verifyMint"
       docs: ["initializer a new market"]
       discriminator: [57, 93, 52, 66, 75, 249, 244, 143]
@@ -957,6 +909,26 @@ export type Marketplace = {
       code: 6005
       name: "invalidNft"
       msg: "Invalid NFT for Market"
+    },
+    {
+      code: 6006
+      name: "invalidRoyaltiesAccount"
+      msg: "Invalid Royalties Account"
+    },
+    {
+      code: 6007
+      name: "invalidRoyaltyPercentage"
+      msg: "Invalid Royalties Percentage"
+    },
+    {
+      code: 6008
+      name: "totalRoyaltyPercentageExceeded"
+      msg: "Total Royalty Percentage Exceeded"
+    },
+    {
+      code: 6009
+      name: "notEnoughRemainingAccounts"
+      msg: "Not Enough Remaining Accounts"
     },
   ]
   types: [
@@ -1115,6 +1087,22 @@ export type Marketplace = {
           {
             name: "verified"
             type: "u8"
+          },
+        ]
+      }
+    },
+    {
+      name: "modifyMarketParams"
+      type: {
+        kind: "struct"
+        fields: [
+          {
+            name: "feeRecipient"
+            type: "pubkey"
+          },
+          {
+            name: "feeBps"
+            type: "u64"
           },
         ]
       }
