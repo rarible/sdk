@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.16](https://github.com/rarible/sdk/compare/v0.13.69-beta.15...v0.13.69-beta.16) (2024-12-03)
+
+**Note:** Version bump only for package @rarible/connector-aptos
+
 ## [0.13.69-beta.15](https://github.com/rarible/sdk/compare/v0.13.69-beta.14...v0.13.69-beta.15) (2024-11-29)
 
 **Note:** Version bump only for package @rarible/connector-aptos

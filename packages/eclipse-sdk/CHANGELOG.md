@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.16](https://github.com/rarible/sdk/compare/v0.13.69-beta.15...v0.13.69-beta.16) (2024-12-03)
+
+### Features
+
+- make tests configurable by .env file ([#692](https://github.com/rarible/sdk/issues/692)) ([81c34a0](https://github.com/rarible/sdk/commit/81c34a09165e114ecd150ccacb3447e5d8252cbe))
+
 ## [0.13.69-beta.15](https://github.com/rarible/sdk/compare/v0.13.69-beta.14...v0.13.69-beta.15) (2024-11-29)
 
 ### Features
