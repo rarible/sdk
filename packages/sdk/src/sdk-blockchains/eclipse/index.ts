@@ -3,6 +3,7 @@ import type { Maybe } from "@rarible/types"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
 import { EclipseSdk } from "@rarible/eclipse-sdk"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
+import { LogsLevel } from "../../domain"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import { MethodWithPrepare } from "../../types/common"
 import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
@@ -17,6 +18,7 @@ export function createEclipseSdk(
   apis: IApisSdk,
   cluster: Cluster,
   config: IEclipseSdkConfig,
+  logs?: LogsLevel,
 ): IRaribleInternalSdk {
   const sdk = EclipseSdk.create({
     connection: {
@@ -24,7 +26,7 @@ export function createEclipseSdk(
       endpoint: config?.eclipseEndpoint,
       commitmentOrConfig: "confirmed",
     },
-    debug: false,
+    debug: logs !== LogsLevel.DISABLED,
   })
   const balanceService = new EclipseBalance(sdk, wallet, apis)
   const nftService = new EclipseNft(sdk, wallet, apis)

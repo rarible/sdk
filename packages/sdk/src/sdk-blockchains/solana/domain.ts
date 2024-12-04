@@ -15,7 +15,7 @@ export interface ISolanaSdkConfig {
   auctionHouseMapping?: SolanaAuctionHouseMapping
   endpoint?: string
   eclipseEndpoint?: string
-  eclipseMarketplaces: Array<PublicKey>
+  eclipseMarketplaces: Array<string>
 }
 
 export interface ISolanaTokenMetadata extends CommonTokenMetadata {

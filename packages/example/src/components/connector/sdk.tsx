@@ -10,7 +10,6 @@ import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
 import type { IRaribleSdk, IRaribleSdkConfig } from "@rarible/sdk/build/domain"
 import { LogsLevel } from "@rarible/sdk/build/domain"
 import { isEVMBlockchain } from "@rarible/sdk-common"
-import { PublicKey } from "@solana/web3.js"
 import { useEnvironmentContext } from "./env"
 import { getConnector } from "./connectors-setup"
 import { useApiKeyContext } from "./api-key"
@@ -81,8 +80,7 @@ function createRaribleConfig(environment: RaribleSdkEnvironment): IRaribleSdkCon
         marketplaceMarker: "0x12345678900000000000000000000000000123456789face",
       },
       [WalletType.SOLANA]: {
-        // todo Eclipse it's for testnet, customize me
-        eclipseMarketplaces: [new PublicKey("ASSySjiXf9T8Mp6Qw7bKgymahRDzyroamBTTER3BaBHm")],
+        eclipseMarketplaces: ["Rarim7DMoD45z1o25QWPsWvTdFSSEdxaxriwWZLLTic"],
       },
     },
   }

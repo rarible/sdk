@@ -2,13 +2,15 @@ import type { Maybe } from "@rarible/types"
 import { toBigNumber, toItemId, toOrderId, toUnionContractAddress } from "@rarible/types"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
 import { Action } from "@rarible/action"
-import { Blockchain, Order, OrderId, OrderStatus } from "@rarible/api-client"
+import type { Order, OrderId } from "@rarible/api-client"
+import { Blockchain, OrderStatus } from "@rarible/api-client"
 import { PublicKey } from "@solana/web3.js"
 import type { EclipseSdk } from "@rarible/eclipse-sdk"
 import { ECLIPSE_NATIVE_CURRENCY_ADDRESS, PreparedTransaction } from "@rarible/eclipse-sdk"
 import { BlockchainSolanaTransaction, type IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { extractId } from "@rarible/sdk-common"
 import BigNumber from "bignumber.js"
+import type { Item } from "@rarible/api-client/build/models"
 import type * as OrderCommon from "../../types/order/common"
 import type { OrderRequest } from "../../types/order/common"
 import {
@@ -22,7 +24,7 @@ import {
 import type { IApisSdk } from "../../domain"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
-import { isAssetType, isNativeCurrencyAssetType, isTokenCurrencyAssetType } from "../../common/get-currency-asset-type"
+import { getCurrencyId } from "../../common/get-currency-asset-type"
 import type { CurrencyType } from "../../common/domain"
 import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import { getPreparedOrder } from "../solana/common/order"
@@ -33,8 +35,6 @@ import { getCurrencies } from "../solana/common/currencies"
 import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
 import { extractPublicKey } from "./common/address-converters"
 import type { IEclipseSdkConfig } from "./domain"
-import type { TokenCurrencyAssetType } from "@rarible/api-client/build/models/AssetType"
-import { Item } from "@rarible/api-client/build/models"
 
 function supportedCurrencies(): CurrencyType[] {
   return [{ blockchain: Blockchain.ECLIPSE, type: "NATIVE" }]
@@ -105,17 +105,7 @@ export class EclipseOrder {
   async sellCommon(request: OrderCommon.OrderInternalRequest, marketIdentifier: PublicKey) {
     const nftMint = extractPublicKey(request.itemId)
     const amount = request.amount !== undefined ? request.amount : 1
-
-    const isNativeCurrency = isAssetType(request.currency) && isNativeCurrencyAssetType(request.currency)
-    const isCustomCurrency = isAssetType(request.currency) && isTokenCurrencyAssetType(request.currency)
-
-    if (!isNativeCurrency && !isCustomCurrency) {
-      throw new Error("Sell orders only in CURRENCY_NATIVE or CURRENCY_TOKEN are supported")
-    }
-
-    const currency = isNativeCurrency
-      ? ECLIPSE_NATIVE_CURRENCY_ADDRESS
-      : (request.currency as TokenCurrencyAssetType).contract
+    const currency = extractId(getCurrencyId(request.currency))
 
     const result = await (
       await this.sdk.order.sell({
