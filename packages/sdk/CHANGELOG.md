@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.18](https://github.com/rarible/sdk/compare/v0.13.69-beta.17...v0.13.69-beta.18) (2024-12-04)
+
+### Features
+
+- change marketplaceid, make logs output configurable, support Ap… ([#694](https://github.com/rarible/sdk/issues/694)) ([ee3b6ad](https://github.com/rarible/sdk/commit/ee3b6ad4efc288bc263df9e4ada81720cc61bbc0))
+
 ## [0.13.69-beta.17](https://github.com/rarible/sdk/compare/v0.13.69-beta.16...v0.13.69-beta.17) (2024-12-03)
 
 ### Features
