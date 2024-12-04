@@ -8,6 +8,7 @@ import type { AbstractLogger } from "@rarible/logger/build/domain"
 import type { SupportedBlockchain } from "@rarible/sdk-common"
 import { extractBlockchain, isSupportedBlockchain, retry } from "@rarible/sdk-common"
 import type { Item } from "@rarible/api-client/build/models"
+import { PublicKey } from "@solana/web3.js"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
 import { LogsLevel } from "./domain"
 import { getSdkConfig } from "./config"
@@ -94,10 +95,16 @@ export function createRaribleSdk(
       blockchainConfig.solanaNetwork,
       config?.blockchain?.SOLANA,
     ),
-    createEclipseSdk(filterWallet(wallet, WalletType.SOLANA), apis, blockchainConfig.solanaNetwork, {
-      eclipseEndpoint: blockchainConfig.eclipseAddress,
-      eclipseMarketplaces: config?.blockchain?.SOLANA?.eclipseMarketplaces!,
-    }),
+    createEclipseSdk(
+      filterWallet(wallet, WalletType.SOLANA),
+      apis,
+      blockchainConfig.solanaNetwork,
+      {
+        eclipseEndpoint: blockchainConfig.eclipseAddress,
+        eclipseMarketplaces: (config?.blockchain?.SOLANA?.eclipseMarketplaces || []).map(val => new PublicKey(val)),
+      },
+      config?.logs,
+    ),
     createImmutablexSdk(
       filterWallet(wallet, WalletType.IMMUTABLEX),
       apis,

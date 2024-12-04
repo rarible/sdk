@@ -5,7 +5,7 @@ import { BigNumber } from "@rarible/utils"
 import { ECLIPSE_NATIVE_CURRENCY_ADDRESS } from "../common/params"
 import { createSdk } from "./common"
 
-const marketIdentifier = new PublicKey("ASSySjiXf9T8Mp6Qw7bKgymahRDzyroamBTTER3BaBHm")
+const marketIdentifier = new PublicKey("Rari4ReeeT8bhbsRGP5J8RBhTFXTAP7iMm7VHuNQTs5")
 
 describe("eclipse order sdk", () => {
   const sdk = createSdk()

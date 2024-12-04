@@ -124,7 +124,7 @@ export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestC
       tokenId: tokenId ? toBigNumber(tokenId) : undefined,
     }
   }
-  if (blockchain === Blockchain.SOLANA || blockchain === Blockchain.ECLIPSE) {
+  if (blockchain === Blockchain.SOLANA) {
     if (contract === ZERO_ADDRESS) {
       return {
         "@type": "SOLANA_SOL",
@@ -133,6 +133,19 @@ export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestC
     return {
       "@type": "SOLANA_NFT",
       itemId: toItemId("SOLANA:" + contract),
+    }
+  }
+
+  if (blockchain === Blockchain.ECLIPSE) {
+    if (contract === ECLIPSE_NATIVE_CURRENCY_ADDRESS) {
+      return {
+        "@type": "CURRENCY_NATIVE",
+        blockchain: Blockchain.ECLIPSE,
+      }
+    }
+    return {
+      "@type": "CURRENCY_TOKEN",
+      contract: toUnionContractAddress(id),
     }
   }
   throw new Error(`Unsupported currency type: ${id}`)
