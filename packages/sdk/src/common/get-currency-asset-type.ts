@@ -140,7 +140,7 @@ export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestC
     if (contract === ECLIPSE_NATIVE_CURRENCY_ADDRESS) {
       return {
         "@type": "CURRENCY_NATIVE",
-        blockchain: Blockchain.APTOS,
+        blockchain: Blockchain.ECLIPSE,
       }
     }
     return {
