@@ -46,6 +46,7 @@ export function createApisSdk(
     activity: new ApiClient.ActivityControllerApi(configuration),
     balances: new ApiClient.BalanceControllerApi(configuration),
     search: new ApiClient.SearchControllerApi(configuration),
+    data: new ApiClient.DataControllerApi(configuration),
   }
 }
 
