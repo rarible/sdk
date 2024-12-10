@@ -154,6 +154,7 @@ export interface IApisSdk {
   ownership: ApiClient.OwnershipControllerApi
   balances: ApiClient.BalanceControllerApi
   search: ApiClient.SearchControllerApi
+  data: ApiClient.DataControllerApi
 }
 
 /**
