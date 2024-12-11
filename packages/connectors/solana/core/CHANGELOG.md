@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.20](https://github.com/rarible/sdk/compare/v0.13.69-beta.19...v0.13.69-beta.20) (2024-12-11)
+
+**Note:** Version bump only for package @rarible/connector-solana
+
 ## [0.13.69-beta.19](https://github.com/rarible/sdk/compare/v0.13.69-beta.18...v0.13.69-beta.19) (2024-12-11)
 
 **Note:** Version bump only for package @rarible/connector-solana
