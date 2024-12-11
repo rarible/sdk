@@ -11,6 +11,7 @@ import { cancelSell } from "./cancel-sell"
 import { executeOrder } from "./execute-order"
 import { initializeMarket } from "./initialize-market"
 import { bid } from "./bid"
+import { cancelBid } from "./cancel-bid"
 
 export interface ISellRequest {
   signer: SolanaSigner
@@ -39,10 +40,15 @@ export interface IExecuteOrderRequest {
   extraAccountParams?: WnsAccountParams
 }
 
-export interface ICancelRequest {
+export interface ICancelSellRequest {
   signer: SolanaSigner
   orderAddress: PublicKey
   extraAccountParams?: WnsAccountParams
+}
+
+export interface ICancelBidRequest {
+  signer: SolanaSigner
+  orderAddress: PublicKey
 }
 
 export interface IInitializeMarketRequest {
@@ -71,7 +77,9 @@ export interface IEclipseOrderSdk {
 
   bid(request: IBidRequest): Promise<PreparedTransaction>
 
-  cancel(request: ICancelRequest): Promise<PreparedTransaction>
+  cancelSell(request: ICancelSellRequest): Promise<PreparedTransaction>
+
+  cancelBid(request: ICancelBidRequest): Promise<PreparedTransaction>
 
   executeOrder(request: IExecuteOrderRequest): Promise<PreparedTransaction>
 
@@ -149,12 +157,24 @@ export class EclipseOrderSdk implements IEclipseOrderSdk {
     })
   }
 
-  async cancel(request: ICancelRequest): Promise<PreparedTransaction> {
+  async cancelSell(request: ICancelSellRequest): Promise<PreparedTransaction> {
     const instructions = await cancelSell({
       connection: this.connection,
       signer: request.signer,
       orderAddress: request.orderAddress,
       extraAccountParams: request.extraAccountParams,
+    })
+
+    return new PreparedTransaction(this.connection, instructions, request.signer, this.logger, () => {
+      this.logger.log("Cancelled order of", request.orderAddress.toString())
+    })
+  }
+
+  async cancelBid(request: ICancelBidRequest): Promise<PreparedTransaction> {
+    const instructions = await cancelBid({
+      connection: this.connection,
+      signer: request.signer,
+      orderAddress: request.orderAddress,
     })
 
     return new PreparedTransaction(this.connection, instructions, request.signer, this.logger, () => {

@@ -29,7 +29,7 @@ import type { CurrencyType } from "../../common/domain"
 import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import { getPreparedOrder } from "../solana/common/order"
 import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
-import { getNftContractAddress } from "../../common/utils"
+import { getNftContractAddress, isNativeToken } from "../../common/utils"
 import type { PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
 import { getCurrencies } from "../solana/common/currencies"
 import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
@@ -182,6 +182,12 @@ export class EclipseOrder {
   }
 
   async cancelBasic(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
+    const order = await this.apis.order.getValidatedOrderById({
+      id: request.orderId,
+    })
+
+    const isCancelBid = isNativeToken(order.make.type)
+
     const cancel = Action.create({
       id: "send-tx" as const,
       run: async (request: CancelOrderRequest) => {
@@ -190,14 +196,25 @@ export class EclipseOrder {
         })
         const orderAddress = new PublicKey(extractId(order.id))
 
-        const res = await (
-          await this.sdk.order.cancel({
-            signer: this.wallet!.provider,
-            orderAddress,
-          })
-        ).submit("processed")
+        if (isCancelBid) {
+          const res = await (
+            await this.sdk.order.cancelBid({
+              signer: this.wallet!.provider,
+              orderAddress,
+            })
+          ).submit("processed")
 
-        return new BlockchainSolanaTransaction(res, this.sdk, Blockchain.ECLIPSE)
+          return new BlockchainSolanaTransaction(res, this.sdk, Blockchain.ECLIPSE)
+        } else {
+          const res = await (
+            await this.sdk.order.cancelSell({
+              signer: this.wallet!.provider,
+              orderAddress,
+            })
+          ).submit("processed")
+
+          return new BlockchainSolanaTransaction(res, this.sdk, Blockchain.ECLIPSE)
+        }
       },
     })
 

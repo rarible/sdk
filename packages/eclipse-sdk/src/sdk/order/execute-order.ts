@@ -121,13 +121,15 @@ export async function executeOrder(
     .remainingAccounts(remainingAccounts)
     .instruction()
 
-  const instructions = [instruction]
+  const instructions = []
 
   instructions.push(
     ComputeBudgetProgram.setComputeUnitLimit({
       units: 850_000,
     }),
   )
+
+  instructions.push(instruction)
 
   return {
     instructions,

@@ -80,7 +80,7 @@ function createRaribleConfig(environment: RaribleSdkEnvironment): IRaribleSdkCon
         marketplaceMarker: "0x12345678900000000000000000000000000123456789face",
       },
       [WalletType.SOLANA]: {
-        eclipseMarketplaces: ["Rarim7DMoD45z1o25QWPsWvTdFSSEdxaxriwWZLLTic"],
+        eclipseMarketplaces: ["Rari4ReeeT8bhbsRGP5J8RBhTFXTAP7iMm7VHuNQTs5"],
       },
     },
   }
