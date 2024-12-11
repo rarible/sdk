@@ -1,4 +1,5 @@
 import type { AccountMeta, Connection } from "@solana/web3.js"
+import { ComputeBudgetProgram } from "@solana/web3.js"
 import { PublicKey, SystemProgram, SYSVAR_INSTRUCTIONS_PUBKEY } from "@solana/web3.js"
 import type { SolanaSigner } from "@rarible/solana-common"
 import { ASSOCIATED_TOKEN_PROGRAM_ID } from "@solana/spl-token"
@@ -67,8 +68,18 @@ export async function cancelSell(request: ICancelSellRequest): Promise<ITransact
     .remainingAccounts(remainingAccounts)
     .instruction()
 
+  const instructions = []
+
+  instructions.push(
+    ComputeBudgetProgram.setComputeUnitLimit({
+      units: 850_000,
+    }),
+  )
+
+  instructions.push(instruction)
+
   return {
-    instructions: [instruction],
+    instructions,
     signers: [],
   }
 }

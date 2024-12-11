@@ -71,13 +71,15 @@ export async function bid(request: IBidRequest): Promise<ITransactionPreparedIns
     })
     .instruction()
 
-  const instructions = [instruction]
+  const instructions = []
 
   instructions.push(
     ComputeBudgetProgram.setComputeUnitLimit({
       units: 850_000,
     }),
   )
+
+  instructions.push(instruction)
 
   return {
     instructions,

@@ -59,7 +59,7 @@ describe("eclipse order sdk", () => {
   test.skip("Should cancel sell order", async () => {
     const result = await createSellOrder(nftMint)
 
-    const cancelPrepare = await sdk.order.cancel({
+    const cancelPrepare = await sdk.order.cancelSell({
       signer: signerAndOwner,
       orderAddress: result.orderId!,
     })
@@ -81,7 +81,7 @@ describe("eclipse order sdk", () => {
 
     const buyTx = await buyPrepare.submit("max")
     expect(buyTx).toBeTruthy()
-    const buyTxConfirm = await sdk.confirmTransaction(result.txId, "finalized")
+    const buyTxConfirm = await sdk.confirmTransaction(buyTx.txId, "finalized")
     expect(buyTxConfirm).toBeTruthy()
   })
 
@@ -99,6 +99,32 @@ describe("eclipse order sdk", () => {
     expect(trx).toBeTruthy()
     const txConfirm = await sdk.confirmTransaction(trx.txId, "finalized")
     expect(txConfirm).toBeTruthy()
+  })
+
+  test.skip("Should cancel bid", async () => {
+    const prepare = await sdk.order.bid({
+      signer: signerAndOwner,
+      nftMint,
+      paymentMint: new PublicKey(ECLIPSE_NATIVE_CURRENCY_ADDRESS),
+      marketIdentifier,
+      price: new BigNumber(0.00001),
+      tokensAmount: 1,
+    })
+
+    const trx = await prepare.submit("max")
+    expect(trx).toBeTruthy()
+    const txConfirm = await sdk.confirmTransaction(trx.txId, "finalized")
+    expect(txConfirm).toBeTruthy()
+
+    const cancelPrepare = await sdk.order.cancelBid({
+      signer: signerAndOwner,
+      orderAddress: trx.orderId!,
+    })
+
+    const cancelTrx = await cancelPrepare.submit("max")
+    expect(cancelTrx).toBeTruthy()
+    const cancelTrxConfirm = await sdk.confirmTransaction(cancelTrx.txId, "finalized")
+    expect(cancelTrxConfirm).toBeTruthy()
   })
 
   test.skip("Should accept bid", async () => {
