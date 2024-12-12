@@ -3,6 +3,7 @@ import { ComputeBudgetProgram, PublicKey, SystemProgram, SYSVAR_INSTRUCTIONS_PUB
 import type { SolanaSigner } from "@rarible/solana-common"
 import { BN } from "@coral-xyz/anchor"
 import { ASSOCIATED_TOKEN_PROGRAM_ID, getTokenMetadata, TOKEN_2022_PROGRAM_ID } from "@solana/spl-token"
+import type { TokenMetadata } from "@solana/spl-token-metadata"
 import { getProgramInstanceRaribleMarketplace } from "../core/marketplace-program"
 import type { WnsAccountParams } from "../utils"
 import {
@@ -176,6 +177,12 @@ async function fillRemainingAccountWithRoyalties(
     return
   }
 
+  let accounts = fixForSpecificNFTs(metadata, paymentTokenProgram, paymentMint)
+  if (accounts.length > 0) {
+    remainingAccounts.push(...accounts)
+    return
+  }
+
   let hasRoyalties = false
   const creatorsInfo: { pubkey: PublicKey; percentage: number }[] = []
   let royaltyBasisPoints = 0
@@ -222,4 +229,32 @@ async function fillRemainingAccountWithRoyalties(
       })
     }
   }
+}
+
+function fixForSpecificNFTs(metadata: TokenMetadata, paymentTokenProgram: PublicKey, paymentMint: PublicKey) {
+  const remainingAccounts = []
+  // for these NFTs there is wrong creator Address in metadata,
+  // so we need to hardcode proper one
+  if (metadata?.symbol === "POD") {
+    const creatorAddress = new PublicKey("J5xffSinbAQw65TsphSZ8gfaNGAPEfNWL9wwzGNdm3PR")
+    remainingAccounts.push({
+      pubkey: creatorAddress,
+      isSigner: false,
+      isWritable: true,
+    })
+
+    const creatorPaymentTa = getAtaAddress(
+      paymentMint.toBase58(),
+      creatorAddress.toBase58(),
+      paymentTokenProgram.toBase58(),
+    )
+
+    remainingAccounts.push({
+      pubkey: creatorPaymentTa,
+      isSigner: false,
+      isWritable: true,
+    })
+  }
+
+  return remainingAccounts
 }
