@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-walletlink",
-  "version": "0.13.69-beta.20",
+  "version": "0.13.69-beta.21",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -16,7 +16,7 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/connector": "^0.13.69-beta.20",
+    "@rarible/connector": "^0.13.69-beta.21",
     "walletlink": "^2.4.1"
   },
   "peerDependencies": {
