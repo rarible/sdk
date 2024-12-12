@@ -1,5 +1,4 @@
 const path = require("path")
-const fs = require("fs")
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin")
 // import HtmlWebpackPlugin from "html-webpack-plugin"
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
@@ -19,12 +18,7 @@ module.exports = {
     },
     compress: true,
     historyApiFallback: true,
-    https: {
-      key: fs.readFileSync(path.join(__dirname, "./test-virtual.mattel.com-key.pem")),
-      cert: fs.readFileSync(path.join(__dirname, "./test-virtual.mattel.com.pem")),
-      // ca: fs.readFileSync(path.join(__dirname, "./server.key")),
-    },
-    port: 443,
+    port: 9000,
     open: true,
   },
   resolve: {

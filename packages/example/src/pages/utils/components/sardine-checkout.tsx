@@ -47,7 +47,6 @@ export function SardineCheckout() {
               itemId: toItemId(`${order.make.type.contract}:${order.make.type.tokenId}`),
             })
             const img = itemId.meta?.content.find(item => item["@type"] === "IMAGE")
-            console.log("before sardine purchase")
             const result = await connector.sardinePurchase({
               orderId,
               orderMaker: order.maker,
@@ -60,7 +59,6 @@ export function SardineCheckout() {
                 },
               },
             })
-            console.log("after sardine purchase")
             setComplete(result)
           } catch (e) {
             setError(JSON.stringify(e, null, "  "))

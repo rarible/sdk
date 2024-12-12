@@ -9,16 +9,16 @@ const devServerConfig: DevServerConfiguration = {
     directory: path.join(__dirname, "src", "public"),
   },
   compress: true,
-  port: 443,
-  server: {
-    type: "https",
-    options: {
-      key: fs.readFileSync(path.join(__dirname, "./test-virtual.mattel.com-key.pem")),
-      cert: fs.readFileSync(path.join(__dirname, "./test-virtual.mattel.com.pem")),
-      // ca: fs.readFileSync(path.join(__dirname, "./server.key")),
-    },
-  },
-  allowedHosts: "all", // разрешаем любой хост
+  port: 7492,
+  // port: 443,
+  // server: {
+  //   type: "https",
+  //   options: {
+  //     key: fs.readFileSync(path.join(__dirname, "./test-virtual.mattel.com-key.pem")),
+  //     cert: fs.readFileSync(path.join(__dirname, "./test-virtual.mattel.com.pem")),
+  // },
+  // },
+  // allowedHosts: "all", // разрешаем любой хост
   historyApiFallback: true,
 }
 

@@ -284,7 +284,7 @@ export const auth0Login = async ({
 async function isLoggedInPromise(magic: InstanceWithExtensions<SDKBase, (FlowExtension | OpenIdExtension)[]>) {
   let handleTimeout: ReturnType<typeof setTimeout>
   const timeoutPromise = new Promise((_resolve, reject) => {
-    handleTimeout = setTimeout(() => reject(new Error("Session Checking Timed Out")), 60000)
+    handleTimeout = setTimeout(() => reject(new Error("Session Checking Timed Out")), 10000)
   })
   return Promise.race([magic.user.isLoggedIn(), timeoutPromise]).then(result => {
     clearTimeout(handleTimeout)
