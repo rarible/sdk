@@ -16,11 +16,11 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/api-client": "1.113.102",
+    "@rarible/api-client": "1.115.0",
     "@rarible/ethereum-sdk-test-common": "^0.13.69-beta.20",
     "@rarible/flow-test-common": "~0.6.0-beta.0",
     "@rarible/sdk-wallet": "^0.13.69-beta.20",
-    "@rarible/types": "~0.10.0-beta.3",
+    "@rarible/types": "~0.10.0-beta.4",
     "bignumber.js": "^9.0.1"
   },
   "devDependencies": {

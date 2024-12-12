@@ -54,6 +54,8 @@ import { fivireTestnetConfig } from "./fivire-testnet"
 import { shapeMainnetConfig } from "./shape"
 import { shapeTestnetConfig } from "./shape-testnet"
 import { berachainTestnetConfig } from "./berachain-testnet"
+import { telosTestnetConfig } from "./telos-testnet"
+import { telosConfig } from "./telos";
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   mainnet: mainnetConfig,
@@ -110,6 +112,8 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   shape: shapeMainnetConfig,
   "shape-testnet": shapeTestnetConfig,
   "berachain-testnet": berachainTestnetConfig,
+  "telos-testnet": telosTestnetConfig,
+  telos: telosConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {

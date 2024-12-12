@@ -7248,10 +7248,10 @@
   dependencies:
     callable-instance "^2.0.0"
 
-"@rarible/api-client@1.113.102":
-  version "1.113.102"
-  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-1.113.102.tgz#5e75be71f0cf2d9d3b99f5f56be09c456a4bb15d"
-  integrity sha512-UXOajgaupRx8/Bp9NDhlfU4hrnepwgUVPK0qVvJrl9pV0JYwYbX7NLdcChBB0fRs0bpbrN2G3F9blU05q9ORvA==
+"@rarible/api-client@1.115.0":
+  version "1.115.0"
+  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-1.115.0.tgz#085a9d46cacc38befa86e1d538c2532d9dd1920a"
+  integrity sha512-KGDJ3lCx+UW/2NfsYMHAtnbd1kpqOapMoX85TvJD2S9ebCTcMkQF+0RY7MRJWJdNvLoQIjUnYETDNpj+kH0/kA==
 
 "@rarible/eslint-config-react@~0.10.0-alpha.37":
   version "0.10.0-alpha.37"
@@ -7408,12 +7408,12 @@
   dependencies:
     "@rarible/utils" "^0.10.0-beta.2"
 
-"@rarible/types@~0.10.0-beta.3":
-  version "0.10.0-beta.3"
-  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.10.0-beta.3.tgz#34a5571f17ae95a7a661b3fe20c3333f0839cdf4"
-  integrity sha512-qno90XhQ4vvOsD+IQA5iX2w6tyN24cqMKp0S6vRcPbKS5IuwkG3ILlxNtMJmfC7tSEHg7CKkFBnPUPDPEQrj/g==
+"@rarible/types@~0.10.0-beta.4":
+  version "0.10.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.10.0-beta.4.tgz#65fe5d9a789e7147d7e5cf25e2d999c2316c0ea9"
+  integrity sha512-iLrGNrNDXiUhLM7oZTigaZmprqrb3Guq4ql6RGlCVizWwyXbQ387NcnzNKFZWHMsjUXnEMBvTlh1DGVmowrxKQ==
   dependencies:
-    "@rarible/utils" "^0.10.0-beta.3"
+    "@rarible/utils" "^0.10.0-beta.4"
 
 "@rarible/utils@^0.10.0-beta.2", "@rarible/utils@~0.10.0-beta.2":
   version "0.10.0-beta.2"
@@ -7424,10 +7424,10 @@
     generic-type-guard "^3.7.2"
     ts-custom-error "^3.3.1"
 
-"@rarible/utils@^0.10.0-beta.3":
-  version "0.10.0-beta.3"
-  resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.10.0-beta.3.tgz#83f00126b4f9c1780c80e16e4114910f5f5f875d"
-  integrity sha512-RTUDoB8adSNhtwqhYH5ds5oXuIBgorS+1dUcL0y2r10YyxeA7yey7OgVZPaasQ21GUGqgkS8ZWBW0p+l6sTXBg==
+"@rarible/utils@^0.10.0-beta.4":
+  version "0.10.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.10.0-beta.4.tgz#eefe9234cd704986bf373874c461f733d0f5a37b"
+  integrity sha512-Ii0iLwr/bztP+llyqLuW6iLDx5Hks5uGsOKiE5dPdIetZc5oOOJkHP00qMVrc8W4ona0bxu6wC5RCyVrloGDdA==
   dependencies:
     bignumber.js "^9.0.0"
     generic-type-guard "^3.7.2"
@@ -24354,7 +24354,7 @@ string-length@^4.0.1:
     char-regex "^1.0.2"
     strip-ansi "^6.0.0"
 
-"string-width-cjs@npm:string-width@^4.2.0":
+"string-width-cjs@npm:string-width@^4.2.0", "string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.0.0, string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.2, string-width@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -24371,15 +24371,6 @@ string-width@^1.0.1:
     code-point-at "^1.0.0"
     is-fullwidth-code-point "^1.0.0"
     strip-ansi "^3.0.0"
-
-"string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.0.0, string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.2, string-width@^4.2.3:
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
-  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
-  dependencies:
-    emoji-regex "^8.0.0"
-    is-fullwidth-code-point "^3.0.0"
-    strip-ansi "^6.0.1"
 
 string-width@^5.0.1, string-width@^5.1.2:
   version "5.1.2"
@@ -24516,7 +24507,7 @@ stringify-object@^3.3.0:
     is-obj "^1.0.1"
     is-regexp "^1.0.0"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -24536,13 +24527,6 @@ strip-ansi@^4.0.0:
   integrity sha512-4XaJ2zQdCzROZDivEVIDPkcQn8LMFSa8kj8Gxb/Lnwzv9A8VctNZ+lfivC/sV3ivW8ElJTERXZoPBRrZKkNKow==
   dependencies:
     ansi-regex "^3.0.0"
-
-strip-ansi@^6.0.0, strip-ansi@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
-  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
-  dependencies:
-    ansi-regex "^5.0.1"
 
 strip-ansi@^7.0.1:
   version "7.1.0"
@@ -27398,7 +27382,7 @@ wordwrap@^1.0.0:
   resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-1.0.0.tgz#27584810891456a4171c8d0226441ade90cbcaeb"
   integrity sha1-J1hIEIkUVqQXHI0CJkQa3pDLyus=
 
-"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0":
+"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
@@ -27411,15 +27395,6 @@ wrap-ansi@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-6.2.0.tgz#e9393ba07102e6c91a3b221478f0257cd2856e53"
   integrity sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==
-  dependencies:
-    ansi-styles "^4.0.0"
-    string-width "^4.1.0"
-    strip-ansi "^6.0.0"
-
-wrap-ansi@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
-  integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
   dependencies:
     ansi-styles "^4.0.0"
     string-width "^4.1.0"
