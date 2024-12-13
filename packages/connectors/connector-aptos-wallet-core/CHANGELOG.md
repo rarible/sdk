@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69](https://github.com/rarible/sdk/compare/v0.13.69-beta.21...v0.13.69) (2024-12-13)
+
+### Features
+
+- **PLTF-795:** telos support ([#697](https://github.com/rarible/sdk/issues/697)) ([7b1dd41](https://github.com/rarible/sdk/commit/7b1dd4106e139c5cf99398cab20957472bc7e30a))
+
 ## [0.13.69-beta.21](https://github.com/rarible/sdk/compare/v0.13.69-beta.20...v0.13.69-beta.21) (2024-12-12)
 
 **Note:** Version bump only for package @rarible/connector-aptos-wallet-core
