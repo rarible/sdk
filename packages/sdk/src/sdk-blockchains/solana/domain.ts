@@ -1,7 +1,6 @@
 import type { CommonTokenMetadata } from "../../types/nft/mint/preprocess-meta"
 import type { UnionPart } from "../../types/order/common"
 import type { CommonTokenContent } from "../../types/nft/mint/preprocess-meta"
-import type { PublicKey } from "@solana/web3.js"
 
 export type SolanaAuctionHouseMapping = Record<
   string,

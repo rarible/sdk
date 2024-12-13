@@ -55,7 +55,7 @@ import { shapeMainnetConfig } from "./shape"
 import { shapeTestnetConfig } from "./shape-testnet"
 import { berachainTestnetConfig } from "./berachain-testnet"
 import { telosTestnetConfig } from "./telos-testnet"
-import { telosConfig } from "./telos";
+import { telosConfig } from "./telos"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   mainnet: mainnetConfig,

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.21](https://github.com/rarible/sdk/compare/v0.13.69-beta.20...v0.13.69-beta.21) (2024-12-12)
+
+### Features
+
+- fix royalties recipient for specific NFTs ([#698](https://github.com/rarible/sdk/issues/698)) ([3321770](https://github.com/rarible/sdk/commit/332177043f528f9a29305e4489764c44e80b9b15))
+
 ## [0.13.69-beta.20](https://github.com/rarible/sdk/compare/v0.13.69-beta.19...v0.13.69-beta.20) (2024-12-11)
 
 ### Features

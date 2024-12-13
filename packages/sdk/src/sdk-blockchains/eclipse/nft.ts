@@ -6,13 +6,13 @@ import { toBigNumber } from "@rarible/types"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
 import type { EclipseSdk } from "@rarible/eclipse-sdk"
+import { Blockchain } from "@rarible/api-client"
 import type { BurnRequest, BurnResponse, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { IApisSdk } from "../../domain"
 import type { PrepareTransferRequest, PrepareTransferResponse, TransferRequest } from "../../types/nft/transfer/domain"
 import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
 import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
 import { extractPublicKey } from "../solana/common/address-converters"
-import { Blockchain } from "@rarible/api-client"
 
 export class EclipseNft {
   constructor(

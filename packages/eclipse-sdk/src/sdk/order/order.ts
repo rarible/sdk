@@ -1,5 +1,5 @@
 import type { Connection } from "@solana/web3.js"
-import { PublicKey } from "@solana/web3.js"
+import type { PublicKey } from "@solana/web3.js"
 import { BigNumber } from "@rarible/utils"
 import type { SolanaSigner } from "@rarible/solana-common"
 import type { DebugLogger } from "../../logger/debug-logger"

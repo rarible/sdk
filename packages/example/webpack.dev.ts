@@ -1,5 +1,5 @@
 import path from "node:path"
-import fs from "fs"
+// import fs from "fs"
 import type { Configuration as DevServerConfiguration } from "webpack-dev-server"
 import { merge } from "webpack-merge"
 import { baseWebpackConfig } from "./webpack.base"
@@ -18,7 +18,7 @@ const devServerConfig: DevServerConfiguration = {
   //     cert: fs.readFileSync(path.join(__dirname, "./test-virtual.mattel.com.pem")),
   // },
   // },
-  // allowedHosts: "all", // разрешаем любой хост
+  // allowedHosts: "all",
   historyApiFallback: true,
 }
 
