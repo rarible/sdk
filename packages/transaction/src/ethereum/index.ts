@@ -137,6 +137,12 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
         return `https://shapescan.xyz/tx/${this.hash()}`
       case "shape-testnet":
         return `https://explorer-sepolia.shape.network/tx/${this.hash()}`
+      case "berachain-testnet":
+        return `https://bartio.beratrail.io/tx/${this.hash()}`
+      case "telos-testnet":
+        return `https://testnet.teloscan.io/tx/${this.hash()}`
+      case "telos":
+        return `https://teloscan.io/tx/${this.hash()}`
       default:
         throw new Error("Unsupported transaction network")
     }

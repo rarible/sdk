@@ -29,7 +29,7 @@ function getDeployRequest(data: Record<string, any>) {
       symbol: data["symbol"],
       baseURI: data["baseURI"],
       contractURI: data["contractURI"],
-      isPublic: !!data["private"],
+      isPublic: !data["private"],
       operators: [],
     } as CreateCollectionRequestSimplified
   }
@@ -44,7 +44,7 @@ function getDeployRequest(data: Record<string, any>) {
         authors: data["authors"],
         license: data["license"],
         homepage: data["homepage"],
-        isPublic: !!data["private"],
+        isPublic: !data["private"],
       } as CreateCollectionRequestSimplified
     case WalletType.SOLANA:
       return {
@@ -92,7 +92,7 @@ export function DeployPage() {
               if (formData["blockchain"] === Blockchain.ETHEREUM) {
                 formData.blockchain = (connection.state as any)?.connection.blockchain
               }
-              console.log("connection", connection, getDeployRequest(formData))
+              console.log("connection", connection, getDeployRequest(formData), formData)
 
               setComplete(await connection.sdk.nft.createCollection(getDeployRequest(formData)))
             } catch (e) {

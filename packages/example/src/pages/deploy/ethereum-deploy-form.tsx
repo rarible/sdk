@@ -26,6 +26,6 @@ export function EthereumDeployForm({ form }: IEthereumDeployFormProps) {
   )
 }
 
-const DEFAULT_URI = "https://example.com"
+const DEFAULT_URI = "ipfs://"
 const DEFAULT_COLLECTION_NAME = "Rarible Example collection"
 const DEFAULT_COLLECTION_SYMBOL = "DFL"

@@ -35,6 +35,7 @@ const EVM_WARN_MESSAGES = [
   "Link Window Closed",
   "nonce too low",
   "transaction would cause overdraft",
+  "PromiEvent timeout",
 ].map(msg => msg.toLowerCase())
 
 export const CANCEL_MESSAGES = [
@@ -84,6 +85,7 @@ export const CANCEL_MESSAGES = [
   "ยกเลิกแล้ว",
   "用户取消了操作",
   "签署交易已取消",
+  "授权被拒绝",
   "membatalkan",
   "La transaction de signature a été annulée",
   "User denied account authorization",
@@ -95,6 +97,7 @@ export const CANCEL_MESSAGES = [
   "Reject by the user",
   "User closed modal",
   "Permission denied",
+  "Approval Denied",
   "The requested account and/or method has not been authorized by the user",
   "user did not approve",
   "Der Nutzer hat die Anfrage abgelehnt",
@@ -196,7 +199,9 @@ export function isTezosWarning(err: any): boolean {
 }
 
 export function isSolanaWarning(error: any): boolean {
-  return error?.name === "User rejected the request." || error?.error?.code === 4001
+  return (
+    error?.name === "User rejected the request." || error?.error?.code === 4001 || error?.message === "Approval Denied"
+  )
 }
 
 export const FLOW_WARN_MESSAGES = ["[Error Code: 1007] invalid proposal key", "User rejected signature"]
