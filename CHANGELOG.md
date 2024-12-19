@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.71](https://github.com/rarible/sdk/compare/v0.13.70...v0.13.71) (2024-12-19)
+
+### Features
+
+- aptos balance from blockchain ([#699](https://github.com/rarible/sdk/issues/699)) ([d0db324](https://github.com/rarible/sdk/commit/d0db324dfd02475a1d7eedef02ed95bce4adc885))
+
 ## [0.13.70](https://github.com/rarible/sdk/compare/v0.13.69...v0.13.70) (2024-12-17)
 
 ### Features
