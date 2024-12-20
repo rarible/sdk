@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.72](https://github.com/rarible/sdk/compare/v0.13.71...v0.13.72) (2024-12-20)
+
+### Reverts
+
+- Revert "feat: aptos balance from blockchain (#699)" ([2eb5255](https://github.com/rarible/sdk/commit/2eb5255f1ac35167188a1b223c632904455d9032)), closes [#699](https://github.com/rarible/sdk/issues/699)
+
 ## [0.13.71](https://github.com/rarible/sdk/compare/v0.13.70...v0.13.71) (2024-12-19)
 
 ### Features
