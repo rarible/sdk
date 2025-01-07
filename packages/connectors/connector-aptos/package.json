@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-aptos",
-  "version": "0.13.70",
+  "version": "0.13.73",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",

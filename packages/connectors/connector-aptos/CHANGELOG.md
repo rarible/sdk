@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.73](https://github.com/rarible/sdk/compare/v0.13.72...v0.13.73) (2025-01-07)
+
+### Features
+
+- match chain types ([#700](https://github.com/rarible/sdk/issues/700)) ([cf52a33](https://github.com/rarible/sdk/commit/cf52a33839bd2f054d3c852d03c9a134405ceed1))
+
 ## [0.13.70](https://github.com/rarible/sdk/compare/v0.13.69...v0.13.70) (2024-12-17)
 
 **Note:** Version bump only for package @rarible/connector-aptos
