@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.75](https://github.com/rarible/sdk/compare/v0.13.74...v0.13.75) (2025-01-08)
+
+### Features
+
+- improvments for collection offer ([#702](https://github.com/rarible/sdk/issues/702)) ([2b1828f](https://github.com/rarible/sdk/commit/2b1828f3d0638b04aed9e71d3ea3fffd7b3e04c6))
+
 ## [0.13.74](https://github.com/rarible/sdk/compare/v0.13.73...v0.13.74) (2025-01-08)
 
 ### Features

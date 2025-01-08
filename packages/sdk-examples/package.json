@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-examples",
-  "version": "0.13.74",
+  "version": "0.13.75",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -22,7 +22,7 @@
     "@rarible/api-client": "1.115.0",
     "@rarible/estimate-middleware": "~0.9.6",
     "@rarible/ethers-ethereum": "^0.13.73",
-    "@rarible/sdk": "^0.13.74",
+    "@rarible/sdk": "^0.13.75",
     "@rarible/sdk-wallet": "^0.13.73",
     "@rarible/test-provider": "~0.5.4",
     "@rarible/types": "~0.10.0-beta.5",
