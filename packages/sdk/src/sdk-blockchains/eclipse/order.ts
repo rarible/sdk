@@ -2,7 +2,7 @@ import type { Maybe } from "@rarible/types"
 import { toBigNumber, toItemId, toOrderId, toUnionContractAddress } from "@rarible/types"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
 import { Action } from "@rarible/action"
-import type { Order, OrderId } from "@rarible/api-client"
+import type { Collection, Order, OrderId } from "@rarible/api-client"
 import { Blockchain, OrderStatus } from "@rarible/api-client"
 import { PublicKey } from "@solana/web3.js"
 import type { EclipseSdk } from "@rarible/eclipse-sdk"
@@ -135,9 +135,14 @@ export class EclipseOrder {
       throw new Error("Eclipse wallet not provided")
     }
 
-    let item: Item | undefined
+    let nftOrCollection: Item | Collection | undefined
+    let collectionId
     if ("itemId" in prepare) {
-      item = await this.apis.item.getItemById({ itemId: prepare.itemId })
+      nftOrCollection = await this.apis.item.getItemById({ itemId: prepare.itemId })
+      collectionId = nftOrCollection.collection
+    } else if ("collectionId" in prepare) {
+      nftOrCollection = await this.apis.collection.getCollectionById({ collection: prepare.collectionId })
+      collectionId = nftOrCollection.id
     }
 
     const submit = Action.create({
@@ -149,7 +154,7 @@ export class EclipseOrder {
           await this.sdk.order.bid({
             marketIdentifier: getMarketplace(this.config),
             signer: this.wallet!.provider,
-            nftMint: item ? extractPublicKey(item.id) : undefined,
+            nftMint: nftOrCollection ? extractPublicKey(nftOrCollection.id) : undefined,
             paymentMint: new PublicKey(ECLIPSE_NATIVE_CURRENCY_ADDRESS),
             price: new BigNumber(request.price).multipliedBy(amount),
             tokensAmount: amount,
@@ -161,8 +166,8 @@ export class EclipseOrder {
     })
 
     return {
-      multiple: item ? parseFloat(item.supply) > 1 : false,
-      maxAmount: item ? toBigNumber(item.supply) : toBigNumber(1),
+      multiple: nftOrCollection && "supply" in nftOrCollection ? parseFloat(nftOrCollection.supply) > 1 : false,
+      maxAmount: nftOrCollection && "supply" in nftOrCollection ? toBigNumber(nftOrCollection?.supply) : toBigNumber(1),
       originFeeSupport: OriginFeeSupport.NONE,
       payoutsSupport: PayoutsSupport.NONE,
       maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
@@ -173,7 +178,7 @@ export class EclipseOrder {
       shouldTransferFunds: false,
       submit,
       nftData: {
-        nftCollection: item?.collection ? toUnionContractAddress(item.collection) : undefined,
+        nftCollection: collectionId ? toUnionContractAddress(collectionId) : undefined,
       },
     }
   }

@@ -663,6 +663,10 @@
           "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         },
         {
+          "name": "group",
+          "optional": true
+        },
+        {
           "name": "event_authority",
           "pda": {
             "seeds": [
@@ -724,7 +728,8 @@
           "signer": true
         },
         {
-          "name": "market_identifier"
+          "name": "market_identifier",
+          "signer": true
         },
         {
           "name": "market",
@@ -1019,6 +1024,7 @@
         },
         {
           "name": "market",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -1257,23 +1263,38 @@
     },
     {
       "code": 6006,
+      "name": "InvalidFeeAccount",
+      "msg": "Invalid Fee Account"
+    },
+    {
+      "code": 6007,
       "name": "InvalidRoyaltiesAccount",
       "msg": "Invalid Royalties Account"
     },
     {
-      "code": 6007,
+      "code": 6008,
       "name": "InvalidRoyaltyPercentage",
       "msg": "Invalid Royalties Percentage"
     },
     {
-      "code": 6008,
+      "code": 6009,
       "name": "TotalRoyaltyPercentageExceeded",
       "msg": "Total Royalty Percentage Exceeded"
     },
     {
-      "code": 6009,
+      "code": 6010,
       "name": "NotEnoughRemainingAccounts",
       "msg": "Not Enough Remaining Accounts"
+    },
+    {
+      "code": 6011,
+      "name": "OrderMintMissMatchMintOrGroupMint",
+      "msg": "Order Mint Miss Match Mint Or GroupMint"
+    },
+    {
+      "code": 6012,
+      "name": "OrderGroupMismatch",
+      "msg": "Order Group Mismatch"
     }
   ],
   "types": [

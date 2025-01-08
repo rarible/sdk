@@ -1,8 +1,15 @@
-import type { AccountMeta, Connection } from "@solana/web3.js"
+import type { AccountMeta, Commitment, Connection } from "@solana/web3.js"
 import { ComputeBudgetProgram, PublicKey, SystemProgram, SYSVAR_INSTRUCTIONS_PUBKEY } from "@solana/web3.js"
 import type { SolanaSigner } from "@rarible/solana-common"
 import { BN } from "@coral-xyz/anchor"
-import { ASSOCIATED_TOKEN_PROGRAM_ID, getTokenMetadata, TOKEN_2022_PROGRAM_ID } from "@solana/spl-token"
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  ExtensionType,
+  getExtensionData,
+  getMint,
+  getTokenMetadata,
+  TOKEN_2022_PROGRAM_ID,
+} from "@solana/spl-token"
 import type { TokenMetadata } from "@solana/spl-token-metadata"
 import { getProgramInstanceRaribleMarketplace } from "../core/marketplace-program"
 import type { WnsAccountParams } from "../utils"
@@ -18,7 +25,7 @@ import {
 import type { ITransactionPreparedInstructions } from "../../common/transactions"
 import type { DebugLogger } from "../../logger/debug-logger"
 
-export interface IFillOrderRequest {
+export interface IExecuteOrderRequest {
   connection: Connection
   signer: SolanaSigner
   orderAddress: PublicKey
@@ -28,7 +35,7 @@ export interface IFillOrderRequest {
 }
 
 export async function executeOrder(
-  request: IFillOrderRequest,
+  request: IExecuteOrderRequest,
   logger: DebugLogger,
 ): Promise<ITransactionPreparedInstructions> {
   const marketProgram = getProgramInstanceRaribleMarketplace(request.connection)
@@ -95,6 +102,8 @@ export async function executeOrder(
 
   await fillRemainingAccountWithRoyalties(request, remainingAccounts, paymentTokenProgram, order.paymentMint, logger)
 
+  const group = await getTokenGroup(request.connection, nftMint, "confirmed", TOKEN_2022_PROGRAM_ID)
+
   const instruction = await marketProgram.methods
     .fillOrder(new BN(request.amountToFill))
     .accountsStrict({
@@ -118,6 +127,7 @@ export async function executeOrder(
       sysvarInstructions: SYSVAR_INSTRUCTIONS_PUBKEY,
       feeRecipient,
       feeRecipientTa,
+      group,
     })
     .remainingAccounts(remainingAccounts)
     .instruction()
@@ -136,6 +146,25 @@ export async function executeOrder(
     instructions,
     signers: [],
   }
+}
+
+async function getTokenGroup(
+  connection: Connection,
+  address: PublicKey,
+  commitment?: Commitment,
+  programId = TOKEN_2022_PROGRAM_ID,
+): Promise<PublicKey | null> {
+  const mintInfo = await getMint(connection, address, commitment, programId)
+  const data = getExtensionData(ExtensionType.GroupMemberPointer, mintInfo.tlvData)
+
+  if (data === null) {
+    return null
+  }
+
+  const authorityData = data.slice(0, 32)
+
+  const groupData = data.slice(32, 32 + 32)
+  return new PublicKey(groupData)
 }
 
 function parseCreatorInfo(
@@ -164,7 +193,7 @@ function parseCreatorInfo(
 }
 
 async function fillRemainingAccountWithRoyalties(
-  request: IFillOrderRequest,
+  request: IExecuteOrderRequest,
   remainingAccounts: AccountMeta[],
   paymentTokenProgram: PublicKey,
   paymentMint: PublicKey,
