@@ -40,13 +40,25 @@ function supportedCurrencies(): CurrencyType[] {
   return [{ blockchain: Blockchain.ECLIPSE, type: "NATIVE" }]
 }
 
-function getMintId(order: Order): PublicKey {
+function getMintId(order: Order): [PublicKey, boolean] {
+  let isCollectionOffer = false
+  let mintId: PublicKey
+
   if (order.make.type["@type"] === "NFT") {
-    return extractPublicKey(order.make.type.itemId)
+    mintId = extractPublicKey(order.make.type.itemId)
   } else if (order.take.type["@type"] === "NFT") {
-    return extractPublicKey(order.take.type.itemId)
+    mintId = extractPublicKey(order.take.type.itemId)
+  } else if (order.make.type["@type"] === "NFT_OF_COLLECTION") {
+    mintId = extractPublicKey(order.make.type.collectionId)
+    isCollectionOffer = true
+  } else if (order.take.type["@type"] === "NFT_OF_COLLECTION") {
+    mintId = extractPublicKey(order.take.type.collectionId)
+    isCollectionOffer = true
+  } else {
+    throw new Error("Unsupported type")
   }
-  throw new Error("Unsupported type")
+
+  return [mintId, isCollectionOffer]
 }
 
 function getMarketplace(config: IEclipseSdkConfig) {
@@ -242,7 +254,7 @@ export class EclipseOrder {
     }
 
     const order = await getPreparedOrder(request, this.apis)
-    const nftMint = getMintId(order)
+    const [nftMint, isCollectionOffer] = getMintId(order)
 
     const orderAddress = new PublicKey(extractId(order.id))
 
@@ -255,10 +267,22 @@ export class EclipseOrder {
     const submit = Action.create({
       id: "send-tx" as const,
       run: async (buyRequest: FillRequest) => {
+        let nftMintAddress = nftMint
+        if (isCollectionOffer) {
+          if (
+            !buyRequest.itemId ||
+            (Array.isArray(buyRequest.itemId) && (buyRequest.itemId.length === 0 || buyRequest.itemId.length > 1))
+          ) {
+            throw new Error("Fill request should contain exactly one itemId for accepting collection bid")
+          }
+
+          nftMintAddress = extractPublicKey(Array.isArray(buyRequest.itemId) ? buyRequest.itemId[0] : buyRequest.itemId)
+        }
+
         const prepare1 = await this.sdk.order.executeOrder({
           signer: this.wallet!.provider,
           orderAddress,
-          nftMint,
+          nftMint: nftMintAddress,
           amountToFill: buyRequest.amount,
         })
 
