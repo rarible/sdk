@@ -70,11 +70,13 @@ export class EclipseOrder {
     this.sell = this.sell.bind(this)
     this.sellBasic = this.sellBasic.bind(this)
     this.cancelBasic = this.cancelBasic.bind(this)
+    this.buy = this.buy.bind(this)
     this.buyBasic = this.buyBasic.bind(this)
     this.fill = this.fill.bind(this)
     this.bid = this.bid.bind(this)
     this.bidBasic = this.bidBasic.bind(this)
     this.cancelBasic = this.cancelBasic.bind(this)
+    this.acceptBid = this.acceptBid.bind(this)
     this.acceptBidBasic = this.acceptBidBasic.bind(this)
   }
 
@@ -82,6 +84,8 @@ export class EclipseOrder {
     if (!this.wallet) {
       throw new Error("Eclipse wallet not provided")
     }
+
+    const marketplace = await this.sdk.order.getMarketPlace({ marketIdentifier: getMarketplace(this.config) })
 
     const submit = Action.create({
       id: "send-tx" as const,
@@ -95,7 +99,7 @@ export class EclipseOrder {
       payoutsSupport: PayoutsSupport.NONE,
       maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
       supportedCurrencies: supportedCurrencies(),
-      baseFee: 0,
+      baseFee: marketplace.feeBps.toNumber(),
       supportsExpirationDate: false,
       shouldTransferNft: false,
       submit: submit,
@@ -156,8 +160,6 @@ export class EclipseOrder {
       },
     })
 
-    const marketplace = await this.sdk.order.getMarketPlace({ marketIdentifier: getMarketplace(this.config) })
-
     return {
       multiple: item ? parseFloat(item.supply) > 1 : false,
       maxAmount: item ? toBigNumber(item.supply) : toBigNumber(1),
@@ -165,7 +167,7 @@ export class EclipseOrder {
       payoutsSupport: PayoutsSupport.NONE,
       maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
       supportedCurrencies: getCurrencies(),
-      baseFee: marketplace.feeBps.toNumber(),
+      baseFee: 0,
       getConvertableValue: _ => Promise.resolve(undefined),
       supportsExpirationDate: false,
       shouldTransferFunds: false,
@@ -221,7 +223,15 @@ export class EclipseOrder {
     return cancel(request)
   }
 
-  async fill(request: PrepareFillRequest): Promise<PrepareFillResponse> {
+  async buy(request: PrepareFillRequest): Promise<PrepareFillResponse> {
+    return this.fill(request, false)
+  }
+
+  async acceptBid(request: PrepareFillRequest): Promise<PrepareFillResponse> {
+    return this.fill(request, true)
+  }
+
+  async fill(request: PrepareFillRequest, shouldPayBaseFee: boolean): Promise<PrepareFillResponse> {
     if (!this.wallet) {
       throw new Error("Solana wallet not provided")
     }
@@ -274,12 +284,16 @@ export class EclipseOrder {
       },
     }).after(tx => new BlockchainSolanaTransaction(tx, this.sdk, Blockchain.ECLIPSE))
 
-    const marketplace = await this.sdk.order.getMarketPlace({ marketIdentifier: getMarketplace(this.config) })
+    let baseFee = 0
+    if (shouldPayBaseFee) {
+      const marketplace = await this.sdk.order.getMarketPlace({ marketIdentifier: getMarketplace(this.config) })
+      baseFee = marketplace.feeBps.toNumber()
+    }
 
     return {
       multiple: parseFloat(item.supply.toString()) > 1,
       maxAmount: order.makeStock,
-      baseFee: marketplace.feeBps.toNumber(),
+      baseFee,
       supportsPartialFill: false,
       originFeeSupport: OriginFeeSupport.NONE,
       payoutsSupport: PayoutsSupport.NONE,
@@ -293,12 +307,12 @@ export class EclipseOrder {
   }
 
   async buyBasic(request: BuySimplifiedRequest): Promise<IBlockchainTransaction> {
-    const response = await this.fill(request)
+    const response = await this.buy(request)
     return response.submit(request)
   }
 
   async acceptBidBasic(request: AcceptBidSimplifiedRequest): Promise<IBlockchainTransaction> {
-    const response = await this.fill(request)
+    const response = await this.acceptBid(request)
     return response.submit(request)
   }
 }
