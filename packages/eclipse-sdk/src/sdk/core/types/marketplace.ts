@@ -519,6 +519,10 @@ export type Marketplace = {
           address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         },
         {
+          name: "group"
+          optional: true
+        },
+        {
           name: "eventAuthority"
           pda: {
             seeds: [
@@ -552,6 +556,7 @@ export type Marketplace = {
         },
         {
           name: "marketIdentifier"
+          signer: true
         },
         {
           name: "market"
@@ -768,6 +773,7 @@ export type Marketplace = {
         },
         {
           name: "market"
+          writable: true
           pda: {
             seeds: [
               {
@@ -912,23 +918,38 @@ export type Marketplace = {
     },
     {
       code: 6006
+      name: "invalidFeeAccount"
+      msg: "Invalid Fee Account"
+    },
+    {
+      code: 6007
       name: "invalidRoyaltiesAccount"
       msg: "Invalid Royalties Account"
     },
     {
-      code: 6007
+      code: 6008
       name: "invalidRoyaltyPercentage"
       msg: "Invalid Royalties Percentage"
     },
     {
-      code: 6008
+      code: 6009
       name: "totalRoyaltyPercentageExceeded"
       msg: "Total Royalty Percentage Exceeded"
     },
     {
-      code: 6009
+      code: 6010
       name: "notEnoughRemainingAccounts"
       msg: "Not Enough Remaining Accounts"
+    },
+    {
+      code: 6011
+      name: "orderMintMissMatchMintOrGroupMint"
+      msg: "Order Mint Miss Match Mint Or GroupMint"
+    },
+    {
+      code: 6012
+      name: "orderGroupMismatch"
+      msg: "Order Group Mismatch"
     },
   ]
   types: [
