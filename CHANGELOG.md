@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.74](https://github.com/rarible/sdk/compare/v0.13.73...v0.13.74) (2025-01-08)
+
+### Features
+
+- change baseFee logic ([#701](https://github.com/rarible/sdk/issues/701)) ([e1cbb66](https://github.com/rarible/sdk/commit/e1cbb66ae9420cea2f1a03b285389f3240b7dfd4))
+
 ## [0.13.73](https://github.com/rarible/sdk/compare/v0.13.72...v0.13.73) (2025-01-07)
 
 ### Features
