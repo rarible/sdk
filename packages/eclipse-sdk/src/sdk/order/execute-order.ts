@@ -161,8 +161,6 @@ async function getTokenGroup(
     return null
   }
 
-  const authorityData = data.slice(0, 32)
-
   const groupData = data.slice(32, 32 + 32)
   return new PublicKey(groupData)
 }
