@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.76](https://github.com/rarible/sdk/compare/v0.13.75...v0.13.76) (2025-01-09)
+
+### Features
+
+- support NFT_OF_COLLECTION ([#703](https://github.com/rarible/sdk/issues/703)) ([c43651c](https://github.com/rarible/sdk/commit/c43651ce19f05beee747082c0169dfa665087591))
+
 ## [0.13.75](https://github.com/rarible/sdk/compare/v0.13.74...v0.13.75) (2025-01-08)
 
 ### Features
