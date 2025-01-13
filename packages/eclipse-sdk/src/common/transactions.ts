@@ -2,9 +2,7 @@ import type {
   Commitment,
   Connection,
   PublicKey,
-  RpcResponseAndContext,
   SignatureStatus,
-  SimulatedTransactionResponse,
   TransactionInstruction,
   TransactionSignature,
 } from "@solana/web3.js"
@@ -73,6 +71,7 @@ export async function sendSignedTransaction(
   const rawTransaction = signedTransaction.serialize()
   const startTime = getUnixTs()
   let slot = 0
+
   const txId: TransactionSignature = await connection.sendRawTransaction(rawTransaction, {
     skipPreflight: true,
   })
@@ -88,6 +87,7 @@ export async function sendSignedTransaction(
       await sleep(500)
     }
   })()
+
   try {
     const confirmation = await awaitTransactionSignatureConfirmation(
       txId,
@@ -108,58 +108,14 @@ export async function sendSignedTransaction(
 
     slot = confirmation?.slot || 0
   } catch (err: any) {
-    logger?.error("Timeout Error caught", err)
-    if (err.timeout) {
-      throw new Error("Timed out awaiting confirmation on transaction")
-    }
-    let simulateResult: SimulatedTransactionResponse | null = null
-    try {
-      simulateResult = (await simulateTransaction(connection, initialTransaction, "single", logger)).value
-    } catch (e) {
-      logger?.error("Simulate Transaction error", e)
-    }
-    if (simulateResult && simulateResult.err) {
-      if (simulateResult.logs) {
-        for (let i = simulateResult.logs.length - 1; i >= 0; --i) {
-          const line = simulateResult.logs[i]
-          if (line.startsWith("Program log: ")) {
-            logger?.log(simulateResult.logs)
-            throw new Error("Transaction failed: " + line.slice("Program log: ".length))
-          }
-        }
-      }
-      throw new Error(JSON.stringify(simulateResult.err))
-    }
-    logger?.error("Got this far.")
+    logger?.error("Confirmation awaiting error caught", err)
+    throw err
   } finally {
     done = true
   }
 
   logger?.log("Latency (ms)", txId, getUnixTs() - startTime)
   return { txId, slot }
-}
-
-async function simulateTransaction(
-  connection: Connection,
-  transaction: Transaction,
-  commitment: Commitment,
-  logger?: DebugLogger,
-): Promise<RpcResponseAndContext<SimulatedTransactionResponse>> {
-  const anyConnection = connection as any
-  transaction.recentBlockhash = await anyConnection._recentBlockhash(anyConnection._disableBlockhashCaching)
-  const signData = transaction.serializeMessage()
-
-  const anyTransaction = transaction as any
-  const wireTransaction = anyTransaction._serialize(signData)
-  const encodedTransaction = wireTransaction.toString("base64")
-  const config = { encoding: "base64", commitment }
-  const args = [encodedTransaction, config]
-
-  const res = await anyConnection._rpcRequest("simulateTransaction", args, logger)
-  if (res.error) {
-    throw new Error("failed to simulate transaction: " + res.error.message)
-  }
-  return res.result
 }
 
 async function awaitTransactionSignatureConfirmation(
@@ -235,14 +191,10 @@ async function awaitTransactionSignatureConfirmation(
           }
         }
       })()
-      await sleep(2000)
+      await sleep(4000)
     }
   })
 
-  const anyConnection = connection as any
-  if (anyConnection._signatureSubscriptions[subId]) {
-    connection.removeSignatureListener(subId)
-  }
   done = true
   logger?.log("Returning status", status)
   return status
