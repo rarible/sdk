@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.77](https://github.com/rarible/sdk/compare/v0.13.76...v0.13.77) (2025-01-13)
+
+### Features
+
+- sign transaction improvments ([#704](https://github.com/rarible/sdk/issues/704)) ([60f867c](https://github.com/rarible/sdk/commit/60f867c91cf45e091cac4a3ed26d0486075b3669))
+
 ## [0.13.76](https://github.com/rarible/sdk/compare/v0.13.75...v0.13.76) (2025-01-09)
 
 ### Features

@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk",
-  "version": "0.13.76",
+  "version": "0.13.77",
   "homepage": "https://github.com/rarible/sdk#readme",
   "repository": {
     "type": "git",
@@ -33,7 +33,7 @@
     "@rarible/action": "~0.9.1",
     "@rarible/api-client": "1.115.0",
     "@rarible/aptos-sdk": "^0.13.73",
-    "@rarible/eclipse-sdk": "^0.13.76",
+    "@rarible/eclipse-sdk": "^0.13.77",
     "@rarible/flow-sdk": "~0.6.0-beta.1",
     "@rarible/immutable-sdk": "^0.13.73",
     "@rarible/immutable-wallet": "^0.13.69",
