@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "0.13.77",
+  "version": "0.13.78",
   "private": true,
   "scripts": {
     "build": "run-s build:webpack",
@@ -35,8 +35,8 @@
     "@rarible/connector-mattel": "^0.13.73",
     "@rarible/connector-nfid": "^0.13.70",
     "@rarible/connector-portis": "^0.13.70",
-    "@rarible/connector-salmon": "^0.13.70",
-    "@rarible/connector-solflare": "^0.13.70",
+    "@rarible/connector-salmon": "^0.13.78",
+    "@rarible/connector-solflare": "^0.13.78",
     "@rarible/connector-thirdweb": "^0.13.70",
     "@rarible/connector-torus": "^0.13.70",
     "@rarible/connector-walletconnect-v2": "^0.13.70",
