@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.80](https://github.com/rarible/sdk/compare/v0.13.79...v0.13.80) (2025-01-16)
+
+### Features
+
+- getOption() return undefined if salmon is not installed ([#707](https://github.com/rarible/sdk/issues/707)) ([938e727](https://github.com/rarible/sdk/commit/938e72752cb47db0d6b8a593896ba26b70878929))
+
 ## [0.13.78](https://github.com/rarible/sdk/compare/v0.13.77...v0.13.78) (2025-01-13)
 
 ### Features
