@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.79](https://github.com/rarible/sdk/compare/v0.13.78...v0.13.79) (2025-01-16)
+
+### Features
+
+- fix for Eclipse collection offer ([#706](https://github.com/rarible/sdk/issues/706)) ([5272b0c](https://github.com/rarible/sdk/commit/5272b0cdaedeb48f27145d613c7a57e80202bacb))
+
 ## [0.13.78](https://github.com/rarible/sdk/compare/v0.13.77...v0.13.78) (2025-01-13)
 
 ### Features
