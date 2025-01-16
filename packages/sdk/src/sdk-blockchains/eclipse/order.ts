@@ -262,7 +262,11 @@ export class EclipseOrder {
       throw new Error("Order is not active")
     }
 
-    const item = await this.apis.item.getItemById({ itemId: toItemId(`ECLIPSE:${nftMint.toString()}`) })
+    let itemsCount = 1
+    if (!isCollectionOffer) {
+      const item = await this.apis.item.getItemById({ itemId: toItemId(`ECLIPSE:${nftMint.toString()}`) })
+      itemsCount = parseFloat(item.supply.toString())
+    }
 
     const submit = Action.create({
       id: "send-tx" as const,
@@ -320,7 +324,7 @@ export class EclipseOrder {
     }
 
     return {
-      multiple: parseFloat(item.supply.toString()) > 1,
+      multiple: itemsCount > 1,
       maxAmount: order.makeStock,
       baseFee,
       supportsPartialFill: false,
