@@ -10,20 +10,27 @@ import type { SalmonProvider, WindowWithSalmonProvider } from "./domain"
 const SALMON_CONNECTION_KEY = "salmon_connected"
 
 export class SalmonConnectionProvider extends SolanaInjectableProvider<string> {
+  private readonly providerName
   constructor(name = "salmon") {
     super(
       name,
       of(null).pipe(
-        switchMap(() => pollUntilConditionMetOrMaxAttempts(() => extractPhantomProvider(), 100, 10)),
+        switchMap(() => pollUntilConditionMetOrMaxAttempts(() => extractSalmonProvider(), 100, 10)),
         switchMap(x => (x ? of(x) : throwError(new SalmonWalletIsNotDetected()))),
         switchMap(x => of(new SalmonProviderAdapter(x))),
         take(1),
       ),
     )
+    this.providerName = name
   }
 
   isAutoConnected = async () => {
     return localStorage.getItem(SALMON_CONNECTION_KEY) === "true"
+  }
+
+  // @ts-expect-error
+  getOption = async () => {
+    return extractSalmonProvider() ? this.providerName : undefined
   }
 }
 
@@ -65,7 +72,7 @@ class SalmonWalletIsNotDetected extends Error {
   }
 }
 
-function extractPhantomProvider(): SalmonProvider | undefined {
+function extractSalmonProvider(): SalmonProvider | undefined {
   if (typeof window === "undefined") {
     console.warn("Window environment is required")
     return undefined

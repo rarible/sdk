@@ -15,7 +15,6 @@ export abstract class SolanaInjectableProvider<ProviderId extends string> extend
   private readonly provider$: Observable<SolanaProvider | undefined>
   private readonly isConnected$: Observable<boolean>
   private readonly connection$: Observable<ConnectionState<SolanaSigner>>
-  private isAvailable = true
 
   constructor(
     private readonly providerId: ProviderId,
@@ -24,10 +23,7 @@ export abstract class SolanaInjectableProvider<ProviderId extends string> extend
     super()
     this.provider$ = adapter$.pipe(
       pluck("provider"),
-      catchError(() => {
-        this.isAvailable = false
-        return of(undefined)
-      }),
+      catchError(() => of(undefined)),
       shareReplay(1),
     )
     this.isConnected$ = this.provider$.pipe(map(x => (x ? x.isConnected() : false)))
@@ -42,7 +38,7 @@ export abstract class SolanaInjectableProvider<ProviderId extends string> extend
 
   getConnection = () => this.connection$
 
-  getOption = async () => (this.isAvailable ? this.providerId : undefined)
+  getOption = async () => this.providerId
 
   isConnected = () => this.isConnected$.pipe(take(1)).toPromise()
 
