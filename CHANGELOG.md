@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.82](https://github.com/rarible/sdk/compare/v0.13.81...v0.13.82) (2025-01-17)
+
+### Features
+
+- use eclipseEndpoint from external config ([#709](https://github.com/rarible/sdk/issues/709)) ([e6389c1](https://github.com/rarible/sdk/commit/e6389c140cf27ff15565a17266cdd905d7a2a47c))
+
 ## [0.13.81](https://github.com/rarible/sdk/compare/v0.13.80...v0.13.81) (2025-01-17)
 
 ### Bug Fixes
