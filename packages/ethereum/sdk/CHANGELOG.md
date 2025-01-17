@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.81](https://github.com/rarible/sdk/compare/v0.13.80...v0.13.81) (2025-01-17)
+
+### Bug Fixes
+
+- ethereum networks ([#708](https://github.com/rarible/sdk/issues/708)) ([f0b81aa](https://github.com/rarible/sdk/commit/f0b81aa102fcf0ab9faa5b9f82875ea5e2b759fc))
+
 ## [0.13.73](https://github.com/rarible/sdk/compare/v0.13.72...v0.13.73) (2025-01-07)
 
 ### Features
