@@ -100,7 +100,7 @@ export function createRaribleSdk(
       apis,
       blockchainConfig.solanaNetwork,
       {
-        eclipseEndpoint: blockchainConfig.eclipseAddress,
+        eclipseEndpoint: config?.blockchain?.SOLANA?.eclipseEndpoint ?? blockchainConfig.eclipseAddress,
         eclipseMarketplaces: (config?.blockchain?.SOLANA?.eclipseMarketplaces || []).map(val => new PublicKey(val)),
       },
       config?.logs,
