@@ -57,7 +57,7 @@ import { berachainTestnetConfig } from "./berachain-testnet"
 import { telosTestnetConfig } from "./telos-testnet"
 import { telosConfig } from "./telos"
 
-export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
+export const configDictionary: Record<string, EthereumConfig> = {
   mainnet: mainnetConfig,
   mumbai: mumbaiConfig,
   polygon: polygonConfig,
