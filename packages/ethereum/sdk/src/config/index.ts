@@ -116,6 +116,8 @@ export const configDictionary: Record<string, EthereumConfig> = {
   telos: telosConfig,
 }
 
+export const ethereumNetworks = Object.keys(configDictionary) as Array<keyof typeof configDictionary>
+
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {
   return configDictionary[env]
 }

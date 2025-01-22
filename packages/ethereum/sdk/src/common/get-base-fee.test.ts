@@ -1,5 +1,5 @@
 import type { EthereumNetwork } from "../types"
-import { ethereumNetworks } from "../types"
+import { ethereumNetworks } from "../config"
 import { getBaseFee } from "./get-base-fee"
 import { createEthereumApis, getApis as getApisTemplate } from "./apis"
 import { getTestAPIKey } from "./test/test-credentials"
