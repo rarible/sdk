@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-helper",
-  "version": "0.13.83",
+  "version": "0.13.84",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -21,10 +21,10 @@
     "@rarible/connector": "^0.13.83",
     "@rarible/connector-beacon": "^0.13.83",
     "@rarible/connector-fcl": "^0.13.83",
-    "@rarible/connector-mattel": "^0.13.83",
+    "@rarible/connector-mattel": "^0.13.84",
     "@rarible/estimate-middleware": "~0.9.6",
     "@rarible/sdk-common": "^0.13.83",
-    "@rarible/sdk-wallet": "^0.13.83",
+    "@rarible/sdk-wallet": "^0.13.84",
     "@rarible/tezos-sdk": "0.1.46"
   },
   "peerDependencies": {

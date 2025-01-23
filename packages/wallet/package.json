@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-wallet",
-  "version": "0.13.83",
+  "version": "0.13.84",
   "homepage": "https://github.com/rarible/sdk/",
   "license": "ISC",
   "exports": {
@@ -47,9 +47,9 @@
   },
   "dependencies": {
     "@ethersproject/abstract-signer": "^5.4.0",
-    "@rarible/aptos-wallet": "^0.13.83",
+    "@rarible/aptos-wallet": "^0.13.84",
     "@rarible/ethereum-provider": "^0.13.83",
-    "@rarible/ethers-ethereum": "^0.13.83",
+    "@rarible/ethers-ethereum": "^0.13.84",
     "@rarible/fcl-types": "~0.5.56",
     "@rarible/flow-sdk": "~0.6.0-beta.1",
     "@rarible/sdk-common": "^0.13.83",
@@ -57,12 +57,12 @@
     "@rarible/solana-wallet": "^0.13.69",
     "@rarible/tezos-sdk": "0.1.46",
     "@rarible/types": "~0.10.0-beta.6",
-    "@rarible/web3-ethereum": "^0.13.83",
-    "@rarible/web3-v4-ethereum": "^0.13.83",
+    "@rarible/web3-ethereum": "^0.13.84",
+    "@rarible/web3-v4-ethereum": "^0.13.84",
     "text-encoding": "~0.7.0"
   },
   "devDependencies": {
-    "@rarible/ethereum-sdk-test-common": "^0.13.83",
+    "@rarible/ethereum-sdk-test-common": "^0.13.84",
     "@types/text-encoding": "~0.0.39",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",

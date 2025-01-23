@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.84](https://github.com/rarible/sdk/compare/v0.13.83...v0.13.84) (2025-01-23)
+
+### Features
+
+- new rari types ([caf1074](https://github.com/rarible/sdk/commit/caf107421421c3ebae859e160552f353dcdce511))
+
 ## [0.13.83](https://github.com/rarible/sdk/compare/v0.13.82...v0.13.83) (2025-01-23)
 
 ### Features
