@@ -13,7 +13,7 @@ export const arbitrumConfig: EthereumConfig = {
     v1: EVM_ZERO_ADDRESS,
     v2: toEVMAddress("0x07b637739CAd9A5f0c487219B283a52717E69978"),
     openseaV1: EVM_ZERO_ADDRESS,
-    wrapper: EVM_ZERO_ADDRESS,
+    wrapper: toEVMAddress("0x13b05523634ABb96E6017Da71b7698CAecDf50b2"),
     looksrare: EVM_ZERO_ADDRESS,
     looksrareV2: EVM_ZERO_ADDRESS,
     x2y2: EVM_ZERO_ADDRESS,
@@ -33,8 +33,8 @@ export const arbitrumConfig: EthereumConfig = {
     merkleValidator: EVM_ZERO_ADDRESS,
   },
   factories: {
-    erc721: EVM_ZERO_ADDRESS,
-    erc1155: EVM_ZERO_ADDRESS,
+    erc721: toEVMAddress("0xdA12E4Ab1d731F29bF4Bff8f971579D95f8DDD07"),
+    erc1155: toEVMAddress("0xEA26e060cCc11C840e6107cfca0B41c45Ce6a5a2"),
   },
   cryptoPunks: {
     marketContract: EVM_ZERO_ADDRESS,
