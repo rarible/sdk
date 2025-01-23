@@ -7408,12 +7408,12 @@
   dependencies:
     "@rarible/utils" "^0.10.0-beta.2"
 
-"@rarible/types@~0.10.0-beta.5":
-  version "0.10.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.10.0-beta.5.tgz#a453d4cabf0df6d653d814d0456666c66c6ed5a2"
-  integrity sha512-roJcd0SknvLEnmwfjN/FoDOq6v4faR8EdO+B4+2x0vJo2GJ9Ide8+z2zB+V2s1/xzm8VnQNrFZ2+5Qt/djrJjw==
+"@rarible/types@~0.10.0-beta.6":
+  version "0.10.0-beta.6"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.10.0-beta.6.tgz#5937f074f58cbee322781287ebad35c636a48071"
+  integrity sha512-1hqREKvhxnmH+O+mkYTyA5nMqR5eO2dthSTWmPyonn16pOo/nbRgDLmZpP4vPWb7JlVEbEoxh76G1DHAjEkEfA==
   dependencies:
-    "@rarible/utils" "^0.10.0-beta.5"
+    "@rarible/utils" "^0.10.0-beta.6"
 
 "@rarible/utils@^0.10.0-beta.2":
   version "0.10.0-beta.2"
@@ -7424,10 +7424,10 @@
     generic-type-guard "^3.7.2"
     ts-custom-error "^3.3.1"
 
-"@rarible/utils@^0.10.0-beta.5", "@rarible/utils@~0.10.0-beta.5":
-  version "0.10.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.10.0-beta.5.tgz#45fd03a6f4a8d889b32ec738d4cec31d63aa855a"
-  integrity sha512-7/g58F0UxngH0ggn/QE5QU/NIr3Qs9/xogn8YQJPwfIMCDvGSdFZnNbLSkbRCTqUErfmZoorjmT7mhXAxbxbGA==
+"@rarible/utils@^0.10.0-beta.6", "@rarible/utils@~0.10.0-beta.6":
+  version "0.10.0-beta.6"
+  resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.10.0-beta.6.tgz#48529930720ed7e4db7b93152512d5fd6bcdbc5b"
+  integrity sha512-4/POmm2Egd/Wy3NSXe0uBWCsO6HZFCPd8GnDjE+QlBZVjq0E996a9kzss7jMxRPDLWbwGZVv/37qp0rWFYqsbQ==
   dependencies:
     bignumber.js "^9.0.0"
     generic-type-guard "^3.7.2"
