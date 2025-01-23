@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.85](https://github.com/rarible/sdk/compare/v0.13.84...v0.13.85) (2025-01-23)
+
+### Bug Fixes
+
+- lockfile ([46cb674](https://github.com/rarible/sdk/commit/46cb67421a35be8f2a0d2009376c607b5fae6b49))
+
 ## [0.13.84](https://github.com/rarible/sdk/compare/v0.13.83...v0.13.84) (2025-01-23)
 
 ### Features
