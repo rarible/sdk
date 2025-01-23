@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.83](https://github.com/rarible/sdk/compare/v0.13.82...v0.13.83) (2025-01-23)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
 ## [0.13.73](https://github.com/rarible/sdk/compare/v0.13.72...v0.13.73) (2025-01-07)
 
 ### Features

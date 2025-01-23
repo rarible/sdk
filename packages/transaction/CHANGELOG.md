@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.83](https://github.com/rarible/sdk/compare/v0.13.82...v0.13.83) (2025-01-23)
+
+### Features
+
+- **PLTF-844:** abstract chain integration ([#711](https://github.com/rarible/sdk/issues/711)) ([f24854b](https://github.com/rarible/sdk/commit/f24854b082c52ff612837164c6a9241c3f3759a1))
+
 ## [0.13.81](https://github.com/rarible/sdk/compare/v0.13.80...v0.13.81) (2025-01-17)
 
 **Note:** Version bump only for package @rarible/sdk-transaction
