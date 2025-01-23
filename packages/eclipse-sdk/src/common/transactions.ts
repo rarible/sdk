@@ -109,13 +109,33 @@ export async function sendSignedTransaction(
     slot = confirmation?.slot || 0
   } catch (err: any) {
     logger?.error("Confirmation awaiting error caught", err)
-    throw err
+
+    throw prettifyBlockchainError(err)
   } finally {
     done = true
   }
 
   logger?.log("Latency (ms)", txId, getUnixTs() - startTime)
   return { txId, slot }
+}
+
+function prettifyBlockchainError(err: any) {
+  try {
+    const stringError = JSON.stringify(err)
+    if (!stringError.includes("InstructionError")) return err
+
+    if (stringError.includes("3012")) {
+      return new Error("Transaction execution error: Order was already executed or cancelled")
+    }
+
+    if (stringError.includes("1")) {
+      return new Error("Transaction execution error: Insufficient funds")
+    }
+
+    return err
+  } catch (e) {
+    return err
+  }
 }
 
 async function awaitTransactionSignatureConfirmation(
