@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.86](https://github.com/rarible/sdk/compare/v0.13.85...v0.13.86) (2025-01-23)
+
+### Bug Fixes
+
+- arbitrum mainnet contracts ([#713](https://github.com/rarible/sdk/issues/713)) ([2e266ba](https://github.com/rarible/sdk/commit/2e266ba733bd10c975661cfe53dfbb89962707c6))
+
 ## [0.13.85](https://github.com/rarible/sdk/compare/v0.13.84...v0.13.85) (2025-01-23)
 
 **Note:** Version bump only for package @rarible/protocol-ethereum-sdk
