@@ -22,8 +22,8 @@
   },
   "dependencies": {
     "@aptos-labs/ts-sdk": "^1.5.1",
-    "@rarible/types": "~0.10.0-beta.5",
-    "@rarible/utils": "~0.10.0-beta.5"
+    "@rarible/types": "~0.10.0-beta.6",
+    "@rarible/utils": "~0.10.0-beta.6"
   },
   "devDependencies": {
     "@rarible/aptos-wallet": "^0.13.83",
