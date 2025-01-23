@@ -10,6 +10,7 @@ import { Transaction } from "@solana/web3.js"
 import type { SolanaSigner } from "@rarible/solana-common"
 import { getUnixTs, sleep } from "@rarible/solana-common"
 import type { TransactionOrVersionedTransaction } from "@rarible/solana-common/src"
+import { getStringifiedData } from "@rarible/sdk-common"
 import type { DebugLogger } from "../logger/debug-logger"
 import type { TransactionResult } from "../types"
 
@@ -120,22 +121,18 @@ export async function sendSignedTransaction(
 }
 
 function prettifyBlockchainError(err: any) {
-  try {
-    const stringError = JSON.stringify(err)
-    if (!stringError.includes("InstructionError")) return err
+  const stringError = getStringifiedData(err)
+  if (!stringError || !stringError.includes("InstructionError")) return err
 
-    if (stringError.includes("3012")) {
-      return new Error("Transaction execution error: Order was already executed or cancelled")
-    }
-
-    if (stringError.includes("1")) {
-      return new Error("Transaction execution error: Insufficient funds")
-    }
-
-    return err
-  } catch (e) {
-    return err
+  if (stringError.includes("3012")) {
+    return new Error("Transaction execution error: Order was already executed or cancelled")
   }
+
+  if (stringError.includes("1")) {
+    return new Error("Transaction execution error: Insufficient funds")
+  }
+
+  return err
 }
 
 async function awaitTransactionSignatureConfirmation(
