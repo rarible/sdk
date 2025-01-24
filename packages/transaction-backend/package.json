@@ -20,7 +20,8 @@
     "get-orders": "npx ts-node scripts/getorders.ts",
     "serve": "nodemon",
     "start": "node ./build/index.js",
-    "test": "jest --runInBand",
+    "test": "jest --runInBand --coverage --coverageReporters=lcov",
+    "test:no-coverage": "jest --runInBand",
     "verify": "tsc"
   },
   "dependencies": {

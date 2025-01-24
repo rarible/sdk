@@ -13,7 +13,8 @@
     "clean": "run-s clean:*",
     "clean:build": "rimraf ./build",
     "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
-    "test": "jest --runInBand --passWithNoTests",
+    "test": "jest --runInBand --passWithNoTests --coverage --coverageReporters=lcov",
+    "test:no-coverage": "jest --runInBand --passWithNoTests",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
