@@ -5,7 +5,7 @@
   "homepage": "",
   "license": "ISC",
   "scripts": {
-    "e2e-tests": "jest --runInBand",
+    "e2e-tests": "jest --runInBand --coverage --coverageReporters=lcov",
     "e2e-tests-all": "jest --runInBand --forceExit --testPathPattern=tests",
     "e2e-tests-ethereum": "jest --runInBand --forceExit --testPathPattern=tests/ethereum/smoke",
     "e2e-tests-flow": "jest --runInBand --forceExit --testPathPattern=tests/flow/smoke",

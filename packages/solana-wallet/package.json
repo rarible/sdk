@@ -17,7 +17,8 @@
     "clean": "run-s clean:*",
     "clean:build": "rimraf ./build",
     "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
-    "test": "jest --silent",
+    "test": "jest --silent --coverage --coverageReporters=lcov",
+    "test:no-coverage": "jest --silent",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {

@@ -24,9 +24,10 @@
     "clean:build": "rimraf ./build",
     "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
     "clean:umd": "rimraf ./umd",
-    "test": "jest --runInBand --silent --forceExit",
+    "test": "jest --runInBand --silent --forceExit --coverage --coverageReporters=lcov",
     "test-provider-dev": "jest --runInBand --forceExit --group=provider/dev",
     "test-provider-ganache": "jest --runInBand --forceExit --group=provider/ganache",
+    "test:no-coverage": "jest --runInBand --silent --forceExit",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {

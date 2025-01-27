@@ -21,7 +21,8 @@
     "clean:build": "rimraf ./build",
     "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
     "clean:umd": "rimraf ./umd",
-    "test": "jest --testTimeout=10000 --forceExit",
+    "test": "jest --testTimeout=10000 --forceExit --coverage --coverageReporters=lcov",
+    "test:no-coverage": "jest --testTimeout=10000 --forceExit",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
