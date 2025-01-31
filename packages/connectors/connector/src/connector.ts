@@ -86,7 +86,7 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
     this.add = this.add.bind(this)
     this.connect = this.connect.bind(this)
 
-    this.logger = createLogger(loggerConfig?.environment || "prod")
+    this.logger = createLogger(loggerConfig?.environment ?? "prod")
 
     this.connection = concat(
       of(STATE_INITIALIZING),
