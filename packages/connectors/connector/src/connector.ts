@@ -66,6 +66,10 @@ export class DefaultConnectionStateProvider implements IConnectorStateProvider {
   }
 }
 
+export interface LoggerConfig {
+  environment: "prod" | "testnet" | "dev"
+}
+
 export class Connector<Option, Connection> implements IConnector<Option, Connection> {
   static pageUnloading: boolean | undefined
   private readonly provider = new BehaviorSubject<ConnectionProvider<Option, Connection> | undefined>(undefined)
@@ -75,13 +79,14 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
   constructor(
     private readonly providers: ConnectionProvider<Option, Connection>[],
     private readonly stateProvider?: IConnectorStateProvider,
+    private readonly loggerConfig?: LoggerConfig,
   ) {
     Connector.initPageUnloadProtection()
 
     this.add = this.add.bind(this)
     this.connect = this.connect.bind(this)
 
-    this.logger = createLogger()
+    this.logger = createLogger(loggerConfig?.environment || "prod")
 
     this.connection = concat(
       of(STATE_INITIALIZING),
