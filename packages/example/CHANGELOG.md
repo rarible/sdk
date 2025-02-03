@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.88](https://github.com/rarible/sdk/compare/v0.13.87...v0.13.88) (2025-02-03)
+
+### Features
+
+- update api client to support items search with owners filter ([#717](https://github.com/rarible/sdk/issues/717)) ([243b797](https://github.com/rarible/sdk/commit/243b797d738a07f7f91fcb66c3467d9528ea63fa))
+- update api keys ([#716](https://github.com/rarible/sdk/issues/716)) ([4d0bf73](https://github.com/rarible/sdk/commit/4d0bf7304470933fd65d6d5e7d9b9a1c5319927b))
+
 ## [0.13.87](https://github.com/rarible/sdk/compare/v0.13.86...v0.13.87) (2025-02-03)
 
 **Note:** Version bump only for package example

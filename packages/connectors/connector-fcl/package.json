@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-fcl",
-  "version": "0.13.87",
+  "version": "0.13.88",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -16,7 +16,7 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/connector": "^0.13.87"
+    "@rarible/connector": "^0.13.88"
   },
   "peerDependencies": {
     "@onflow/fcl": "^1.4.1",
