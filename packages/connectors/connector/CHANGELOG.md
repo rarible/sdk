@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.87](https://github.com/rarible/sdk/compare/v0.13.86...v0.13.87) (2025-02-03)
+
+### Features
+
+- add coverage report for tests ([#714](https://github.com/rarible/sdk/issues/714)) ([9e02350](https://github.com/rarible/sdk/commit/9e023508da660dabee36e9214a3f5751e386a634))
+- add environment to logs ([#715](https://github.com/rarible/sdk/issues/715)) ([c27a09f](https://github.com/rarible/sdk/commit/c27a09fe218eddb3c794bfdb5d78c5574349b994))
+
 ## [0.13.86](https://github.com/rarible/sdk/compare/v0.13.85...v0.13.86) (2025-01-23)
 
 **Note:** Version bump only for package @rarible/connector
