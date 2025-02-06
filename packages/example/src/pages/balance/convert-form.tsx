@@ -10,6 +10,9 @@ import type { WalletType } from "@rarible/sdk-wallet"
 import type { IRaribleSdk } from "@rarible/sdk"
 import type { UnionAddress } from "@rarible/types"
 import type { SupportedBlockchain } from "@rarible/sdk-common"
+import { devEthereumConfig } from "@rarible/protocol-ethereum-sdk/build/config/dev"
+import { testnetEthereumConfig } from "@rarible/protocol-ethereum-sdk/build/config/testnet"
+import { mainnetConfig } from "@rarible/protocol-ethereum-sdk/build/config/mainnet"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { FormSelect } from "../../components/common/form/form-select"
 import { useRequestResult } from "../../components/hooks/use-request-result"
@@ -136,9 +139,9 @@ type PartialRecord<K extends keyof any, T> = {
 
 const wethMapByBlockchain: PartialRecord<Blockchain, PartialRecord<RaribleSdkEnvironment, ContractAddress>> = {
   [Blockchain.ETHEREUM]: {
-    prod: toContractAddress("ETHEREUM:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"),
-    testnet: toContractAddress("ETHEREUM:0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6"),
-    development: toContractAddress("ETHEREUM:0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6"),
+    prod: toContractAddress(`ETHEREUM:${mainnetConfig.weth}`),
+    testnet: toContractAddress(`ETHEREUM:${testnetEthereumConfig.weth}`),
+    development: toContractAddress(`ETHEREUM:${devEthereumConfig.weth}`),
   },
   // [Blockchain.POLYGON]: {
   // 	prod: toContractAddress("ETHEREUM:0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619"),
