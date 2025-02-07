@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.89](https://github.com/rarible/sdk/compare/v0.13.88...v0.13.89) (2025-02-07)
+
+### Bug Fixes
+
+- weth convert ([9550c30](https://github.com/rarible/sdk/commit/9550c30c6254d3b9c8149976d99525a4d494474e))
+
 ## [0.13.88](https://github.com/rarible/sdk/compare/v0.13.87...v0.13.88) (2025-02-03)
 
 ### Features

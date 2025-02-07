@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.89](https://github.com/rarible/sdk/compare/v0.13.88...v0.13.89) (2025-02-07)
+
+### Bug Fixes
+
+- berachain mainnet be url ([a9e0f66](https://github.com/rarible/sdk/commit/a9e0f668178ce0c64464336efa0c6f5f8d54b1d8))
+
+### Features
+
+- **RX-1413:** berachain mainnet support ([#720](https://github.com/rarible/sdk/issues/720)) ([3441b21](https://github.com/rarible/sdk/commit/3441b2170dfee78f4746204586feca66fc130a47))
+
 ## [0.13.88](https://github.com/rarible/sdk/compare/v0.13.87...v0.13.88) (2025-02-03)
 
 ### Features
