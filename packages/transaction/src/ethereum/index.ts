@@ -139,6 +139,8 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
         return `https://explorer-sepolia.shape.network/tx/${this.hash()}`
       case "berachain-testnet":
         return `https://bartio.beratrail.io/tx/${this.hash()}`
+      case "berachain":
+        return `https://berascan.com/tx/${this.hash()}`
       case "telos-testnet":
         return `https://testnet.teloscan.io/tx/${this.hash()}`
       case "telos":

@@ -113,7 +113,7 @@ export const configDictionary: Record<string, EthereumConfig> = {
   "fivire-testnet": fivireTestnetConfig,
   shape: shapeMainnetConfig,
   "shape-testnet": shapeTestnetConfig,
-  "berachain": berachainConfig,
+  berachain: berachainConfig,
   "berachain-testnet": berachainTestnetConfig,
   "telos-testnet": telosTestnetConfig,
   telos: telosConfig,
