@@ -1,4 +1,4 @@
-@Library('shared-library@sonar-for-sdk') _
+@Library('shared-library@sonar-for-sdk1') _
 
 def pipelineConfig = [
   "JSpublicLibrary": "true",
