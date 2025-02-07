@@ -57,6 +57,7 @@ import { berachainTestnetConfig } from "./berachain-testnet"
 import { telosTestnetConfig } from "./telos-testnet"
 import { telosConfig } from "./telos"
 import { abstractTestnetConfig } from "./testnet-abstract"
+import { berachainConfig } from "./berachain"
 
 export const configDictionary: Record<string, EthereumConfig> = {
   mainnet: mainnetConfig,
@@ -112,6 +113,7 @@ export const configDictionary: Record<string, EthereumConfig> = {
   "fivire-testnet": fivireTestnetConfig,
   shape: shapeMainnetConfig,
   "shape-testnet": shapeTestnetConfig,
+  "berachain": berachainConfig,
   "berachain-testnet": berachainTestnetConfig,
   "telos-testnet": telosTestnetConfig,
   telos: telosConfig,
