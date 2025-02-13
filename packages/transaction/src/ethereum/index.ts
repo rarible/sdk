@@ -145,6 +145,8 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
         return `https://testnet.teloscan.io/tx/${this.hash()}`
       case "telos":
         return `https://teloscan.io/tx/${this.hash()}`
+      case "abstract":
+        return `https://abscan.org/tx/${this.hash()}`
       case "abstract-testnet":
         return `https://sepolia.abscan.org/tx/${this.hash()}`
       default:
