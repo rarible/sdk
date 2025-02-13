@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.90](https://github.com/rarible/sdk/compare/v0.13.89...v0.13.90) (2025-02-13)
+
+### Features
+
+- **PLTF-845:** abstract mainnet support ([#723](https://github.com/rarible/sdk/issues/723)) ([9de86ab](https://github.com/rarible/sdk/commit/9de86ab47defeb6cfe5b44b11f1ebbcdf1718695))
+
 ## [0.13.89](https://github.com/rarible/sdk/compare/v0.13.88...v0.13.89) (2025-02-07)
 
 ### Bug Fixes
