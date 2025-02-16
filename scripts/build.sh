@@ -9,6 +9,7 @@ yarn run build-sdk-common
 . $scripts_dir/build-solana.sh
 wait
 yarn run build-sdk-wallet
+yarn run build-aptos-sdk
 . $scripts_dir/build-connectors.sh
 
 yarn run build-sdk-transaction

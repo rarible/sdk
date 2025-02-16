@@ -19,4 +19,5 @@ yarn run build-connector-phantom &
 yarn run build-connector-solflare &
 yarn run build-connector-imx &
 yarn run build-connector-nfid
+yarn run build-connector-salmon
 wait
