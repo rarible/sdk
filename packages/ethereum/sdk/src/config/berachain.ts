@@ -22,5 +22,5 @@ export const berachainConfig: EthereumConfig = extendConfig({
     erc721: toEVMAddress("0xC699FB932c1bD7235C7ED19388f26A2428224AED"),
     erc1155: toEVMAddress("0xdA12E4Ab1d731F29bF4Bff8f971579D95f8DDD07"),
   },
-  weth: toEVMAddress("0x2F6F07CDcf3588944Bf4C42aC74ff24bF56e7590"),
+  weth: toEVMAddress("0x6969696969696969696969696969696969696969"),
 })
