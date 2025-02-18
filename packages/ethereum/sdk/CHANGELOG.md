@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.91](https://github.com/rarible/sdk/compare/v0.13.90...v0.13.91) (2025-02-18)
+
+### Bug Fixes
+
+- wbera mainnet contract ([#725](https://github.com/rarible/sdk/issues/725)) ([aeb17e2](https://github.com/rarible/sdk/commit/aeb17e2290d29c80786834f2f2dcf4343092d11c))
+
 ## [0.13.90](https://github.com/rarible/sdk/compare/v0.13.89...v0.13.90) (2025-02-13)
 
 ### Features
