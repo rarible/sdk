@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.92](https://github.com/rarible/sdk/compare/v0.13.91...v0.13.92) (2025-02-19)
+
+### Features
+
+- update api-client to support sorting items by alphabet ([#726](https://github.com/rarible/sdk/issues/726)) ([4bd6f2b](https://github.com/rarible/sdk/commit/4bd6f2bc980587f9631a42d6d1ded68a73509fd7))
+
 ## [0.13.91](https://github.com/rarible/sdk/compare/v0.13.90...v0.13.91) (2025-02-18)
 
 **Note:** Version bump only for package @rarible/connector-aptos

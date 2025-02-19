@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-phantom",
-  "version": "0.13.91",
+  "version": "0.13.92",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -16,7 +16,7 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/connector-solana": "^0.13.91"
+    "@rarible/connector-solana": "^0.13.92"
   },
   "publishConfig": {
     "access": "public"
