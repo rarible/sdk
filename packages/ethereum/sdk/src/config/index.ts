@@ -58,6 +58,8 @@ import { berachainConfig } from "./berachain"
 import { abstractConfig } from "./abstract"
 import { hederaMainnetConfig } from "./hedera"
 import { hederaTestnetConfig } from "./hedera-testnet"
+import { victionMainnetConfig } from "./viction"
+import { victionTestnetConfig } from "./viction-testnet"
 
 export const configDictionary: Record<string, EthereumConfig> = {
   mainnet: mainnetConfig,
@@ -118,6 +120,8 @@ export const configDictionary: Record<string, EthereumConfig> = {
   "abstract-testnet": abstractTestnetConfig,
   hedera: hederaMainnetConfig,
   "hedera-testnet": hederaTestnetConfig,
+  viction: victionMainnetConfig,
+  "viction-testnet": victionTestnetConfig,
 }
 
 export const ethereumNetworks = Object.keys(configDictionary) as Array<keyof typeof configDictionary>
