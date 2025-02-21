@@ -29,6 +29,7 @@ export const EVMBlockchains = [
   Blockchain.BERACHAIN,
   Blockchain.TELOS,
   Blockchain.ABSTRACT,
+  Blockchain.HEDERAEVM,
 ] as const
 
 export type EVMBlockchain = (typeof EVMBlockchains)[number]

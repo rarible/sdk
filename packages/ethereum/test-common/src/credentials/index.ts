@@ -12,7 +12,14 @@ export const DEV_PK_3 = "064b2a70a2932eb5b45c760b210a2bee579d94031a8c40bff05cfd9
 export const DEV_PK_4 = "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9"
 export const DEV_PK_5 = "d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"
 
-export const e2eProviderSupportedNetworks = ["rarible-dev", "amoy", "polygon", "sepolia", "mainnet"] as const
+export const e2eProviderSupportedNetworks = [
+  "hedera-testnet",
+  "rarible-dev",
+  "amoy",
+  "polygon",
+  "sepolia",
+  "mainnet",
+] as const
 export type E2EProviderSupportedNetwork = (typeof e2eProviderSupportedNetworks)[number]
 
 const e2eProviderConfigs: Record<E2EProviderSupportedNetwork, Partial<E2EProviderConfig>> = {
@@ -35,6 +42,10 @@ const e2eProviderConfigs: Record<E2EProviderSupportedNetwork, Partial<E2EProvide
   mainnet: {
     rpcUrl: "https://node-mainnet.rarible.com",
     networkId: 1,
+  },
+  "hedera-testnet": {
+    rpcUrl: "https://testnet.rarible.com/nodes/testnet-hederaevm-node",
+    networkId: 296,
   },
 }
 

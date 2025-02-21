@@ -36,7 +36,7 @@
     "@rarible/ethereum-provider": "^0.13.92",
     "@rarible/logger": "^0.9.12",
     "@rarible/sdk-common": "^0.13.92",
-    "@rarible/utils": "~0.10.0-beta.6",
+    "@rarible/utils": "~0.10.0-beta.7",
     "eth-sig-util": "^3.0.0",
     "ethereumjs-util": "^7.1.0",
     "exponential-backoff": "^3.1.0",
