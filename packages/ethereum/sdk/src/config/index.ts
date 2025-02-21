@@ -59,6 +59,8 @@ import { telosConfig } from "./telos"
 import { abstractTestnetConfig } from "./testnet-abstract"
 import { berachainConfig } from "./berachain"
 import { abstractConfig } from "./abstract"
+import { victionMainnetConfig } from "./viction"
+import { victionTestnetConfig } from "./viction-testnet"
 
 export const configDictionary: Record<string, EthereumConfig> = {
   mainnet: mainnetConfig,
@@ -120,6 +122,8 @@ export const configDictionary: Record<string, EthereumConfig> = {
   telos: telosConfig,
   abstract: abstractConfig,
   "abstract-testnet": abstractTestnetConfig,
+  viction: victionMainnetConfig,
+  "viction-testnet": victionTestnetConfig,
 }
 
 export const ethereumNetworks = Object.keys(configDictionary) as Array<keyof typeof configDictionary>
