@@ -5,7 +5,7 @@ import type { EthereumConfig } from "./type"
 import { extendConfig } from "./utils"
 
 export const hederaMainnetConfig: EthereumConfig = extendConfig({
-  basePath: "https://hedera-api.rarible.org",
+  basePath: "https://hederaevm-api.rarible.org",
   chainId: 295,
   environment: "production",
   blockchain: Blockchain.HEDERAEVM,
