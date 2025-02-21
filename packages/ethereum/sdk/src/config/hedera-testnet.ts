@@ -6,7 +6,7 @@ import { extendConfig } from "./utils"
 
 export const hederaTestnetConfig: EthereumConfig = extendConfig({
   basePath: "https://testnet-hedera-api.rarible.org",
-  chainId: 297,
+  chainId: 296,
   environment: "testnet",
   blockchain: Blockchain.HEDERAEVM,
   exchange: {
@@ -26,5 +26,5 @@ export const hederaTestnetConfig: EthereumConfig = extendConfig({
     erc721: toEVMAddress("0x0bb5F77F0567133BF4d22293296F9F81752CC35a"),
     erc1155: toEVMAddress("0x8936ADC061Bb292fc9b8e285BACD27054E7DE002"),
   },
-  weth: toEVMAddress("0xcC1141eEd15EB519b08cA38A2Ee75AB8025F0DA9"),
+  weth: toEVMAddress("0xe6749c41199764ac33a9598ac508073bbfbb5e7c"),
 })
