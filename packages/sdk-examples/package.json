@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-examples",
-  "version": "0.13.92",
+  "version": "0.13.93",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -22,11 +22,11 @@
   "dependencies": {
     "@rarible/api-client": "1.122.1",
     "@rarible/estimate-middleware": "~0.9.6",
-    "@rarible/ethers-ethereum": "^0.13.92",
-    "@rarible/sdk": "^0.13.92",
-    "@rarible/sdk-wallet": "^0.13.92",
+    "@rarible/ethers-ethereum": "^0.13.93",
+    "@rarible/sdk": "^0.13.93",
+    "@rarible/sdk-wallet": "^0.13.93",
     "@rarible/test-provider": "~0.5.4",
-    "@rarible/types": "~0.10.0-beta.6",
+    "@rarible/types": "~0.10.0-beta.7",
     "ethereumjs-wallet": "^1.0.2",
     "ethers": "^5.6.2",
     "web3-provider-engine": "^16.0.4"

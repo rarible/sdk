@@ -22,7 +22,6 @@ import { lightlinkConfig } from "./lightlink"
 import { testnetLightlinkConfig } from "./testnet-lightlink"
 import { rariTestnetConfig } from "./testnet-rari"
 import { rariMainnetConfig } from "./rari"
-import { zkatanaConfig } from "./zkatana"
 import { baseConfig } from "./base"
 import { baseSepoliaConfig } from "./base-sepolia"
 import { xaiConfig } from "./xai"
@@ -30,11 +29,9 @@ import { fiefTestnetConfig } from "./testnet-fief"
 import { xaiTestnetConfig } from "./testnet-xai"
 import { kromaTestnetConfig } from "./testnet-kroma"
 import { kromaConfig } from "./kroma"
-import { astarZKEVMConfig } from "./astar-zkevm"
 import { celoTestnetConfig } from "./testnet-celo"
 import { celoConfig } from "./celo"
 import { polygonAmoyConfig } from "./polygon-amoy"
-import { astarKyotoConfig } from "./astar-kyoto"
 import { seiArctic1Config } from "./sei-arctic-1"
 import { seiPacific1Config } from "./sei-pacific-1"
 import { moonbeamTestnetConfig } from "./moonbeam-testnet"
@@ -61,6 +58,8 @@ import { berachainConfig } from "./berachain"
 import { abstractConfig } from "./abstract"
 import { victionMainnetConfig } from "./viction"
 import { victionTestnetConfig } from "./viction-testnet"
+import { hederaMainnetConfig } from "./hedera"
+import { hederaTestnetConfig } from "./hedera-testnet"
 
 export const configDictionary: Record<string, EthereumConfig> = {
   mainnet: mainnetConfig,
@@ -82,9 +81,6 @@ export const configDictionary: Record<string, EthereumConfig> = {
   "testnet-lightlink": testnetLightlinkConfig,
   "testnet-rari": rariTestnetConfig,
   rari: rariMainnetConfig,
-  zkatana: zkatanaConfig,
-  "astar-zkevm": astarZKEVMConfig,
-  "astar-kyoto": astarKyotoConfig,
   base: baseConfig,
   "base-sepolia": baseSepoliaConfig,
   "testnet-celo": celoTestnetConfig,
@@ -124,6 +120,8 @@ export const configDictionary: Record<string, EthereumConfig> = {
   "abstract-testnet": abstractTestnetConfig,
   viction: victionMainnetConfig,
   "viction-testnet": victionTestnetConfig,
+  hedera: hederaMainnetConfig,
+  "hedera-testnet": hederaTestnetConfig,
 }
 
 export const ethereumNetworks = Object.keys(configDictionary) as Array<keyof typeof configDictionary>

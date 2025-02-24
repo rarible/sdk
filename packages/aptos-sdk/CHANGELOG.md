@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.93](https://github.com/rarible/sdk/compare/v0.13.92...v0.13.93) (2025-02-21)
+
+### Features
+
+- **hedera:** added hedera support for sdk ([#727](https://github.com/rarible/sdk/issues/727)) ([acb8314](https://github.com/rarible/sdk/commit/acb83142a4c3dc5c99c31a23cbf26c457721db6a))
+
 ## [0.13.92](https://github.com/rarible/sdk/compare/v0.13.91...v0.13.92) (2025-02-19)
 
 **Note:** Version bump only for package @rarible/aptos-sdk

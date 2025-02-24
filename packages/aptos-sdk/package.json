@@ -1,6 +1,6 @@
 {
   "name": "@rarible/aptos-sdk",
-  "version": "0.13.92",
+  "version": "0.13.93",
   "keywords": [
     "solana",
     "web3"
@@ -23,11 +23,11 @@
   },
   "dependencies": {
     "@aptos-labs/ts-sdk": "^1.5.1",
-    "@rarible/types": "~0.10.0-beta.6",
-    "@rarible/utils": "~0.10.0-beta.6"
+    "@rarible/types": "~0.10.0-beta.7",
+    "@rarible/utils": "~0.10.0-beta.7"
   },
   "devDependencies": {
-    "@rarible/aptos-wallet": "^0.13.92",
+    "@rarible/aptos-wallet": "^0.13.93",
     "@types/node-fetch": "^2.6.1",
     "form-data": "^4.0.0"
   },
