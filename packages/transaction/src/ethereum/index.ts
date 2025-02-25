@@ -149,11 +149,14 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
         return `https://abscan.org/tx/${this.hash()}`
       case "abstract-testnet":
         return `https://sepolia.abscan.org/tx/${this.hash()}`
+      case "viction":
+        return `https://www.vicscan.xyz/txs/${this.hash()}`
+      case "viction-testnet":
+        return `https://testnet.vicscan.xyz/txs/${this.hash()}`
       case "hedera-testnet":
         return `https://hashscan.io/testnet/transaction/${this.hash()}`
       case "hedera":
         return `https://hashscan.io/mainnet/transaction/${this.hash()}`
-
       default:
         throw new Error("Unsupported transaction network")
     }

@@ -56,6 +56,8 @@ import { telosConfig } from "./telos"
 import { abstractTestnetConfig } from "./testnet-abstract"
 import { berachainConfig } from "./berachain"
 import { abstractConfig } from "./abstract"
+import { victionMainnetConfig } from "./viction"
+import { victionTestnetConfig } from "./viction-testnet"
 import { hederaMainnetConfig } from "./hedera"
 import { hederaTestnetConfig } from "./hedera-testnet"
 
@@ -116,6 +118,8 @@ export const configDictionary: Record<string, EthereumConfig> = {
   telos: telosConfig,
   abstract: abstractConfig,
   "abstract-testnet": abstractTestnetConfig,
+  viction: victionMainnetConfig,
+  "viction-testnet": victionTestnetConfig,
   hedera: hederaMainnetConfig,
   "hedera-testnet": hederaTestnetConfig,
 }
