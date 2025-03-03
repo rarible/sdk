@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.97](https://github.com/rarible/sdk/compare/v0.13.96...v0.13.97) (2025-03-03)
+
+### Features
+
+- support second fee recipient ([#729](https://github.com/rarible/sdk/issues/729)) ([12982aa](https://github.com/rarible/sdk/commit/12982aa1f1caa953058ed290b472751d76af2e77))
+
 ## [0.13.96](https://github.com/rarible/sdk/compare/v0.13.94...v0.13.96) (2025-02-26)
 
 **Note:** Version bump only for package root
