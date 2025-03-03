@@ -94,6 +94,13 @@ export async function executeOrder(
     paymentTokenProgram.toBase58(),
   )
 
+  const feeRecipient2 = market.feeRecipient2
+  const feeRecipient2Ta = getAtaAddress(
+    order.paymentMint.toBase58(),
+    feeRecipient2.toBase58(),
+    paymentTokenProgram.toBase58(),
+  )
+
   const remainingAccounts: AccountMeta[] = await getRemainingAccountsForMint(
     request.connection,
     nftMint.toBase58(),
@@ -105,7 +112,7 @@ export async function executeOrder(
   const group = await getTokenGroup(request.connection, nftMint, "confirmed", TOKEN_2022_PROGRAM_ID)
 
   const instruction = await marketProgram.methods
-    .fillOrder(new BN(request.amountToFill))
+    .fillOrderV2(new BN(request.amountToFill))
     .accountsStrict({
       taker: taker,
       maker: order.owner,
@@ -127,6 +134,8 @@ export async function executeOrder(
       sysvarInstructions: SYSVAR_INSTRUCTIONS_PUBKEY,
       feeRecipient,
       feeRecipientTa,
+      feeRecipient2,
+      feeRecipient2Ta,
       group,
     })
     .remainingAccounts(remainingAccounts)

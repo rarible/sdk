@@ -55,9 +55,11 @@ export interface IInitializeMarketRequest {
   signer: SolanaSigner
   marketIdentifier: PublicKey
   feeRecipient: PublicKey
+  feeRecipient2: PublicKey
   initializer: PublicKey
   versionNumber: number
   feeBps: BigNumber
+  feeBps2: BigNumber
 }
 
 export interface IGetMarketplaceRequest {
@@ -100,7 +102,9 @@ export class EclipseOrderSdk implements IEclipseOrderSdk {
       signer: request.signer,
       marketIdentifier: request.marketIdentifier,
       feeRecipient: request.feeRecipient,
+      feeRecipient2: request.feeRecipient2,
       feeBps: request.feeBps,
+      feeBps2: request.feeBps2,
     })
 
     return new PreparedTransaction(this.connection, instructions, request.signer, this.logger, () => {

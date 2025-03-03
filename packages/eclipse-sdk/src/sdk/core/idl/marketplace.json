@@ -2,7 +2,7 @@
   "address": "Rarim7DMoD45z1o25QWPsWvTdFSSEdxaxriwWZLLTic",
   "metadata": {
     "name": "marketplace",
-    "version": "0.1.0",
+    "version": "0.2.8",
     "spec": "0.1.0",
     "description": "Base marketplace contracts on SVM for rarible"
   },
@@ -707,6 +707,192 @@
       ]
     },
     {
+      "name": "fill_order_v2",
+      "docs": [
+        "fill a listing"
+      ],
+      "discriminator": [
+        66,
+        12,
+        52,
+        136,
+        172,
+        148,
+        145,
+        230
+      ],
+      "accounts": [
+        {
+          "name": "taker",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "maker",
+          "writable": true
+        },
+        {
+          "name": "market",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  114,
+                  107,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "market.market_identifier",
+                "account": "Market"
+              }
+            ]
+          }
+        },
+        {
+          "name": "order",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111,
+                  114,
+                  100,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "order.nonce",
+                "account": "Order"
+              },
+              {
+                "kind": "account",
+                "path": "order.market",
+                "account": "Order"
+              },
+              {
+                "kind": "account",
+                "path": "order.owner",
+                "account": "Order"
+              }
+            ]
+          }
+        },
+        {
+          "name": "nft_mint",
+          "writable": true
+        },
+        {
+          "name": "seller_nft_ta",
+          "writable": true
+        },
+        {
+          "name": "buyer_nft_ta",
+          "writable": true
+        },
+        {
+          "name": "fee_recipient",
+          "writable": true
+        },
+        {
+          "name": "fee_recipient_ta",
+          "writable": true
+        },
+        {
+          "name": "fee_recipient_2",
+          "writable": true
+        },
+        {
+          "name": "fee_recipient_2_ta",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "nft_token_program"
+        },
+        {
+          "name": "nft_program"
+        },
+        {
+          "name": "seller_payment_ta",
+          "writable": true
+        },
+        {
+          "name": "buyer_payment_ta",
+          "writable": true
+        },
+        {
+          "name": "payment_mint",
+          "writable": true
+        },
+        {
+          "name": "payment_token_program"
+        },
+        {
+          "name": "sysvar_instructions",
+          "address": "Sysvar1nstructions1111111111111111111111111"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "group",
+          "optional": true
+        },
+        {
+          "name": "event_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  95,
+                  95,
+                  101,
+                  118,
+                  101,
+                  110,
+                  116,
+                  95,
+                  97,
+                  117,
+                  116,
+                  104,
+                  111,
+                  114,
+                  105,
+                  116,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "init_market",
       "docs": [
         "initializer a new market"
@@ -1330,6 +1516,14 @@
           {
             "name": "fee_bps",
             "type": "u64"
+          },
+          {
+            "name": "fee_recipient_2",
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_bps_2",
+            "type": "u64"
           }
         ]
       }
@@ -1406,6 +1600,20 @@
             "type": "u64"
           },
           {
+            "name": "fee_recipient_2",
+            "docs": [
+              "address that should receive market fees"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_bps_2",
+            "docs": [
+              "fee basis points"
+            ],
+            "type": "u64"
+          },
+          {
             "name": "reserve",
             "docs": [
               "reserved space for future changes"
@@ -1413,7 +1621,7 @@
             "type": {
               "array": [
                 "u8",
-                512
+                472
               ]
             }
           }
@@ -1456,6 +1664,14 @@
           {
             "name": "fee_bps",
             "type": "u64"
+          },
+          {
+            "name": "fee_recipient_2",
+            "type": "string"
+          },
+          {
+            "name": "fee_bps_2",
+            "type": "u64"
           }
         ]
       }
@@ -1483,6 +1699,14 @@
           },
           {
             "name": "fee_bps",
+            "type": "u64"
+          },
+          {
+            "name": "fee_recipient_2",
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_bps_2",
             "type": "u64"
           }
         ]

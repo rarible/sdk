@@ -12,7 +12,9 @@ export interface IInitializeMarketRequest {
   signer: SolanaSigner
   marketIdentifier: PublicKey
   feeRecipient: PublicKey
+  feeRecipient2: PublicKey
   feeBps: BigNumberValue
+  feeBps2: BigNumberValue
 }
 
 export async function initializeMarket(request: IInitializeMarketRequest): Promise<ITransactionPreparedInstructions> {
@@ -21,7 +23,12 @@ export async function initializeMarket(request: IInitializeMarketRequest): Promi
   const eventAuthority = getEventAuthority()
 
   const instruction = await marketProgram.methods
-    .initMarket({ feeBps: new BN(request.feeBps.toString()), feeRecipient: request.feeRecipient })
+    .initMarket({
+      feeBps: new BN(request.feeBps.toString()),
+      feeRecipient: request.feeRecipient,
+      feeBps2: new BN(request.feeBps2.toString()),
+      feeRecipient2: request.feeRecipient2,
+    })
     .accountsStrict({
       initializer: request.signer.publicKey,
       marketIdentifier: request.marketIdentifier,

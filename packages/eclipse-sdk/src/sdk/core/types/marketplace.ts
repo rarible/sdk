@@ -8,7 +8,7 @@ export type Marketplace = {
   address: "Rarim7DMoD45z1o25QWPsWvTdFSSEdxaxriwWZLLTic"
   metadata: {
     name: "marketplace"
-    version: "0.1.0"
+    version: "0.2.8"
     spec: "0.1.0"
     description: "Base marketplace contracts on SVM for rarible"
   }
@@ -545,6 +545,150 @@ export type Marketplace = {
       ]
     },
     {
+      name: "fillOrderV2"
+      docs: ["fill a listing"]
+      discriminator: [66, 12, 52, 136, 172, 148, 145, 230]
+      accounts: [
+        {
+          name: "taker"
+          writable: true
+          signer: true
+        },
+        {
+          name: "maker"
+          writable: true
+        },
+        {
+          name: "market"
+          pda: {
+            seeds: [
+              {
+                kind: "const"
+                value: [109, 97, 114, 107, 101, 116]
+              },
+              {
+                kind: "account"
+                path: "market.market_identifier"
+                account: "market"
+              },
+            ]
+          }
+        },
+        {
+          name: "order"
+          writable: true
+          pda: {
+            seeds: [
+              {
+                kind: "const"
+                value: [111, 114, 100, 101, 114]
+              },
+              {
+                kind: "account"
+                path: "order.nonce"
+                account: "order"
+              },
+              {
+                kind: "account"
+                path: "order.market"
+                account: "order"
+              },
+              {
+                kind: "account"
+                path: "order.owner"
+                account: "order"
+              },
+            ]
+          }
+        },
+        {
+          name: "nftMint"
+          writable: true
+        },
+        {
+          name: "sellerNftTa"
+          writable: true
+        },
+        {
+          name: "buyerNftTa"
+          writable: true
+        },
+        {
+          name: "feeRecipient"
+          writable: true
+        },
+        {
+          name: "feeRecipientTa"
+          writable: true
+        },
+        {
+          name: "feeRecipient2"
+          writable: true
+        },
+        {
+          name: "feeRecipient2Ta"
+          writable: true
+        },
+        {
+          name: "systemProgram"
+          address: "11111111111111111111111111111111"
+        },
+        {
+          name: "nftTokenProgram"
+        },
+        {
+          name: "nftProgram"
+        },
+        {
+          name: "sellerPaymentTa"
+          writable: true
+        },
+        {
+          name: "buyerPaymentTa"
+          writable: true
+        },
+        {
+          name: "paymentMint"
+          writable: true
+        },
+        {
+          name: "paymentTokenProgram"
+        },
+        {
+          name: "sysvarInstructions"
+          address: "Sysvar1nstructions1111111111111111111111111"
+        },
+        {
+          name: "associatedTokenProgram"
+          address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          name: "group"
+          optional: true
+        },
+        {
+          name: "eventAuthority"
+          pda: {
+            seeds: [
+              {
+                kind: "const"
+                value: [95, 95, 101, 118, 101, 110, 116, 95, 97, 117, 116, 104, 111, 114, 105, 116, 121]
+              },
+            ]
+          }
+        },
+        {
+          name: "program"
+        },
+      ]
+      args: [
+        {
+          name: "amount"
+          type: "u64"
+        },
+      ]
+    },
+    {
       name: "initMarket"
       docs: ["initializer a new market"]
       discriminator: [33, 253, 15, 116, 89, 25, 127, 236]
@@ -986,6 +1130,14 @@ export type Marketplace = {
             name: "feeBps"
             type: "u64"
           },
+          {
+            name: "feeRecipient2"
+            type: "pubkey"
+          },
+          {
+            name: "feeBps2"
+            type: "u64"
+          },
         ]
       }
     },
@@ -1051,10 +1203,20 @@ export type Marketplace = {
             type: "u64"
           },
           {
+            name: "feeRecipient2"
+            docs: ["address that should receive market fees"]
+            type: "pubkey"
+          },
+          {
+            name: "feeBps2"
+            docs: ["fee basis points"]
+            type: "u64"
+          },
+          {
             name: "reserve"
             docs: ["reserved space for future changes"]
             type: {
-              array: ["u8", 512]
+              array: ["u8", 472]
             }
           },
         ]
@@ -1097,6 +1259,14 @@ export type Marketplace = {
             name: "feeBps"
             type: "u64"
           },
+          {
+            name: "feeRecipient2"
+            type: "string"
+          },
+          {
+            name: "feeBps2"
+            type: "u64"
+          },
         ]
       }
     },
@@ -1123,6 +1293,14 @@ export type Marketplace = {
           },
           {
             name: "feeBps"
+            type: "u64"
+          },
+          {
+            name: "feeRecipient2"
+            type: "pubkey"
+          },
+          {
+            name: "feeBps2"
             type: "u64"
           },
         ]
