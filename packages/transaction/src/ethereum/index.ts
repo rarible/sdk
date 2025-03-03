@@ -157,6 +157,10 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
         return `https://hashscan.io/testnet/transaction/${this.hash()}`
       case "hedera":
         return `https://hashscan.io/mainnet/transaction/${this.hash()}`
+      case "goat":
+        return `https://explorer.goat.network/tx/${this.hash()}`
+      case "goat-testnet":
+        return `https://explorer.testnet3.goat.network/tx/${this.hash()}`
       default:
         throw new Error("Unsupported transaction network")
     }
