@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.99](https://github.com/rarible/sdk/compare/v0.13.98...v0.13.99) (2025-03-05)
+
+### Bug Fixes
+
+- hedera mainnet contracts ([#733](https://github.com/rarible/sdk/issues/733)) ([d00e22b](https://github.com/rarible/sdk/commit/d00e22b9e5c1e09a7146bad9d1ba9e53c432e411))
+
 ## [0.13.98](https://github.com/rarible/sdk/compare/v0.13.97...v0.13.98) (2025-03-05)
 
 ### Features
