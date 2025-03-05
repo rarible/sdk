@@ -7401,6 +7401,13 @@
     text-encoder "^0.0.4"
     yargs "^17.2.1"
 
+"@rarible/types@0.10.0-beta.7":
+  version "0.10.0-beta.7"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.10.0-beta.7.tgz#e1977db8e94d720ca38ae57a7a3219a37f97c6c8"
+  integrity sha512-X0dgP7xHQ+AL5lfI0b5tGrqYdNv0Ide7reBKQWALH2+OS/EIP7TiO4hya5BRfH3+XZQeegxJURVrkVu6cGC2ig==
+  dependencies:
+    "@rarible/utils" "^0.10.0-beta.7"
+
 "@rarible/types@^0.10.0-beta.2":
   version "0.10.0-beta.2"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.10.0-beta.2.tgz#19d36899ea826d200f41032640b1706997706f56"
@@ -7408,26 +7415,19 @@
   dependencies:
     "@rarible/utils" "^0.10.0-beta.2"
 
-"@rarible/types@~0.10.0-beta.7":
+"@rarible/utils@0.10.0-beta.7", "@rarible/utils@^0.10.0-beta.7":
   version "0.10.0-beta.7"
-  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.10.0-beta.7.tgz#e1977db8e94d720ca38ae57a7a3219a37f97c6c8"
-  integrity sha512-X0dgP7xHQ+AL5lfI0b5tGrqYdNv0Ide7reBKQWALH2+OS/EIP7TiO4hya5BRfH3+XZQeegxJURVrkVu6cGC2ig==
-  dependencies:
-    "@rarible/utils" "^0.10.0-beta.7"
-
-"@rarible/utils@^0.10.0-beta.2":
-  version "0.10.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.10.0-beta.2.tgz#3f4887f90f3bf44c2d325d8ee79f0d7145e89a34"
-  integrity sha512-Tgz8vQg+wUK98j3ty58/BvucX1dNViq1ZB/XTpn0YWqPf6kM8V5ZGveizNxeRacUzZ9h9B4cdERpuVXRDNTw/A==
+  resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.10.0-beta.7.tgz#c0611d122d23eb84e730e9a891a50fcd3a8b2f8a"
+  integrity sha512-ITa/9uwbBRvYqm9csEG+n7g6lUWGdtR6tIaK/cD5wvrd/ijz8u6tO9ku4Iqi8/n0j3VWdCFWgqKUSrwSkX9KEA==
   dependencies:
     bignumber.js "^9.0.0"
     generic-type-guard "^3.7.2"
     ts-custom-error "^3.3.1"
 
-"@rarible/utils@^0.10.0-beta.7", "@rarible/utils@~0.10.0-beta.7":
-  version "0.10.0-beta.7"
-  resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.10.0-beta.7.tgz#c0611d122d23eb84e730e9a891a50fcd3a8b2f8a"
-  integrity sha512-ITa/9uwbBRvYqm9csEG+n7g6lUWGdtR6tIaK/cD5wvrd/ijz8u6tO9ku4Iqi8/n0j3VWdCFWgqKUSrwSkX9KEA==
+"@rarible/utils@^0.10.0-beta.2":
+  version "0.10.0-beta.2"
+  resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.10.0-beta.2.tgz#3f4887f90f3bf44c2d325d8ee79f0d7145e89a34"
+  integrity sha512-Tgz8vQg+wUK98j3ty58/BvucX1dNViq1ZB/XTpn0YWqPf6kM8V5ZGveizNxeRacUzZ9h9B4cdERpuVXRDNTw/A==
   dependencies:
     bignumber.js "^9.0.0"
     generic-type-guard "^3.7.2"
