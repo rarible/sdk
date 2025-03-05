@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.102](https://github.com/rarible/sdk/compare/v0.13.101...v0.13.102) (2025-03-05)
+
+### Features
+
+- **RX-1494:** Upd the types and api-client libs again ([557ec81](https://github.com/rarible/sdk/commit/557ec81bfa29413c8ba5afe6bc7e023e1486d492))
+
 ## [0.13.101](https://github.com/rarible/sdk/compare/v0.13.100...v0.13.101) (2025-03-05)
 
 **Note:** Version bump only for package example
