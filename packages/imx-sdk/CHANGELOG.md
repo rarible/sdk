@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.101](https://github.com/rarible/sdk/compare/v0.13.100...v0.13.101) (2025-03-05)
+
+### Features
+
+- **RX-1494:** Make fixed version for types ([f8d0d24](https://github.com/rarible/sdk/commit/f8d0d24542089f7c4a7556105d9a803b4b7531fe))
+
 ## [0.13.100](https://github.com/rarible/sdk/compare/v0.13.99...v0.13.100) (2025-03-05)
 
 **Note:** Version bump only for package @rarible/immutable-sdk
