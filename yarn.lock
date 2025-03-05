@@ -7248,10 +7248,10 @@
   dependencies:
     callable-instance "^2.0.0"
 
-"@rarible/api-client@1.124.101":
-  version "1.124.101"
-  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-1.124.101.tgz#8810d1fd1c5c55f1422e81f9c4511096fcb8388b"
-  integrity sha512-n6SpVZv2GfIdvB2iJr11sIMhKm3aDHeusn2Us6dWIaXFW7Qlw/kTdm8ZfB1ufejJNO3wNJiIM3jn0SVET0aL7g==
+"@rarible/api-client@1.124.101-PR-1-1":
+  version "1.124.101-PR-1-1"
+  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-1.124.101-PR-1-1.tgz#dfefbdf674d34c159604d782c397b2ab0a06b64d"
+  integrity sha512-iYV86kW8wI94orHxdHooyxUAzICsZ+DUQcwP79eP2dK/udhGdivPF+m07Rvo/Uhw9Gr7B6PtC2Dhk6sJDY3p5Q==
 
 "@rarible/eslint-config-react@~0.10.0-alpha.37":
   version "0.10.0-alpha.37"
@@ -7401,12 +7401,12 @@
     text-encoder "^0.0.4"
     yargs "^17.2.1"
 
-"@rarible/types@0.10.0-beta.7":
-  version "0.10.0-beta.7"
-  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.10.0-beta.7.tgz#e1977db8e94d720ca38ae57a7a3219a37f97c6c8"
-  integrity sha512-X0dgP7xHQ+AL5lfI0b5tGrqYdNv0Ide7reBKQWALH2+OS/EIP7TiO4hya5BRfH3+XZQeegxJURVrkVu6cGC2ig==
+"@rarible/types@0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.10.1.tgz#18dbbf219845fa87203056a8d3f3cb359b061951"
+  integrity sha512-43rrUtF6YfN6trS9UT0f/xlhT8NgP7czF+nsePafwv+zzXrJmIDjcKkcw93asrS/pE592YN9T8iKAKRIG36Stg==
   dependencies:
-    "@rarible/utils" "^0.10.0-beta.7"
+    "@rarible/utils" "^0.10.1"
 
 "@rarible/types@^0.10.0-beta.2":
   version "0.10.0-beta.2"
@@ -7415,10 +7415,10 @@
   dependencies:
     "@rarible/utils" "^0.10.0-beta.2"
 
-"@rarible/utils@0.10.0-beta.7", "@rarible/utils@^0.10.0-beta.7":
-  version "0.10.0-beta.7"
-  resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.10.0-beta.7.tgz#c0611d122d23eb84e730e9a891a50fcd3a8b2f8a"
-  integrity sha512-ITa/9uwbBRvYqm9csEG+n7g6lUWGdtR6tIaK/cD5wvrd/ijz8u6tO9ku4Iqi8/n0j3VWdCFWgqKUSrwSkX9KEA==
+"@rarible/utils@0.10.1", "@rarible/utils@^0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.10.1.tgz#7e1193b837d2a13639e63fda6dbfc6719fe4c39f"
+  integrity sha512-vboCELvFcQ2OjQMHMz7W/Ou958SgBizR5wAPuaM+cRqa2zYCoRgyxqV8HwF7DXxSiYohIFwi+tTLqGgzQtZqvA==
   dependencies:
     bignumber.js "^9.0.0"
     generic-type-guard "^3.7.2"
