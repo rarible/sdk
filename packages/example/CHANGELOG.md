@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.98](https://github.com/rarible/sdk/compare/v0.13.97...v0.13.98) (2025-03-05)
+
+### Features
+
+- **RX-14948:** Update api-client version ([90f1596](https://github.com/rarible/sdk/commit/90f15962bf251addb4f2f945008c2086214f4968))
+
 ## [0.13.97](https://github.com/rarible/sdk/compare/v0.13.96...v0.13.97) (2025-03-03)
 
 **Note:** Version bump only for package example
