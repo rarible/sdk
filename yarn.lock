@@ -7248,11 +7248,6 @@
   dependencies:
     callable-instance "^2.0.0"
 
-"@rarible/api-client@1.122.1":
-  version "1.122.1"
-  resolved "https://registry.npmjs.org/@rarible/api-client/-/api-client-1.122.1.tgz#575c78acc30a7e00c78a8f77e3b04d1cf799d1ba"
-  integrity sha512-fv3ep25Jrcmqg8Y4ooEQ0muwz/PKVipvgdMFA1Hjk0i8xXQz09aXLhUaNq64U+SEfqpo+9xwQw19wWcGRonmgw==
-
 "@rarible/api-client@1.124.100-SNAPSHOT-new-rarible-types":
   version "1.124.100-SNAPSHOT-new-rarible-types"
   resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-1.124.100-SNAPSHOT-new-rarible-types.tgz#d17a3916176ecd313fedf7ef188678adbff8f52d"
