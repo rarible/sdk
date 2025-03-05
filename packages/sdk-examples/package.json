@@ -20,7 +20,7 @@
     "verify": "tsc --noEmit  --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/api-client": "1.124.100-SNAPSHOT-new-rarible-types",
+    "@rarible/api-client": "1.124.101",
     "@rarible/estimate-middleware": "~0.9.6",
     "@rarible/ethers-ethereum": "^0.13.98",
     "@rarible/sdk": "^0.13.98",

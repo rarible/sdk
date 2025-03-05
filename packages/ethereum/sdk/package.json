@@ -61,7 +61,7 @@
     "stream-browserify": "^3.0.0"
   },
   "peerDependencies": {
-    "@rarible/api-client": "1.124.100-SNAPSHOT-new-rarible-types",
+    "@rarible/api-client": "1.124.101",
     "axios": "^0.26.1",
     "tslib": "^2.3.1"
   },
