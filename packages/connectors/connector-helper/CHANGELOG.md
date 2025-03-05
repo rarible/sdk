@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.100](https://github.com/rarible/sdk/compare/v0.13.99...v0.13.100) (2025-03-05)
+
+### Features
+
+- **RX-1494:** Update api-client version ([fae5a52](https://github.com/rarible/sdk/commit/fae5a5267607f92acecf2e95a1da24106780c417))
+
 ## [0.13.99](https://github.com/rarible/sdk/compare/v0.13.98...v0.13.99) (2025-03-05)
 
 **Note:** Version bump only for package @rarible/connector-helper

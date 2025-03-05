@@ -1,6 +1,6 @@
 {
   "name": "@rarible/solana-common",
-  "version": "0.13.99",
+  "version": "0.13.100",
   "description": "Common code",
   "license": "Apache-2.0",
   "main": "build/index.js",

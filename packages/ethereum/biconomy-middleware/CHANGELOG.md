@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.100](https://github.com/rarible/sdk/compare/v0.13.99...v0.13.100) (2025-03-05)
+
+**Note:** Version bump only for package @rarible/biconomy-middleware
+
 ## [0.13.99](https://github.com/rarible/sdk/compare/v0.13.98...v0.13.99) (2025-03-05)
 
 **Note:** Version bump only for package @rarible/biconomy-middleware

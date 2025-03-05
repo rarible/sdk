@@ -1,6 +1,6 @@
 {
   "name": "@rarible/immutable-sdk",
-  "version": "0.13.99",
+  "version": "0.13.100",
   "description": "SDK for interact with immutable blockchain and Rarible protocol",
   "license": "MIT",
   "main": "build/index.js",
@@ -23,7 +23,7 @@
     "@ethersproject/wallet": "~5.6.0",
     "@imtbl/imx-sdk": "^2.1.1",
     "@rarible/ethereum-api-client": "0.2.1-beta.3",
-    "@rarible/immutable-wallet": "^0.13.99"
+    "@rarible/immutable-wallet": "^0.13.100"
   },
   "devDependencies": {
     "@rarible/types": "~0.10.0-beta.7",
