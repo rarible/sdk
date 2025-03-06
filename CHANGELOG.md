@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.103](https://github.com/rarible/sdk/compare/v0.13.102...v0.13.103) (2025-03-06)
+
+### Features
+
+- correct fee for eclipse ([#738](https://github.com/rarible/sdk/issues/738)) ([9c11501](https://github.com/rarible/sdk/commit/9c115015e69a49d48f42bef385153ebf761374e8))
+
+## [0.13.102](https://github.com/rarible/sdk/compare/v0.13.101...v0.13.102) (2025-03-05)
+
+### Features
+
+- **RX-1494:** Upd the types and api-client libs again ([557ec81](https://github.com/rarible/sdk/commit/557ec81bfa29413c8ba5afe6bc7e023e1486d492))
+
+## [0.13.101](https://github.com/rarible/sdk/compare/v0.13.100...v0.13.101) (2025-03-05)
+
+### Features
+
+- **RX-1494:** Make fixed version for types ([f8d0d24](https://github.com/rarible/sdk/commit/f8d0d24542089f7c4a7556105d9a803b4b7531fe))
+
+## [0.13.100](https://github.com/rarible/sdk/compare/v0.13.99...v0.13.100) (2025-03-05)
+
+### Features
+
+- **RX-1494:** Update api-client version ([fae5a52](https://github.com/rarible/sdk/commit/fae5a5267607f92acecf2e95a1da24106780c417))
+
+## [0.13.99](https://github.com/rarible/sdk/compare/v0.13.98...v0.13.99) (2025-03-05)
+
+### Bug Fixes
+
+- hedera mainnet contracts ([#733](https://github.com/rarible/sdk/issues/733)) ([d00e22b](https://github.com/rarible/sdk/commit/d00e22b9e5c1e09a7146bad9d1ba9e53c432e411))
+
+## [0.13.98](https://github.com/rarible/sdk/compare/v0.13.97...v0.13.98) (2025-03-05)
+
+### Features
+
+- **RX-14948:** Update api-client version ([90f1596](https://github.com/rarible/sdk/commit/90f15962bf251addb4f2f945008c2086214f4968))
+- **RX-1494:** Update api-client version in sdk-common ([aa15130](https://github.com/rarible/sdk/commit/aa15130e0836393da4d87d77863a5560cf92cbe2))
+
 ## [0.13.97](https://github.com/rarible/sdk/compare/v0.13.96...v0.13.97) (2025-03-03)
 
 ### Features
