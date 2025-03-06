@@ -106,12 +106,16 @@ export class EclipseOrder {
       },
     })
 
+    const baseFee = marketplace.feeBps2
+      ? marketplace.feeBps2.toNumber() + marketplace.feeBps.toNumber()
+      : marketplace.feeBps.toNumber()
+
     return {
       originFeeSupport: OriginFeeSupport.NONE,
       payoutsSupport: PayoutsSupport.NONE,
       maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
       supportedCurrencies: supportedCurrencies(),
-      baseFee: marketplace.feeBps.toNumber(),
+      baseFee,
       supportsExpirationDate: false,
       shouldTransferNft: false,
       submit: submit,
@@ -320,7 +324,9 @@ export class EclipseOrder {
     let baseFee = 0
     if (shouldPayBaseFee) {
       const marketplace = await this.sdk.order.getMarketPlace({ marketIdentifier: getMarketplace(this.config) })
-      baseFee = marketplace.feeBps.toNumber()
+      baseFee = marketplace.feeBps2
+        ? marketplace.feeBps2.toNumber() + marketplace.feeBps.toNumber()
+        : marketplace.feeBps.toNumber()
     }
 
     return {
