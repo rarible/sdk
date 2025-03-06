@@ -69,7 +69,9 @@ export interface IGetMarketplaceRequest {
 export interface Marketplace {
   marketIdentifier: PublicKey
   feeRecipient: PublicKey
+  feeRecipient2?: PublicKey
   feeBps: BigNumber
+  feeBps2?: BigNumber
   version: number
   initializer: PublicKey
 }
@@ -223,7 +225,9 @@ export class EclipseOrderSdk implements IEclipseOrderSdk {
     return {
       marketIdentifier: request.marketIdentifier,
       feeRecipient: market.feeRecipient,
+      feeRecipient2: market.feeRecipient2,
       feeBps: new BigNumber(market.feeBps.toString()),
+      feeBps2: market.feeBps2 ? new BigNumber(market.feeBps2.toString()) : undefined,
       initializer: market.initializer,
       version: market.version,
     }
