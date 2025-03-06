@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.103](https://github.com/rarible/sdk/compare/v0.13.102...v0.13.103) (2025-03-06)
+
+**Note:** Version bump only for package @rarible/connector-immutablex-link
+
 ## [0.13.102](https://github.com/rarible/sdk/compare/v0.13.101...v0.13.102) (2025-03-05)
 
 **Note:** Version bump only for package @rarible/connector-immutablex-link

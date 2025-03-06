@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.103](https://github.com/rarible/sdk/compare/v0.13.102...v0.13.103) (2025-03-06)
+
+### Features
+
+- correct fee for eclipse ([#738](https://github.com/rarible/sdk/issues/738)) ([9c11501](https://github.com/rarible/sdk/commit/9c115015e69a49d48f42bef385153ebf761374e8))
+
 ## [0.13.102](https://github.com/rarible/sdk/compare/v0.13.101...v0.13.102) (2025-03-05)
 
 ### Features
