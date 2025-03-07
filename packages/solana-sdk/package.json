@@ -33,7 +33,7 @@
     "@rarible/logger": "^0.9.12",
     "@rarible/solana-common": "^0.13.103",
     "@rarible/solana-wallet": "^0.13.103",
-    "@rarible/utils": "~0.10.1",
+    "@rarible/utils": "0.10.1",
     "@types/bs58": "^4.0.1",
     "borsh": "~0.7.0",
     "bs58": "^5.0.0",
