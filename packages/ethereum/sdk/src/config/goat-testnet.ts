@@ -26,5 +26,5 @@ export const goatTestnetConfig: EthereumConfig = extendConfig({
     erc721: toEVMAddress("0x2eBecaBBbe8a8C629b99aB23ed154d74CD5d4342"), // ERC721RaribleFactoryC2
     erc1155: toEVMAddress("0x4492608238eB09c7AD036e9C089538a7286B8985"), // ERC1155RaribleFactoryC2
   },
-  weth: toEVMAddress("0xcC1141eEd15EB519b08cA38A2Ee75AB8025F0DA9"),
+  weth: toEVMAddress("0xdea5b96593a43f3fd7c6b7d34e7e3551028d5060"),
 })
