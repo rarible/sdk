@@ -7401,10 +7401,10 @@
     text-encoder "^0.0.4"
     yargs "^17.2.1"
 
-"@rarible/types@0.10.1":
-  version "0.10.1"
-  resolved "http://nexus.rarible.int/repository/npm-all/@rarible/types/-/types-0.10.1.tgz#18dbbf219845fa87203056a8d3f3cb359b061951"
-  integrity sha512-43rrUtF6YfN6trS9UT0f/xlhT8NgP7czF+nsePafwv+zzXrJmIDjcKkcw93asrS/pE592YN9T8iKAKRIG36Stg==
+"@rarible/types@0.10.2":
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.10.2.tgz#015d75f4b87335773a1d9243c22fc8ec62b1a9d7"
+  integrity sha512-3J4gDvTaNHWodKUQBmQ87/eUs8JkJu2A1cqj4iPZW34PAOrxg8HPEVCdN1KbEEugHcL9GsiqPnR+rh0BWP5VVA==
   dependencies:
     "@rarible/utils" "^0.10.1"
 
