@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.104](https://github.com/rarible/sdk/compare/v0.13.103...v0.13.104) (2025-03-10)
+
+### Features
+
+- **goat:** added support for goat network ([#730](https://github.com/rarible/sdk/issues/730)) ([d52cbcd](https://github.com/rarible/sdk/commit/d52cbcd90d0d785a3b43a298a1354360b48bd614))
+
 ## [0.13.103](https://github.com/rarible/sdk/compare/v0.13.102...v0.13.103) (2025-03-06)
 
 **Note:** Version bump only for package @rarible/connector-aptos
