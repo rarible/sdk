@@ -62,7 +62,7 @@
     "precommit": "run-s lint-staged verify",
     "version": "lerna version",
     "prepare": "husky install",
-    "release": "lerna publish from-package",
+    "release": "sh ./scripts/release.sh",
     "update:rarible": "lerna exec -- ncu -u @rarible/* && ncu -u @rarible/* && yarn bootstrap",
     "publish-all": "lerna publish from-package",
     "e2e-tests": "sh ./scripts/e2e.sh",
