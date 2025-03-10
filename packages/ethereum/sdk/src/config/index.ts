@@ -60,6 +60,8 @@ import { victionMainnetConfig } from "./viction"
 import { victionTestnetConfig } from "./viction-testnet"
 import { hederaMainnetConfig } from "./hedera"
 import { hederaTestnetConfig } from "./hedera-testnet"
+import { goatMainnetConfig } from "./goat"
+import { goatTestnetConfig } from "./goat-testnet"
 
 export const configDictionary: Record<string, EthereumConfig> = {
   mainnet: mainnetConfig,
@@ -122,6 +124,8 @@ export const configDictionary: Record<string, EthereumConfig> = {
   "viction-testnet": victionTestnetConfig,
   hedera: hederaMainnetConfig,
   "hedera-testnet": hederaTestnetConfig,
+  goat: goatMainnetConfig,
+  "goat-testnet": goatTestnetConfig,
 }
 
 export const ethereumNetworks = Object.keys(configDictionary) as Array<keyof typeof configDictionary>
