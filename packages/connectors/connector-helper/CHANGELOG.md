@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.105](https://github.com/rarible/sdk/compare/v0.13.104...v0.13.105) (2025-03-13)
+
+### Features
+
+- **RX-1487:** update api client to support traits by owner ([#741](https://github.com/rarible/sdk/issues/741)) ([57db035](https://github.com/rarible/sdk/commit/57db035c5f61dcfef3153ad4b7fdb951718d0080))
+
 ## [0.13.104](https://github.com/rarible/sdk/compare/v0.13.103...v0.13.104) (2025-03-10)
 
 **Note:** Version bump only for package @rarible/connector-helper
