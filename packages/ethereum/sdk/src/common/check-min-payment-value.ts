@@ -17,7 +17,7 @@ export async function checkGreaterThanMinPaymentValue(ethereum: Ethereum, { asse
 }
 
 // Min value 0.0001 in ETH/Rari/Weth on listing/bidding
-export const MIN_PAYMENT_VALUE = new BigNumber(10).pow(14)
+export const MIN_PAYMENT_VALUE = new BigNumber(10).pow(12)
 export const MIN_PAYMENT_VALUE_DECIMAL = MIN_PAYMENT_VALUE.div(ETHER_IN_WEI)
 
 export async function checkMinPaymentValue(ethereum: Ethereum, checked: OrderForm): Promise<void> {
