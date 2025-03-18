@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.106](https://github.com/rarible/sdk/compare/v0.13.105...v0.13.106) (2025-03-18)
+
+### Features
+
+- add release script ([#740](https://github.com/rarible/sdk/issues/740)) ([e6e29e4](https://github.com/rarible/sdk/commit/e6e29e4c776d125a3181dea9133fa51bd0df404f))
+- change minimal price value ([#742](https://github.com/rarible/sdk/issues/742)) ([abe77bb](https://github.com/rarible/sdk/commit/abe77bb50ad3a1803f2096c1dd18e6cf5e71ee92))
+
 ## [0.13.105](https://github.com/rarible/sdk/compare/v0.13.104...v0.13.105) (2025-03-13)
 
 ### Features
