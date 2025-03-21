@@ -7,6 +7,7 @@ import type { ConnectionProvider } from "./provider"
 import type { ConnectionState } from "./connection-state"
 import { getStateConnecting, getStateDisconnected, STATE_INITIALIZING } from "./connection-state"
 import { createLogger, getErrorLogLevel, LogLevelConnector } from "./common/logger"
+import type { Fingerprint } from "./common/fingerprint"
 
 export type ProviderOption<Option, Connection> = {
   provider: ConnectionProvider<Option, Connection>
@@ -68,6 +69,7 @@ export class DefaultConnectionStateProvider implements IConnectorStateProvider {
 
 export interface LoggerConfig {
   environment: "prod" | "testnet" | "dev"
+  fingerprint?: Fingerprint
 }
 
 export class Connector<Option, Connection> implements IConnector<Option, Connection> {
@@ -86,7 +88,7 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
     this.add = this.add.bind(this)
     this.connect = this.connect.bind(this)
 
-    this.logger = createLogger(loggerConfig?.environment ?? "prod")
+    this.logger = createLogger(loggerConfig?.environment ?? "prod", loggerConfig?.fingerprint)
 
     this.connection = concat(
       of(STATE_INITIALIZING),

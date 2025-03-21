@@ -9,6 +9,7 @@ import {
   retry,
 } from "@rarible/sdk-common"
 import { BlockchainGroup } from "@rarible/api-client"
+import type { Fingerprint } from "./fingerprint"
 import { getFingerprint } from "./fingerprint"
 
 const packageJson = require("../../package.json")
@@ -18,7 +19,7 @@ export const loggerConfig = {
   elkUrl: "https://logging.rarible.com/",
 }
 
-export function createLogger(environment: Environment) {
+export function createLogger(environment: Environment, fingerprint?: Fingerprint) {
   return new RemoteLogger(
     async (msg: LoggableValue) => {
       try {
@@ -35,7 +36,7 @@ export function createLogger(environment: Environment) {
       } catch (_) {}
     },
     {
-      initialContext: createLoggerContext(environment),
+      initialContext: createLoggerContext(environment, fingerprint),
       dropBatchInterval: 1000,
       maxByteSize: 3 * 10240,
     },
@@ -61,14 +62,17 @@ export function getErrorLogLevel(error: any, providerId: string | undefined) {
 
 export type Environment = "prod" | "testnet" | "dev"
 
-async function createLoggerContext(environment: Environment): Promise<Record<string, string>> {
-  const fingerprint = await getFingerprint()
+async function createLoggerContext(
+  environment: Environment,
+  fingerprint?: Fingerprint,
+): Promise<Record<string, string>> {
+  const fallbackFingerprint = await getFingerprint()
 
   return {
     service: loggerConfig.service,
     "@version": packageJson.version,
     environment,
     domain: window?.location?.host,
-    fingerprint,
+    fingerprint: fingerprint ?? fallbackFingerprint,
   }
 }
