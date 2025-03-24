@@ -65,6 +65,11 @@ export type LoggerAdditionalParams = {
   fingerprint?: Fingerprint
 }
 
+export type ConnectorLoggerConfig = {
+  environment: Environment
+  additionalParams?: LoggerAdditionalParams
+}
+
 async function createLoggerContext(
   environment: Environment,
   additionalParams?: LoggerAdditionalParams,
