@@ -19,7 +19,7 @@ export const loggerConfig = {
   elkUrl: "https://logging.rarible.com/",
 }
 
-export function createLogger(environment: Environment, fingerprint?: Fingerprint) {
+export function createLogger(environment: Environment, additionalParams?: LoggerAdditionalParams) {
   return new RemoteLogger(
     async (msg: LoggableValue) => {
       try {
@@ -36,7 +36,7 @@ export function createLogger(environment: Environment, fingerprint?: Fingerprint
       } catch (_) {}
     },
     {
-      initialContext: createLoggerContext(environment, fingerprint),
+      initialContext: createLoggerContext(environment, additionalParams),
       dropBatchInterval: 1000,
       maxByteSize: 3 * 10240,
     },
@@ -61,10 +61,18 @@ export function getErrorLogLevel(error: any, providerId: string | undefined) {
 }
 
 export type Environment = "prod" | "testnet" | "dev"
+export type LoggerAdditionalParams = {
+  fingerprint?: Fingerprint
+}
+
+export type ConnectorLoggerConfig = {
+  environment: Environment
+  additionalParams?: LoggerAdditionalParams
+}
 
 async function createLoggerContext(
   environment: Environment,
-  fingerprint?: Fingerprint,
+  additionalParams?: LoggerAdditionalParams,
 ): Promise<Record<string, string>> {
   const fallbackFingerprint = await getFingerprint()
 
@@ -73,6 +81,6 @@ async function createLoggerContext(
     "@version": packageJson.version,
     environment,
     domain: window?.location?.host,
-    fingerprint: fingerprint ?? fallbackFingerprint,
+    fingerprint: additionalParams?.fingerprint ?? fallbackFingerprint,
   }
 }

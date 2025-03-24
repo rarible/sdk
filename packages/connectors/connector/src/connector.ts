@@ -6,8 +6,8 @@ import { getStringifiedData } from "@rarible/sdk-common"
 import type { ConnectionProvider } from "./provider"
 import type { ConnectionState } from "./connection-state"
 import { getStateConnecting, getStateDisconnected, STATE_INITIALIZING } from "./connection-state"
+import type { ConnectorLoggerConfig } from "./common/logger"
 import { createLogger, getErrorLogLevel, LogLevelConnector } from "./common/logger"
-import type { Fingerprint } from "./common/fingerprint"
 
 export type ProviderOption<Option, Connection> = {
   provider: ConnectionProvider<Option, Connection>
@@ -67,11 +67,6 @@ export class DefaultConnectionStateProvider implements IConnectorStateProvider {
   }
 }
 
-export interface LoggerConfig {
-  environment: "prod" | "testnet" | "dev"
-  fingerprint?: Fingerprint
-}
-
 export class Connector<Option, Connection> implements IConnector<Option, Connection> {
   static pageUnloading: boolean | undefined
   private readonly provider = new BehaviorSubject<ConnectionProvider<Option, Connection> | undefined>(undefined)
@@ -81,14 +76,14 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
   constructor(
     private readonly providers: ConnectionProvider<Option, Connection>[],
     private readonly stateProvider?: IConnectorStateProvider,
-    private readonly loggerConfig?: LoggerConfig,
+    private readonly loggerConfig?: ConnectorLoggerConfig,
   ) {
     Connector.initPageUnloadProtection()
 
     this.add = this.add.bind(this)
     this.connect = this.connect.bind(this)
 
-    this.logger = createLogger(loggerConfig?.environment ?? "prod", loggerConfig?.fingerprint)
+    this.logger = createLogger(loggerConfig?.environment ?? "prod", loggerConfig?.additionalParams)
 
     this.connection = concat(
       of(STATE_INITIALIZING),
