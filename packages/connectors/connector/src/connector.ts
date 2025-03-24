@@ -69,7 +69,9 @@ export class DefaultConnectionStateProvider implements IConnectorStateProvider {
 
 export interface LoggerConfig {
   environment: "prod" | "testnet" | "dev"
-  fingerprint?: Fingerprint
+  additionalParams?: {
+    fingerprint?: Fingerprint
+  }
 }
 
 export class Connector<Option, Connection> implements IConnector<Option, Connection> {
@@ -88,7 +90,7 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
     this.add = this.add.bind(this)
     this.connect = this.connect.bind(this)
 
-    this.logger = createLogger(loggerConfig?.environment ?? "prod", loggerConfig?.fingerprint)
+    this.logger = createLogger(loggerConfig?.environment ?? "prod", loggerConfig?.additionalParams)
 
     this.connection = concat(
       of(STATE_INITIALIZING),
