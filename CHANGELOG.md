@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.108](https://github.com/rarible/sdk/compare/v0.13.107...v0.13.108) (2025-03-24)
+
+### Features
+
+- **RX-1545:** Add optional fingerprint param to connector logger ([372e844](https://github.com/rarible/sdk/commit/372e8449bae1b2cc5b1a6590c297d32fc768d6de))
+- **RX-1545:** Add optional fingerprint param to connector logger ([67f153f](https://github.com/rarible/sdk/commit/67f153f10e51a7ba693278f0d979b22a03114e59))
+
 ## [0.13.107](https://github.com/rarible/sdk/compare/v0.13.106...v0.13.107) (2025-03-21)
 
 ### Features
