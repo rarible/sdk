@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.109-beta.0](https://github.com/rarible/sdk/compare/v0.13.108...v0.13.109-beta.0) (2025-04-07)
+
+**Note:** Version bump only for package @rarible/solana-common
+
 ## [0.13.108](https://github.com/rarible/sdk/compare/v0.13.107...v0.13.108) (2025-03-24)
 
 **Note:** Version bump only for package @rarible/solana-common
