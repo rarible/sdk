@@ -27,6 +27,8 @@ export function getSendWithInjects(
       await estimateGas(functionCall, { from: callInfo.from, value: options?.value }, logger)
     } catch (err) {
       const message = getErrorMessageString(err)
+      // this error is thrown by Abstract Global wallet connected by Thirdweb provider
+      // but in fact further transaction succeed
       if (!message.includes("TypeError: Do not know how to serialize a BigInt Given value")) {
         throw err
       }
