@@ -25,7 +25,12 @@ export function getSendWithInjects(
 
     try {
       await estimateGas(functionCall, { from: callInfo.from, value: options?.value }, logger)
-    } catch (err) {}
+    } catch (err) {
+      const message = getErrorMessageString(err)
+      if (!message.includes("TypeError: Do not know how to serialize a BigInt Given value")) {
+        throw err
+      }
+    }
 
     try {
       const tx = await functionCall.send(options)
