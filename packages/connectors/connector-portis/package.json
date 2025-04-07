@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-portis",
-  "version": "0.13.109-beta.0",
+  "version": "0.13.109-beta.1",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@portis/web3": "^4.0.7",
-    "@rarible/connector": "^0.13.109-beta.0"
+    "@rarible/connector": "^0.13.109-beta.1"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"
