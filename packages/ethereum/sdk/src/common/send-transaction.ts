@@ -23,7 +23,9 @@ export function getSendWithInjects(
   ): Promise<EthereumTransaction> {
     const callInfo = await functionCall.getCallInfo()
 
-    await estimateGas(functionCall, { from: callInfo.from, value: options?.value }, logger)
+    try {
+      await estimateGas(functionCall, { from: callInfo.from, value: options?.value }, logger)
+    } catch (err) {}
 
     try {
       const tx = await functionCall.send(options)
