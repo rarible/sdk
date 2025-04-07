@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.109-beta.1](https://github.com/rarible/sdk/compare/v0.13.109-beta.0...v0.13.109-beta.1) (2025-04-07)
+
+### Features
+
+- experiment 2 ([9666965](https://github.com/rarible/sdk/commit/9666965d461361819e42e336af16bd0fa20c9cdc))
+
+## [0.13.109-beta.0](https://github.com/rarible/sdk/compare/v0.13.108...v0.13.109-beta.0) (2025-04-07)
+
+### Features
+
+- experiment ([ad566d8](https://github.com/rarible/sdk/commit/ad566d8ba9e37ceeb0dc350cd4eb47289306fce0))
+
 ## [0.13.108](https://github.com/rarible/sdk/compare/v0.13.107...v0.13.108) (2025-03-24)
 
 ### Features
