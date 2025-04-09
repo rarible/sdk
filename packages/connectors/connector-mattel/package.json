@@ -19,7 +19,7 @@
     "@auth0/auth0-spa-js": "~2.1.1",
     "@magic-ext/flow": "~13.5.0",
     "@magic-ext/oidc": "~1.3.0",
-    "@rarible/api-client": "1.125.100",
+    "@rarible/api-client": "1.129.0-SNAPSHOT-1.129",
     "@rarible/connector": "^0.13.109",
     "@rarible/types": "0.10.2"
   },

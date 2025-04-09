@@ -90,7 +90,7 @@
     "@commitlint/config-conventional": "^13.1.0",
     "@onflow/fcl": "^1.4.1",
     "@onflow/types": "^1.1.0",
-    "@rarible/api-client": "1.125.100",
+    "@rarible/api-client": "1.129.0-SNAPSHOT-1.129",
     "@rarible/eslint-config-react": "~0.10.0-alpha.37",
     "@rarible/eslint-config-ts": "~0.10.0-alpha.37",
     "@rarible/prettier": "~0.10.0-alpha.37",
