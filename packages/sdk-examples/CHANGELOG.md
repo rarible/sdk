@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.110](https://github.com/rarible/sdk/compare/v0.13.109...v0.13.110) (2025-04-09)
+
+### Features
+
+- **RX-1565:** update api-client to support new sorting by latest owner change ([#748](https://github.com/rarible/sdk/issues/748)) ([7f2b1e2](https://github.com/rarible/sdk/commit/7f2b1e214701b2b91445e051f4a28e4b9d13556d))
+
 ## [0.13.109](https://github.com/rarible/sdk/compare/v0.13.108...v0.13.109) (2025-04-07)
 
 **Note:** Version bump only for package @rarible/sdk-examples

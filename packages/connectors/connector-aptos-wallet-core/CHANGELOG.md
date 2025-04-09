@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.110](https://github.com/rarible/sdk/compare/v0.13.109...v0.13.110) (2025-04-09)
+
+**Note:** Version bump only for package @rarible/connector-aptos-wallet-core
+
 ## [0.13.109](https://github.com/rarible/sdk/compare/v0.13.108...v0.13.109) (2025-04-07)
 
 **Note:** Version bump only for package @rarible/connector-aptos-wallet-core
