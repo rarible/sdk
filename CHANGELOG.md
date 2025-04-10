@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.112](https://github.com/rarible/sdk/compare/v0.13.111...v0.13.112) (2025-04-10)
+
+### Features
+
+- change weth contract ([#750](https://github.com/rarible/sdk/issues/750)) ([7384727](https://github.com/rarible/sdk/commit/73847273821820312e5efe7f790f3385f70ce67a))
+
 ## [0.13.111](https://github.com/rarible/sdk/compare/v0.13.110...v0.13.111) (2025-04-10)
 
 ### Features
