@@ -1,8 +1,8 @@
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
+import type { Maybe } from "@rarible/types"
 import { toEVMAddress } from "@rarible/types"
 import { Action } from "@rarible/action"
 import type { AssetType, EVMAddress } from "@rarible/ethereum-api-client"
-import type { Maybe } from "@rarible/types"
 import type { GetAmmBuyInfoRequest } from "@rarible/ethereum-api-client/build/apis/OrderControllerApi"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client/build/models"
 import type {
@@ -17,29 +17,29 @@ import type { RaribleEthereumApis } from "../../common/apis"
 import type { CheckAssetTypeFunction } from "../check-asset-type"
 import { checkAssetType } from "../check-asset-type"
 import { checkLazyAssetType } from "../check-lazy-asset-type"
-import type { IRaribleEthereumSdkConfig } from "../../types"
-import type { EthereumNetwork } from "../../types"
+import type { EthereumNetwork, IRaribleEthereumSdkConfig } from "../../types"
 import type { GetConfigByChainId } from "../../config"
 import type {
+  AmmOrderFillRequest,
+  BuyOrderAction,
+  BuyOrderRequest,
   CryptoPunksOrderFillRequest,
   FillOrderAction,
   FillOrderRequest,
   FillOrderStageId,
   GetOrderBuyTxRequest,
   LegacyOrderFillRequest,
+  LooksrareOrderFillRequest,
+  LooksrareOrderV2FillRequest,
   OpenSeaV1OrderFillRequest,
   OrderFillSendData,
   OrderFillTransactionData,
   RaribleV2OrderFillRequest,
-  BuyOrderRequest,
-  SellOrderRequest,
-  TransactionData,
   SeaportV1OrderFillRequest,
   SellOrderAction,
-  BuyOrderAction,
-  LooksrareOrderFillRequest,
+  SellOrderRequest,
+  TransactionData,
   X2Y2OrderFillRequest,
-  AmmOrderFillRequest,
 } from "./types"
 import { RaribleV1OrderHandler } from "./rarible-v1"
 import { RaribleV2OrderHandler } from "./rarible-v2"
@@ -51,7 +51,9 @@ import { LooksrareOrderHandler } from "./looksrare"
 import { AmmOrderHandler } from "./amm"
 import { getUpdatedCalldata } from "./common/get-updated-call"
 import { LooksrareV2OrderHandler } from "./looksrare-v2"
-import type { LooksrareOrderV2FillRequest } from "./types"
+import { getRequiredWallet } from "../../common/get-required-wallet"
+import { toBn } from "@rarible/utils"
+import { HEDERAEVM_GAS_LIMIT, isHederaEvm, MULTIPLICATOR_FOR_HBAR_IN_RPC_REQUST } from "../../common"
 
 export class OrderFiller {
   v1Handler: RaribleV1OrderHandler
@@ -212,8 +214,20 @@ export class OrderFiller {
 
   private async sendTransaction(request: FillOrderRequest, inverted: SimpleOrder): Promise<EthereumTransaction> {
     const { functionCall, options } = await this.getTransactionRequestData(request, inverted)
+
+    let value = options.value
+    let gas = options.gas
+    if (await isHederaEvm(getRequiredWallet(this.ethereum))) {
+      value = toBn(value ?? 0)
+        .multipliedBy(MULTIPLICATOR_FOR_HBAR_IN_RPC_REQUST)
+        .toString()
+      gas = HEDERAEVM_GAS_LIMIT
+    }
+
     return this.send(functionCall, {
       ...options,
+      value,
+      gas,
       additionalData: getUpdatedCalldata(this.sdkConfig),
     })
   }

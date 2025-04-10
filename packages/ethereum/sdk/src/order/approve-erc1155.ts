@@ -4,6 +4,7 @@ import type { Maybe } from "@rarible/types"
 import type { Ethereum } from "../../../ethereum-provider"
 import type { SendFunction } from "../common/send-transaction"
 import { createErc1155Contract } from "./contracts/erc1155"
+import { HEDERAEVM_GAS_LIMIT, isHederaEvm } from "../common"
 
 export async function approveErc1155(
   ethereum: Maybe<Ethereum>,
@@ -15,6 +16,7 @@ export async function approveErc1155(
   if (!ethereum) {
     throw new Error("Wallet undefined")
   }
+  const options = (await isHederaEvm(ethereum)) ? { gas: HEDERAEVM_GAS_LIMIT } : undefined
   const erc1155 = createErc1155Contract(ethereum, contract)
   let allowance: boolean
   try {
@@ -23,7 +25,7 @@ export async function approveErc1155(
     allowance = false
   }
   if (!allowance) {
-    return send(erc1155.functionCall("setApprovalForAll", operator, true))
+    return send(erc1155.functionCall("setApprovalForAll", operator, true), options)
   }
   return undefined
 }
