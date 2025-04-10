@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.111](https://github.com/rarible/sdk/compare/v0.13.110...v0.13.111) (2025-04-10)
+
+### Features
+
+- add fixes for hedera evm ([#749](https://github.com/rarible/sdk/issues/749)) ([21691cd](https://github.com/rarible/sdk/commit/21691cd5dd3bb77256279bb1c5be62403e4314f2))
+
 ## [0.13.110](https://github.com/rarible/sdk/compare/v0.13.109...v0.13.110) (2025-04-09)
 
 ### Features
