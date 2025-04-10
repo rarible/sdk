@@ -26,5 +26,5 @@ export const hederaTestnetConfig: EthereumConfig = extendConfig({
     erc721: toEVMAddress("0x0bb5F77F0567133BF4d22293296F9F81752CC35a"),
     erc1155: toEVMAddress("0x8936ADC061Bb292fc9b8e285BACD27054E7DE002"),
   },
-  weth: toEVMAddress("0xe6749c41199764ac33a9598ac508073bbfbb5e7c"),
+  weth: toEVMAddress("0xb1F616b8134F602c3Bb465fB5b5e6565cCAd37Ed"),
 })

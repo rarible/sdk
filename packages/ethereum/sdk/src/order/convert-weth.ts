@@ -11,6 +11,7 @@ import { getRequiredWallet } from "../common/get-required-wallet"
 import { compareCaseInsensitive } from "../common/compare-case-insensitive"
 import type { GetConfigByChainId } from "../config"
 import { createWethContract } from "./contracts/weth"
+import { isHederaEvm, MULTIPLICATOR_FOR_HBAR_IN_RPC_REQUST } from "../common"
 export class ConvertWeth {
   getWethContractAddress = async () => {
     const config = await this.getConfig()
@@ -59,8 +60,14 @@ export class ConvertWeth {
     if (valueBn.isZero()) {
       throw new ZeroValueIsPassedError()
     }
+
+    let value = valueBn
+    if (await isHederaEvm(getRequiredWallet(this.ethereum))) {
+      value = valueBn.multipliedBy(MULTIPLICATOR_FOR_HBAR_IN_RPC_REQUST)
+    }
+
     return this.send(await this.depositWeiFunctionCall(), {
-      value: valueBn.toString(),
+      value: value.toString(),
     })
   }
 

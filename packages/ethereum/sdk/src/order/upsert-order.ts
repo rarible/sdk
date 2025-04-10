@@ -24,7 +24,7 @@ import type { SendFunction } from "../common/send-transaction"
 import { getRequiredWallet } from "../common/get-required-wallet"
 import { waitTx } from "../common/wait-tx"
 import { checkMinPaymentValue } from "../common/check-min-payment-value"
-import { ETHER_IN_WEI } from "../common"
+import { ETHER_IN_WEI, HBAR_IN_TINYBAR, isHederaEvm } from "../common"
 import type { GetConfigByChainId } from "../config"
 import type { RaribleEthereumApis } from "../common/apis"
 import type { SimpleCryptoPunkOrder, SimpleOrder } from "./types"
@@ -95,6 +95,9 @@ export class UpsertOrder {
     } else {
       switch (assetType.assetClass) {
         case "ETH":
+          if (await isHederaEvm(getRequiredWallet(this.ethereum))) {
+            return toBn(hasPrice.priceDecimal).multipliedBy(HBAR_IN_TINYBAR)
+          }
           return toBn(hasPrice.priceDecimal).multipliedBy(ETHER_IN_WEI)
         case "ERC20":
           const decimals = await createErc20Contract(getRequiredWallet(this.ethereum), assetType.contract)
