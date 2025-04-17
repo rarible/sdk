@@ -226,38 +226,6 @@ export class EthereumFill {
           supportsPartialFill,
         }
       }
-      case "ETH_LOOKSRARE_ORDER_DATA_V1": {
-        return {
-          originFeeSupport: OriginFeeSupport.FULL,
-          payoutsSupport: PayoutsSupport.NONE,
-          maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
-          supportsPartialFill: true,
-        }
-      }
-      case "ETH_LOOKSRARE_ORDER_DATA_V2": {
-        return {
-          originFeeSupport: OriginFeeSupport.FULL,
-          payoutsSupport: PayoutsSupport.NONE,
-          maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
-          supportsPartialFill: true,
-        }
-      }
-      case "ETH_SUDOSWAP_AMM_DATA_V1": {
-        return {
-          originFeeSupport: OriginFeeSupport.FULL,
-          payoutsSupport: PayoutsSupport.NONE,
-          maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
-          supportsPartialFill: true,
-        }
-      }
-      case "ETH_X2Y2_ORDER_DATA_V1": {
-        return {
-          originFeeSupport: OriginFeeSupport.FULL,
-          payoutsSupport: PayoutsSupport.NONE,
-          maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
-          supportsPartialFill: false,
-        }
-      }
       default:
         throw new Error("Unsupported order type")
     }
@@ -273,13 +241,6 @@ export class EthereumFill {
       case "ETH_OPEN_SEA_V1":
       case "ETH_BASIC_SEAPORT_DATA_V1":
         return Platform.OPEN_SEA
-      case "ETH_LOOKSRARE_ORDER_DATA_V1":
-      case "ETH_LOOKSRARE_ORDER_DATA_V2":
-        return Platform.LOOKSRARE
-      case "ETH_SUDOSWAP_AMM_DATA_V1":
-        return Platform.SUDOSWAP
-      case "ETH_X2Y2_ORDER_DATA_V1":
-        return Platform.X2Y2
       case "ETH_CRYPTO_PUNKS":
         return Platform.CRYPTO_PUNKS
       default:
@@ -311,8 +272,6 @@ export class EthereumFill {
       contract = order.take.type.contract
     } else if (isNft(order.make.type) || order.make.type["@type"] === "COLLECTION") {
       contract = order.make.type.contract
-    } else if (order.make.type["@type"] === "AMM_NFT") {
-      return false
     } else {
       throw new Error("Nft has not been found")
     }

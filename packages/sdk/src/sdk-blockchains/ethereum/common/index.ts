@@ -192,12 +192,6 @@ export function convertToEthereumAssetType(assetType: AssetType): EthereumAssetT
         contract: convertToEthereumAddress(assetType.contract),
       }
     }
-    case "AMM_NFT": {
-      return {
-        assetClass: "AMM_NFT",
-        contract: convertToEthereumAddress(assetType.contract),
-      }
-    }
     case "COLLECTION": {
       return {
         assetClass: "COLLECTION",
@@ -293,51 +287,6 @@ export function convertOrderDataToEth(data: OrderData): SimpleOrder["data"] {
         dataType: "CRYPTO_PUNKS_DATA",
       } as OrderCryptoPunksData
     }
-    case "ETH_X2Y2_ORDER_DATA_V1": {
-      return {
-        dataType: "X2Y2_DATA",
-        itemHash: toWord(data.itemHash),
-        isCollectionOffer: data.isCollectionOffer,
-        isBundle: data.isBundle,
-        side: data.side,
-        orderId: data.orderId,
-      } as OrderX2Y2Data
-    }
-    case "ETH_LOOKSRARE_ORDER_DATA_V1": {
-      return {
-        dataType: "LOOKSRARE_DATA_V1",
-        minPercentageToAsk: data.minPercentageToAsk,
-        strategy: convertToEthereumAddress(data.strategy),
-        nonce: data.nonce,
-        params: data.params && toBinary(data.params),
-      } as OrderLooksRareDataV1
-    }
-    case "ETH_LOOKSRARE_ORDER_DATA_V2": {
-      return {
-        dataType: "LOOKSRARE_DATA_V2",
-        quoteType: OrderLooksRareDataV2QuoteType[data.quoteType],
-        globalNonce: data.globalNonce,
-        orderNonce: data.orderNonce,
-        subsetNonce: data.subsetNonce,
-        strategyId: data.strategyId,
-        additionalParameters: toBinary(data.strategyId),
-        merkleRoot: data.merkleRoot && toBinary(data.merkleRoot),
-        merkleProof: data.merkleProof,
-      } as OrderLooksRareDataV2
-    }
-    case "ETH_SUDOSWAP_AMM_DATA_V1": {
-      return {
-        dataType: "SUDOSWAP_AMM_DATA_V1",
-        poolAddress: convertToEthereumAddress(data.poolAddress),
-        bondingCurve: convertToEthereumAddress(data.bondingCurve),
-        curveType: SudoSwapCurveType[data.curveType],
-        assetRecipient: convertToEthereumAddress(data.assetRecipient),
-        poolType: SudoSwapPoolType[data.poolType],
-        delta: data.delta,
-        fee: data.fee,
-        feeDecimal: data.feeDecimal,
-      } as OrderSudoSwapAmmDataV1
-    }
     default:
       throw new Error(`Unrecognized order data type: ${data["@type"]}`)
   }
@@ -357,14 +306,6 @@ export function getEthOrderType(data: OrderData): SimpleOrder["type"] {
       return "SEAPORT_V1"
     case "ETH_CRYPTO_PUNKS":
       return "CRYPTO_PUNK"
-    case "ETH_X2Y2_ORDER_DATA_V1":
-      return "X2Y2"
-    case "ETH_LOOKSRARE_ORDER_DATA_V1":
-      return "LOOKSRARE"
-    case "ETH_LOOKSRARE_ORDER_DATA_V2":
-      return "LOOKSRARE_V2"
-    case "ETH_SUDOSWAP_AMM_DATA_V1":
-      return "AMM"
     default:
       throw new Error(`Unrecognized order data type: ${data["@type"]}`)
   }

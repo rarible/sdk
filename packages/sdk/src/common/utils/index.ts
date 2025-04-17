@@ -30,7 +30,6 @@ export function getNftContractAddress(assetType: AssetType): UnionContractAddres
     case "CRYPTO_PUNKS":
     case "GEN_ART":
     case "COLLECTION":
-    case "AMM_NFT":
       return assetType.contract
     case "NFT":
     case "NFT_OF_COLLECTION":
