@@ -70,7 +70,7 @@
     "stream-browserify": "^3.0.0"
   },
   "peerDependencies": {
-    "@rarible/api-client": "1.129.0-SNAPSHOT-1.129",
+    "@rarible/api-client": "1.130.0-PR-update-types-version-2",
     "tslib": "^2.3.1"
   },
   "publishConfig": {

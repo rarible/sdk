@@ -7248,10 +7248,10 @@
   dependencies:
     callable-instance "^2.0.0"
 
-"@rarible/api-client@1.129.0-SNAPSHOT-1.129":
-  version "1.129.0-SNAPSHOT-1.129"
-  resolved "https://registry.npmjs.org/@rarible/api-client/-/api-client-1.129.0-SNAPSHOT-1.129.tgz#d6775962eb907b6b1112c6127b7b2a4cc0c6148c"
-  integrity sha512-lw47+DRubRg6XtDh+t0MWY4n4H/QXodZAgPA+D0CXIqfJWakyozNRkmjjZtOhfVfLaPy7fv1i0Dg4AgPXMCCDw==
+"@rarible/api-client@1.130.0-PR-update-types-version-2":
+  version "1.130.0-PR-update-types-version-2"
+  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-1.130.0-PR-update-types-version-2.tgz#3dff1493d6810436d9e5815934dd994505d4787a"
+  integrity sha512-wkYjhmDbhf6Mss211XXyb3g6+bUrQZR+8ITUy3OWFRpBqVwa6dHt3yapbQqybqNk5Rmq92+LwGf/FHklBFtW1w==
 
 "@rarible/eslint-config-react@~0.10.0-alpha.37":
   version "0.10.0-alpha.37"
