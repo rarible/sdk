@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.113](https://github.com/rarible/sdk/compare/v0.13.112...v0.13.113) (2025-04-17)
+
+### Features
+
+- update types ([#752](https://github.com/rarible/sdk/issues/752)) ([467968d](https://github.com/rarible/sdk/commit/467968d2a54d591722c52da85f84912d168c5c38))
+
 ## [0.13.112](https://github.com/rarible/sdk/compare/v0.13.111...v0.13.112) (2025-04-10)
 
 **Note:** Version bump only for package @rarible/aptos-wallet
