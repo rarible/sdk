@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@rarible/ethereum-sdk-test-common": "^0.13.112",
-    "@rarible/types": "0.10.2",
+    "@rarible/types": "0.10.3",
     "@types/jest": "^27.0.2",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
