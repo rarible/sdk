@@ -161,6 +161,10 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
         return `https://explorer.goat.network/tx/${this.hash()}`
       case "goat-testnet":
         return `https://explorer.testnet3.goat.network/tx/${this.hash()}`
+      case "settlus":
+        return `https://mainnet.settlus.network/tx/${this.hash()}`
+      case "settlus-testnet":
+        return `https://eth-sepolia.blockscout.com/tx/${this.hash()}`
       default:
         throw new Error("Unsupported transaction network")
     }
