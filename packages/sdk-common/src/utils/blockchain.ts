@@ -19,6 +19,7 @@ export const EVMBlockchains = [
   Blockchain.OASYS,
   Blockchain.SEI,
   Blockchain.MOONBEAM,
+  Blockchain.SETTLUS,
   Blockchain.PALM,
   Blockchain.ETHERLINK,
   Blockchain.LISK,
