@@ -53,7 +53,7 @@ export class EclipseNftSdk implements IEclipseNftSdk {
       }))
 
     if (!sourceTokenAccount) {
-      throw new Error("Can't find current token account for for mint")
+      throw new Error("Can't find current token account for mint")
     }
 
     const tokenAmountToTransfer = toBn(request.amount).toNumber() ?? 1
@@ -114,7 +114,7 @@ export class EclipseNftSdk implements IEclipseNftSdk {
       }))
 
     if (!tokenAccount) {
-      throw new Error("Can't find current token account for for mint")
+      throw new Error("Can't find current token account for mint")
     }
 
     const tokenAmountToBurn = toBn(request.amount).toNumber() ?? 1
