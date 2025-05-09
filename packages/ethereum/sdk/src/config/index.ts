@@ -64,6 +64,8 @@ import { goatMainnetConfig } from "./goat"
 import { goatTestnetConfig } from "./goat-testnet"
 import { settlusConfig } from "./settlus"
 import { settlusTestnetConfig } from "./settlus-testnet"
+import { zkCandyConfig } from "./zkcandy"
+import { zkCandyTestnetConfig } from "./zkcandy-testnet"
 
 export const configDictionary: Record<string, EthereumConfig> = {
   mainnet: mainnetConfig,
@@ -124,6 +126,8 @@ export const configDictionary: Record<string, EthereumConfig> = {
   "abstract-testnet": abstractTestnetConfig,
   viction: victionMainnetConfig,
   "viction-testnet": victionTestnetConfig,
+  zkCandy: zkCandyConfig,
+  "zkCandy-testnet": zkCandyTestnetConfig,
   hedera: hederaMainnetConfig,
   "hedera-testnet": hederaTestnetConfig,
   goat: goatMainnetConfig,
