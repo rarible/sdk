@@ -29,6 +29,7 @@ export const EVMBlockchains = [
   Blockchain.SHAPE,
   Blockchain.BERACHAIN,
   Blockchain.TELOS,
+  Blockchain.ZKCANDY,
   Blockchain.ABSTRACT,
   Blockchain.VICTION,
   Blockchain.HEDERAEVM,

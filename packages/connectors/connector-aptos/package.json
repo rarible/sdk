@@ -18,7 +18,7 @@
   "dependencies": {
     "@rarible/api-client": "1.130.0-PR-update-types-version-2",
     "@rarible/connector": "^0.13.114",
-    "@rarible/types": "0.10.3"
+    "@rarible/types": "0.10.4"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

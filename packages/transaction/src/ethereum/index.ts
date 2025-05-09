@@ -153,6 +153,10 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
         return `https://www.vicscan.xyz/txs/${this.hash()}`
       case "viction-testnet":
         return `https://testnet.vicscan.xyz/txs/${this.hash()}`
+      case "zkCandy":
+        return `https://explorer.zkcandy.io/tx/${this.hash()}`
+      case "zkCandy-testnet":
+        return `https://sepolia.explorer.zkcandy.io/tx/${this.hash()}`
       case "hedera-testnet":
         return `https://hashscan.io/testnet/transaction/${this.hash()}`
       case "hedera":
