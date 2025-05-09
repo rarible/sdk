@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.115](https://github.com/rarible/sdk/compare/v0.13.114...v0.13.115) (2025-05-09)
+
+### Bug Fixes
+
+- settlus-testnet tx link ([#755](https://github.com/rarible/sdk/issues/755)) ([762ea23](https://github.com/rarible/sdk/commit/762ea23420a9075270cfbf03d2450188dad40325))
+
+### Features
+
+- support zkcandy ([#756](https://github.com/rarible/sdk/issues/756)) ([ebc90c0](https://github.com/rarible/sdk/commit/ebc90c0245f5c6a3cab3eda59fa0ef5a31b91d01))
+
 ## [0.13.114](https://github.com/rarible/sdk/compare/v0.13.113...v0.13.114) (2025-04-18)
 
 ### Features
