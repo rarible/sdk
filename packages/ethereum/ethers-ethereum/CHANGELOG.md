@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.116](https://github.com/rarible/sdk/compare/v0.13.115...v0.13.116) (2025-05-16)
+
+### Features
+
+- use gasLimit param for ethers transaction ([#757](https://github.com/rarible/sdk/issues/757)) ([1de160b](https://github.com/rarible/sdk/commit/1de160b9fb3c35ac1f10aceec32d2407a66ede17))
+
 ## [0.13.115](https://github.com/rarible/sdk/compare/v0.13.114...v0.13.115) (2025-05-09)
 
 ### Features
