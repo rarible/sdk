@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.117](https://github.com/rarible/sdk/compare/v0.13.116...v0.13.117) (2025-06-03)
+
+### Features
+
+- fix for getting transaction data for opensea orders in transaction-backend ([#758](https://github.com/rarible/sdk/issues/758)) ([003c141](https://github.com/rarible/sdk/commit/003c141e6c0ce7f93ba55a3d740a705eacb6d177))
+
 ## [0.13.116](https://github.com/rarible/sdk/compare/v0.13.115...v0.13.116) (2025-05-16)
 
 **Note:** Version bump only for package @rarible/protocol-ethereum-sdk
