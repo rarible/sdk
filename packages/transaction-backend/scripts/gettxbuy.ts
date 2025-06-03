@@ -7,6 +7,7 @@ interface Part {
 
 interface RequestBody {
   from: string
+  to: string
   request: {
     orderId: string // Rarible OrderId in Union format ${blockchainGroup}:${orderId}
     amount: number
@@ -64,12 +65,13 @@ const baseUrl = "http://localhost:5500/v0.1/orders/buy-tx"
 
 async function getTransactionData(): Promise<void> {
   const requestBody: RequestBody = {
-    from: "ETHEREUM:0x5b04Bd4CF6ac8F976a1d578b7156206b781ca861",
+    from: "0x669f66b15544d3E3AEA8B9A88C92285ffd9D3a45",
+    to: "0xbe4f5AdF3913E7EF0437a21174490a42853A7637",
     request: {
-      orderId: "POLYGON:" + orderData.id,
+      orderId: "POLYGON:0x47330bc27fff59e777dad28a17cba26adc0e1c09f3f35551b5a977aa96400bcf",
       amount: 1,
       originFees: [],
-      payouts: orderData.data.originFees,
+      payouts: [{ account: "0x1cf0df2a5a20cd61d68d4489eebbf85b8d39e18a", value: 150 }],
     },
   }
 

@@ -5,6 +5,7 @@ import { Action } from "@rarible/action"
 import type { AssetType, EVMAddress } from "@rarible/ethereum-api-client"
 import type { GetAmmBuyInfoRequest } from "@rarible/ethereum-api-client/build/apis/OrderControllerApi"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client/build/models"
+import { toBn } from "@rarible/utils"
 import type {
   SimpleCryptoPunkOrder,
   SimpleLegacyOrder,
@@ -19,6 +20,8 @@ import { checkAssetType } from "../check-asset-type"
 import { checkLazyAssetType } from "../check-lazy-asset-type"
 import type { EthereumNetwork, IRaribleEthereumSdkConfig } from "../../types"
 import type { GetConfigByChainId } from "../../config"
+import { getRequiredWallet } from "../../common/get-required-wallet"
+import { HEDERAEVM_GAS_LIMIT, isHederaEvm, MULTIPLICATOR_FOR_HBAR_IN_RPC_REQUST } from "../../common"
 import type {
   AmmOrderFillRequest,
   BuyOrderAction,
@@ -51,9 +54,6 @@ import { LooksrareOrderHandler } from "./looksrare"
 import { AmmOrderHandler } from "./amm"
 import { getUpdatedCalldata } from "./common/get-updated-call"
 import { LooksrareV2OrderHandler } from "./looksrare-v2"
-import { getRequiredWallet } from "../../common/get-required-wallet"
-import { toBn } from "@rarible/utils"
-import { HEDERAEVM_GAS_LIMIT, isHederaEvm, MULTIPLICATOR_FOR_HBAR_IN_RPC_REQUST } from "../../common"
 
 export class OrderFiller {
   v1Handler: RaribleV1OrderHandler
@@ -159,6 +159,7 @@ export class OrderFiller {
     }
     const { functionCall, options } = await this.getTransactionRequestData(request, inverted, {
       disableCheckingBalances: true,
+      disableApprove: true,
     })
     const callInfo = await functionCall.getCallInfo()
     const value = options.value?.toString() || "0"
@@ -213,7 +214,10 @@ export class OrderFiller {
   }
 
   private async sendTransaction(request: FillOrderRequest, inverted: SimpleOrder): Promise<EthereumTransaction> {
-    const { functionCall, options } = await this.getTransactionRequestData(request, inverted)
+    const { functionCall, options } = await this.getTransactionRequestData(request, inverted, {
+      disableApprove: false,
+      disableCheckingBalances: false,
+    })
 
     let value = options.value
     let gas = options.gas
@@ -235,7 +239,7 @@ export class OrderFiller {
   private async getTransactionRequestData(
     request: FillOrderRequest,
     inverted: SimpleOrder,
-    options?: { disableCheckingBalances?: boolean },
+    options: { disableCheckingBalances: boolean; disableApprove: boolean },
   ): Promise<OrderFillSendData> {
     switch (request.order.type) {
       case "RARIBLE_V1":
@@ -254,7 +258,8 @@ export class OrderFiller {
         )
       case "SEAPORT_V1":
         return this.seaportHandler.getTransactionData(<SeaportV1OrderFillRequest>request, {
-          disableCheckingBalances: options?.disableCheckingBalances,
+          disableCheckingBalances: options.disableCheckingBalances,
+          disableApprove: options.disableApprove,
         })
       case "LOOKSRARE":
         return this.looksrareHandler.getTransactionData(<LooksrareOrderFillRequest>request)
@@ -283,7 +288,10 @@ export class OrderFiller {
     if (request.assetType && inverted.make.assetType.assetClass === "COLLECTION") {
       inverted.make.assetType = await this.checkAssetType(request.assetType)
     }
-    const { functionCall, options } = await this.getTransactionRequestData(request, inverted)
+    const { functionCall, options } = await this.getTransactionRequestData(request, inverted, {
+      disableApprove: false,
+      disableCheckingBalances: false,
+    })
 
     const { contract } = await functionCall.getCallInfo()
     return {

@@ -57,10 +57,12 @@ export async function fulfillOrder(
     tips,
     unitsToFill,
     disableCheckingBalances,
+    disableApprove,
   }: {
     tips?: TipInputItem[]
     unitsToFill?: BigNumberValue
     disableCheckingBalances?: boolean
+    disableApprove?: boolean
   },
 ) {
   const seaportContract = createSeaportV14Contract(ethereum, toEVMAddress(simpleOrder.data.protocol))
@@ -122,18 +124,20 @@ export async function fulfillOrder(
   // We cannot use basic fulfill if user is trying to partially fill though.
   if (!unitsToFill && isRecipientSelf && shouldUseBasicFulfill(sanitizedOrder.parameters, totalFilled)) {
     // TODO: Use fulfiller proxy if there are approvals needed directly, but none needed for proxy
-    await approveBeforeBasicFulfillOrder({
-      ethereum,
-      send,
-      order,
-      tips: tipConsiderationItems,
-      offererBalancesAndApprovals,
-      fulfillerBalancesAndApprovals,
-      timeBasedItemParams,
-      offererOperator,
-      fulfillerOperator,
-      disableCheckingBalances,
-    })
+    if (!disableApprove) {
+      await approveBeforeBasicFulfillOrder({
+        ethereum,
+        send,
+        order,
+        tips: tipConsiderationItems,
+        offererBalancesAndApprovals,
+        fulfillerBalancesAndApprovals,
+        timeBasedItemParams,
+        offererOperator,
+        fulfillerOperator,
+        disableCheckingBalances,
+      })
+    }
     return getfulfillBasicOrderData({
       order: sanitizedOrder,
       timeBasedItemParams,
@@ -142,24 +146,25 @@ export async function fulfillOrder(
       seaportContract,
     })
   }
-
-  await approveBeforeStandardFulfillOrder({
-    ethereum,
-    send,
-    order: sanitizedOrder,
-    unitsToFill,
-    totalFilled,
-    totalSize: totalSize.eq(0) ? getMaximumSizeForOrder(sanitizedOrder) : totalSize,
-    offerCriteria,
-    considerationCriteria,
-    tips: tipConsiderationItems,
-    offererBalancesAndApprovals,
-    fulfillerBalancesAndApprovals,
-    timeBasedItemParams,
-    offererOperator,
-    fulfillerOperator,
-    disableCheckingBalances,
-  })
+  if (!disableApprove) {
+    await approveBeforeStandardFulfillOrder({
+      ethereum,
+      send,
+      order: sanitizedOrder,
+      unitsToFill,
+      totalFilled,
+      totalSize: totalSize.eq(0) ? getMaximumSizeForOrder(sanitizedOrder) : totalSize,
+      offerCriteria,
+      considerationCriteria,
+      tips: tipConsiderationItems,
+      offererBalancesAndApprovals,
+      fulfillerBalancesAndApprovals,
+      timeBasedItemParams,
+      offererOperator,
+      fulfillerOperator,
+      disableCheckingBalances,
+    })
+  }
   return getFulfillStandardOrderData({
     order: sanitizedOrder,
     unitsToFill,
