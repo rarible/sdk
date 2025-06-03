@@ -39,7 +39,10 @@ export class SeaportOrderHandler {
   ) {}
 
   async sendTransaction(request: SeaportV1OrderFillRequest): Promise<EthereumTransaction> {
-    const { functionCall, options } = await this.getTransactionData(request)
+    const { functionCall, options } = await this.getTransactionData(request, {
+      disableApprove: false,
+      disableCheckingBalances: false,
+    })
     return this.send(functionCall, options)
   }
 
@@ -84,7 +87,7 @@ export class SeaportOrderHandler {
   }
   async getTransactionData(
     request: SeaportV1OrderFillRequest,
-    requestOptions?: { disableCheckingBalances?: boolean },
+    requestOptions: { disableCheckingBalances: boolean; disableApprove: boolean },
   ): Promise<OrderFillSendData> {
     const ethereum = getRequiredWallet(this.ethereum)
     const { order } = request
@@ -115,7 +118,8 @@ export class SeaportOrderHandler {
     const { functionCall, options } = await fulfillOrder(ethereum, this.send.bind(this), order, {
       unitsToFill,
       tips,
-      disableCheckingBalances: requestOptions?.disableCheckingBalances,
+      disableCheckingBalances: requestOptions.disableCheckingBalances,
+      disableApprove: requestOptions.disableApprove,
     })
 
     return {
