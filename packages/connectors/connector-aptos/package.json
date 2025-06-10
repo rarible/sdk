@@ -16,7 +16,7 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/api-client": "1.130.0-PR-update-types-version-2",
+    "@rarible/api-client": "1.135.0",
     "@rarible/connector": "^0.13.117",
     "@rarible/types": "0.10.4"
   },

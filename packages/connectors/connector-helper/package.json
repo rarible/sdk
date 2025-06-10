@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@imtbl/imx-sdk": "^2.1.1",
-    "@rarible/api-client": "1.130.0-PR-update-types-version-2",
+    "@rarible/api-client": "1.135.0",
     "@rarible/connector": "^0.13.117",
     "@rarible/connector-beacon": "^0.13.117",
     "@rarible/connector-fcl": "^0.13.117",
