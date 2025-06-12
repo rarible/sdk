@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.118](https://github.com/rarible/sdk/compare/v0.13.117...v0.13.118) (2025-06-12)
+
+### Features
+
+- **RX-1705:** Remove Tezos, Xai and Fivire chains ([b3b8fdc](https://github.com/rarible/sdk/commit/b3b8fdc89c59653b92646f26c289059f7526eaee))
+
 ## [0.13.117](https://github.com/rarible/sdk/compare/v0.13.116...v0.13.117) (2025-06-03)
 
 **Note:** Version bump only for package @rarible/connector-aptos-wallet-core

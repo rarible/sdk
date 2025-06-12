@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-solflare",
-  "version": "0.13.117",
+  "version": "0.13.118",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -16,7 +16,7 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/connector-solana": "^0.13.117",
+    "@rarible/connector-solana": "^0.13.118",
     "@solflare-wallet/sdk": "^1.4.2"
   },
   "publishConfig": {

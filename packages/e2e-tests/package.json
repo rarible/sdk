@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-e2e-tests",
-  "version": "0.13.117",
+  "version": "0.13.118",
   "private": true,
   "homepage": "",
   "license": "ISC",
@@ -16,9 +16,9 @@
   },
   "dependencies": {
     "@rarible/api-client": "1.136.0-SNAPSHOT-update-types",
-    "@rarible/ethereum-sdk-test-common": "^0.13.117",
+    "@rarible/ethereum-sdk-test-common": "^0.13.118",
     "@rarible/flow-test-common": "~0.6.0-beta.3",
-    "@rarible/sdk-wallet": "^0.13.117",
+    "@rarible/sdk-wallet": "^0.13.118",
     "@rarible/types": "0.10.5",
     "bignumber.js": "^9.0.1"
   },
