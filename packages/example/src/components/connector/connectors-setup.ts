@@ -289,7 +289,6 @@ export function getConnector(environment: RaribleSdkEnvironment) {
   const mainConnector = Connector.create(injected, state)
     .add(nfid)
     .add(walletLink)
-    .add(beacon)
     .add(fcl)
     .add(walletConnectV2)
     .add(salmonConnect)
