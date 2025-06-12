@@ -1,5 +1,5 @@
 import { toUnionContractAddress, toCurrencyId, ZERO_ADDRESS } from "@rarible/types"
-import type { EthErc20AssetType, EthEthereumAssetType, TezosFTAssetType, TezosXTZAssetType } from "@rarible/api-client"
+import type { EthErc20AssetType, EthEthereumAssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type {
   FlowAssetTypeFt,
@@ -50,20 +50,6 @@ describe("test getCurrencyAssetType", () => {
     expect(assetType["@type"]).toEqual("FLOW_FT")
     expect(assetType.contract).toEqual("FLOW:A.7e60df042a9c0868.FlowToken")
   })
-  test("get XTZ asset type from currency id", async () => {
-    const assetType = getCurrencyAssetType(
-      toCurrencyId("TEZOS:tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU"),
-    ) as TezosXTZAssetType
-    expect(assetType["@type"]).toEqual("XTZ")
-  })
-  test("get tezos_ft asset type from currency id", async () => {
-    const assetType = getCurrencyAssetType(
-      toCurrencyId("TEZOS:KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC:0"),
-    ) as TezosFTAssetType
-    expect(assetType["@type"]).toEqual("TEZOS_FT")
-    expect(assetType.contract).toEqual("TEZOS:KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC")
-    expect(assetType.tokenId).toEqual("0")
-  })
   test("test getDataFromCurrencyId with ETH", async () => {
     const { blockchain, contract, tokenId } = getDataFromCurrencyId(
       toCurrencyId("ETHEREUM:0x0000000000000000000000000000000000000000"),
@@ -112,9 +98,6 @@ describe("test getCurrencyAssetType", () => {
     )
     expect(convertCurrencyIdToAssetType(toCurrencyId("SOLANA:0x0000000000000000000000000000000000000000"))).toEqual({
       "@type": "SOLANA_SOL",
-    })
-    expect(convertCurrencyIdToAssetType(toCurrencyId("TEZOS:tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU"))).toEqual({
-      "@type": "XTZ",
     })
   })
 

@@ -1,4 +1,4 @@
-import { toBigNumber, toCurrencyId, toItemId, toUnionContractAddress, ZERO_ADDRESS } from "@rarible/types"
+import { toCurrencyId, toItemId, toUnionContractAddress, ZERO_ADDRESS } from "@rarible/types"
 import type * as ApiClient from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type {
@@ -112,18 +112,6 @@ export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestC
       contract: toUnionContractAddress(id),
     }
   }
-  if (blockchain === Blockchain.TEZOS) {
-    if (id === XTZ) {
-      return {
-        "@type": "XTZ",
-      }
-    }
-    return {
-      "@type": "TEZOS_FT",
-      contract: toUnionContractAddress(`TEZOS:${contract}`),
-      tokenId: tokenId ? toBigNumber(tokenId) : undefined,
-    }
-  }
   if (blockchain === Blockchain.SOLANA) {
     if (contract === ZERO_ADDRESS) {
       return {
@@ -183,5 +171,3 @@ export function normalizeId(input: string) {
   } catch (e) {}
   return input
 }
-
-export const XTZ = "TEZOS:tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU" as ApiClient.CurrencyId

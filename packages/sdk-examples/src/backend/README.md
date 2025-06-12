@@ -80,21 +80,6 @@ const raribleSdkWallet = new SolanaWallet(keypairWallet)
 const raribleSdk = createRaribleSdk(raribleSdkWallet, "dev")
 ```
 
-#### Tezos
-```typescript
-import { TezosWallet } from "@rarible/sdk-wallet"
-import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
-import { createRaribleSdk } from "@rarible/sdk"
-
-const walletEdsk = "edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6" +
-"H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
-const provider = in_memory_provider(
-    walletEdsk,
-    "https://test-tezos-node.rarible.org"
-)
-const wallet = new TezosWallet(provider)
-const sdk = createRaribleSdk(wallet, "testnet")
-```
 #### Flow
 
 ```typescript

@@ -183,21 +183,6 @@ export function isEVMWarning(error: any): boolean {
   return EVM_WARN_MESSAGES.some(msg => msgLowerCase?.includes(msg))
 }
 
-export function isTezosWarning(err: any): boolean {
-  const isWrappedError = err.name === "TezosProviderError"
-  const originalError = isWrappedError ? err.error : err
-  return (
-    (originalError?.name === "UnknownBeaconError" && originalError?.title === "Aborted") ||
-    originalError?.name === "NotGrantedTempleWalletError" ||
-    originalError?.name === "NoAddressBeaconError" ||
-    originalError?.name === "NoPrivateKeyBeaconError" ||
-    originalError?.name === "BroadcastBeaconError" ||
-    originalError?.name === "MissedBlockDuringConfirmationError" ||
-    originalError?.message === "Error: timeout of 30000ms exceeded" ||
-    err?.message?.endsWith("does not have enough funds for transaction")
-  )
-}
-
 export function isSolanaWarning(error: any): boolean {
   return (
     error?.name === "User rejected the request." || error?.error?.code === 4001 || error?.message === "Approval Denied"
@@ -212,8 +197,6 @@ export function isFlowWarning(error: any): boolean {
 
 export function getBlockchainByConnectorId(providerId: string): BlockchainGroup | undefined {
   switch (providerId) {
-    case "beacon":
-      return BlockchainGroup.TEZOS
     case "fcl":
     case "mattel":
       return BlockchainGroup.FLOW

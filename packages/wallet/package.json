@@ -50,13 +50,12 @@
     "@rarible/aptos-wallet": "^0.13.117",
     "@rarible/ethereum-provider": "^0.13.117",
     "@rarible/ethers-ethereum": "^0.13.117",
-    "@rarible/fcl-types": "~0.5.56",
-    "@rarible/flow-sdk": "~0.6.0-beta.1",
+    "@rarible/fcl-types": "~0.6.0-beta.3",
+    "@rarible/flow-sdk": "~0.6.0-beta.3",
     "@rarible/sdk-common": "^0.13.117",
     "@rarible/solana-common": "^0.13.117",
     "@rarible/solana-wallet": "^0.13.117",
-    "@rarible/tezos-sdk": "0.1.46",
-    "@rarible/types": "0.10.4",
+    "@rarible/types": "0.10.5",
     "@rarible/web3-ethereum": "^0.13.117",
     "@rarible/web3-v4-ethereum": "^0.13.117",
     "text-encoding": "~0.7.0"
@@ -70,7 +69,7 @@
     "stream-browserify": "^3.0.0"
   },
   "peerDependencies": {
-    "@rarible/api-client": "1.130.0-PR-update-types-version-2",
+    "@rarible/api-client": "1.136.0-SNAPSHOT-update-types",
     "tslib": "^2.3.1"
   },
   "publishConfig": {

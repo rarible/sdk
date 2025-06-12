@@ -12,7 +12,6 @@ export const EVMBlockchains = [
   Blockchain.ASTARZKEVM,
   Blockchain.BASE,
   Blockchain.FIEF,
-  Blockchain.XAI,
   Blockchain.KROMA,
   Blockchain.CELO,
   Blockchain.SAAKURU,
@@ -25,7 +24,6 @@ export const EVMBlockchains = [
   Blockchain.LISK,
   Blockchain.ALEPHZERO,
   Blockchain.MATCH,
-  Blockchain.FIVIRE,
   Blockchain.SHAPE,
   Blockchain.BERACHAIN,
   Blockchain.TELOS,
@@ -44,7 +42,6 @@ export function isEVMBlockchain(blockchain: string): blockchain is EVMBlockchain
 
 export const NonEVMBlockchains = [
   Blockchain.FLOW,
-  Blockchain.TEZOS,
   Blockchain.SOLANA,
   Blockchain.ECLIPSE,
   Blockchain.IMMUTABLEX,

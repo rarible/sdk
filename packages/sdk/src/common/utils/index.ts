@@ -22,7 +22,6 @@ export function getOrderIdFromFillRequest(req?: PrepareFillRequest): OrderId | u
 export function getNftContractAddress(assetType: AssetType): UnionContractAddress | undefined {
   switch (assetType["@type"]) {
     case "FLOW_NFT":
-    case "TEZOS_NFT":
     case "ERC721":
     case "ERC721_Lazy":
     case "ERC1155":

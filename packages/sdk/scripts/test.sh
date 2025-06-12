@@ -7,10 +7,9 @@ cd "${scripts_dir}/.."
 jest --runInBand --forceExit --testPathPattern=src/sdk-blockchains/ethereum --coverage --coverageReporters=lcov &
 jest --runInBand --forceExit --testPathPattern=src/sdk-blockchains/flow --coverage --coverageReporters=lcov &
 jest --runInBand --forceExit --testPathPattern=src/sdk-blockchains/immutablex --coverage --coverageReporters=lcov &
-jest --runInBand --forceExit --testPathPattern=src/sdk-blockchains/tezos --coverage --coverageReporters=lcov
 wait
 echo "REST OF TESTS:"
-jest --runInBand --forceExit --testPathIgnorePatterns "src/sdk-blockchains/ethereum" "src/sdk-blockchains/immutablex" "src/sdk-blockchains/tezos" "src/sdk-blockchains/flow" --coverage --coverageReporters=lcov
+jest --runInBand --forceExit --testPathIgnorePatterns "src/sdk-blockchains/ethereum" "src/sdk-blockchains/immutablex" "src/sdk-blockchains/flow" --coverage --coverageReporters=lcov
 
 
 end=$(date +%s)

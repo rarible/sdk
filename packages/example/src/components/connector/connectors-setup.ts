@@ -1,10 +1,8 @@
-import { NetworkType as TezosNetwork } from "@airgap/beacon-sdk"
 import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
-import type { ConnectionProvider, IConnectorStateProvider } from "@rarible/connector"
+import type { IConnectorStateProvider } from "@rarible/connector"
 import { Connector, DappType, InjectedWeb3ConnectionProvider } from "@rarible/connector"
 import { FclConnectionProvider } from "@rarible/connector-fcl"
 import { NFIDConnectionProvider } from "@rarible/connector-nfid"
-import { BeaconConnectionProvider } from "@rarible/connector-beacon"
 import { TorusConnectionProvider } from "@rarible/connector-torus"
 import { ThirdwebInAppProvider } from "@rarible/connector-thirdweb"
 import { FirebaseConnectionProvider } from "@rarible/connector-firebase"
@@ -14,8 +12,7 @@ import { WalletLinkConnectionProvider } from "@rarible/connector-walletlink"
 import { PhantomConnectionProvider } from "@rarible/connector-phantom"
 import { SolflareConnectionProvider } from "@rarible/connector-solflare"
 import { SalmonConnectionProvider } from "@rarible/connector-salmon"
-import type { IWalletAndAddress } from "@rarible/connector-helper"
-import { mapFlowWallet, mapImmutableXWallet, mapSolanaWallet, mapTezosWallet } from "@rarible/connector-helper"
+import { mapFlowWallet, mapImmutableXWallet, mapSolanaWallet } from "@rarible/connector-helper"
 import { ImmutableXLinkConnectionProvider } from "@rarible/connector-immutablex-link"
 import { MattelConnectionProvider } from "@rarible/connector-mattel"
 import { WalletConnectConnectionProviderV2 } from "@rarible/connector-walletconnect-v2"
@@ -59,27 +56,6 @@ function environmentToFlowNetwork(environment: RaribleSdkEnvironment) {
   }
 }
 
-function environmentToTezosNetwork(environment: RaribleSdkEnvironment) {
-  switch (environment) {
-    case "prod":
-      return {
-        accessNode: "https://rpc.tzkt.io/mainnet",
-        network: TezosNetwork.MAINNET,
-      }
-    case "development":
-      return {
-        accessNode: "https://rpc.tzkt.io/ghostnet",
-        network: TezosNetwork.CUSTOM,
-      }
-    case "testnet":
-    default:
-      return {
-        accessNode: "https://rpc.tzkt.io/ghostnet",
-        network: TezosNetwork.CUSTOM,
-      }
-  }
-}
-
 const environmentToImmutableXNetwork: Record<RaribleSdkEnvironment, ImxEnv> = {
   prod: "prod",
   testnet: "testnet",
@@ -100,7 +76,6 @@ const state: IConnectorStateProvider = {
 export function getConnector(environment: RaribleSdkEnvironment) {
   const ethChainId = environmentToEthereumChainId[environment]
   const flowNetwork = environmentToFlowNetwork(environment)
-  const tezosNetwork = environmentToTezosNetwork(environment)
 
   const injected = mapEthereumWeb3v4Wallet(
     new InjectedWeb3ConnectionProvider({
@@ -111,14 +86,6 @@ export function getConnector(environment: RaribleSdkEnvironment) {
   const nfid = mapEthereumWeb3v4Wallet(
     new NFIDConnectionProvider({
       origin: process.env.REACT_APP_NFID_ORIGIN || "https://nfid.one",
-    }),
-  )
-
-  const beacon: ConnectionProvider<"beacon", IWalletAndAddress> = mapTezosWallet(
-    new BeaconConnectionProvider({
-      appName: "Rarible Test",
-      accessNode: tezosNetwork.accessNode,
-      network: tezosNetwork.network,
     }),
   )
 

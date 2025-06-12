@@ -2,7 +2,6 @@
 set -e
 
 yarn run build-connector
-yarn run build-connector-beacon
 yarn run build-connector-fcl
 yarn run build-connector-mattel
 yarn run build-connector-helper

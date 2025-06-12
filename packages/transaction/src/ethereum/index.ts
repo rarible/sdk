@@ -89,10 +89,6 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
         return `https://explorer.celo.org/mainnet/tx/${this.hash()}`
       case "testnet-fief":
         return `https://explorer.playground.fiefdom.gg/tx/${this.hash()}`
-      case "testnet-xai":
-        return `https://testnet-explorer-v2.xai-chain.net/tx/${this.hash()}`
-      case "xai":
-        return `https://explorer.xai-chain.net/tx/${this.hash()}`
       case "testnet-kroma":
         return `https://blockscout.sepolia.kroma.network/tx/${this.hash()}`
       case "kroma":

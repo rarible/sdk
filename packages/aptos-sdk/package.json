@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@aptos-labs/ts-sdk": "^1.5.1",
-    "@rarible/types": "0.10.4",
+    "@rarible/types": "0.10.5",
     "@rarible/utils": "0.10.1"
   },
   "devDependencies": {

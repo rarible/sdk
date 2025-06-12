@@ -6,7 +6,7 @@ import { getStateConnected } from "./connection-state"
 
 /**
  * Provider of the connection.
- * Examples: injected web3, fortmatic, temple tezos wallet, blocto.
+ * Examples: injected web3, fortmatic, blocto.
  */
 export type ConnectionProvider<Option, Connection> = {
   /**

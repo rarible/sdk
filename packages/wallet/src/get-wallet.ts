@@ -1,5 +1,4 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
-import type { TezosProvider } from "@rarible/tezos-sdk"
 import type { Fcl } from "@rarible/fcl-types"
 import type { ImxWallet } from "@rarible/immutable-wallet"
 import type { Web3 } from "@rarible/web3-ethereum"
@@ -14,15 +13,7 @@ import * as SdkCommon from "@rarible/sdk-common"
 
 import { AptosSdkWallet } from "@rarible/aptos-wallet"
 import type { ExternalAccount as AptosExternalAccount } from "@rarible/aptos-wallet"
-import {
-  AptosWallet,
-  ImmutableXWallet,
-  EthereumWallet,
-  FlowWallet,
-  SolanaWallet,
-  TezosWallet,
-  isBlockchainWallet,
-} from "./wallets"
+import { AptosWallet, ImmutableXWallet, EthereumWallet, FlowWallet, SolanaWallet, isBlockchainWallet } from "./wallets"
 import type { BlockchainWallet } from "./wallets"
 import type { EtherSigner, RaribleSdkProvider } from "./domain"
 
@@ -30,7 +21,6 @@ export function getRaribleWallet(provider: RaribleSdkProvider): BlockchainWallet
   if (isBlockchainWallet(provider)) return provider
   if (isEthereumProvider(provider)) return new EthereumWallet(provider)
   if (isSolanaSigner(provider)) return new SolanaWallet(provider)
-  if (isTezosProvider(provider)) return new TezosWallet(provider)
   if (isFlowProvider(provider)) return new FlowWallet(provider)
   if (isImxWallet(provider)) return new ImmutableXWallet(provider)
   if (isEthersSigner(provider)) return new EthereumWallet(new EthersEthereum(provider))
@@ -54,10 +44,6 @@ function isEthereumProvider(x: any): x is Ethereum {
 
 function isSolanaSigner(x: any): x is SolanaSigner {
   return "signTransaction" in x && "signAllTransactions" in x && "publicKey" in x
-}
-
-function isTezosProvider(x: any): x is TezosProvider {
-  return "sign" in x && "kind" in x && "public_key" in x
 }
 
 function isFlowProvider(x: any): x is Fcl {

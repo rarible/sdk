@@ -8,7 +8,6 @@ import {
   isFlowWarning,
   isInfoLevel,
   isSolanaWarning,
-  isTezosWarning,
   WrappedError,
 } from "@rarible/sdk-common"
 import { NetworkErrorCode } from "../apis"
@@ -49,10 +48,6 @@ export function isErrorWarning(err: any, blockchain: WalletType | undefined): bo
       if (isEVMWarning(err)) {
         return true
       }
-    }
-
-    if (blockchain === WalletType.TEZOS) {
-      return isTezosWarning(err)
     }
 
     if (blockchain === WalletType.FLOW) {

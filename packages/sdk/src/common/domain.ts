@@ -8,7 +8,7 @@ export type CurrencyType = {
   type: CurrencySubType
 }
 
-export type CurrencySubType = "NATIVE" | "ERC20" | "TEZOS_FT"
+export type CurrencySubType = "NATIVE" | "ERC20"
 
 export interface AbstractPrepareResponse<Id, In, Out> {
   submit: Action<Id, In, Out>
@@ -20,8 +20,6 @@ export type RequestCurrencyAssetType =
   | ApiClient.EthErc20AssetType
   | ApiClient.EthEthereumAssetType
   | ApiClient.FlowAssetTypeFt
-  | ApiClient.TezosXTZAssetType
-  | ApiClient.TezosFTAssetType
   | ApiClient.SolanaNftAssetType
   | ApiClient.SolanaFtAssetType
   | ApiClient.SolanaSolAssetType

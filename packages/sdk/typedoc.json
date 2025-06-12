@@ -10,8 +10,7 @@
     "src/domain.ts",
     "src/types",
     "src/config/domain.ts",
-    "src/sdk-blockchains/solana/domain.ts",
-    "src/sdk-blockchains/tezos/domain.ts"
+    "src/sdk-blockchains/solana/domain.ts"
   ],
   "excludeInternal": true,
   "excludePrivate": true,

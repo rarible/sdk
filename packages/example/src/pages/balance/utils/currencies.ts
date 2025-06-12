@@ -62,16 +62,6 @@ export function getCurrenciesForBlockchain(
           },
         },
       ]
-    case WalletType.TEZOS:
-      return [
-        {
-          isNative: true,
-          requireContract: false,
-          getAssetType: () => ({
-            "@type": "XTZ",
-          }),
-        },
-      ]
     case WalletType.FLOW:
       return [
         {

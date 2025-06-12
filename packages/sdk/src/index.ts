@@ -22,7 +22,6 @@ import type { MintAndSellRequest, MintAndSellResponse } from "./types/nft/mint-a
 import type { HasCollection, HasCollectionId } from "./types/nft/mint/prepare-mint-request.type"
 import type { RaribleSdkEnvironment } from "./config/domain"
 import { createEthereumSdk } from "./sdk-blockchains/ethereum"
-import { createTezosSdk } from "./sdk-blockchains/tezos"
 import { createUnionSdk } from "./sdk-blockchains/union"
 import { createApisSdk } from "./common/apis"
 import { Middlewarer } from "./common/middleware/middleware"
@@ -88,7 +87,6 @@ export function createRaribleSdk(
       ethConfig,
     ),
     createFlowSdk(filterWallet(wallet, WalletType.FLOW), apis, blockchainConfig.flowEnv, undefined, config),
-    createTezosSdk(filterWallet(wallet, WalletType.TEZOS), apis, blockchainConfig, config),
     createSolanaSdk(
       filterWallet(wallet, WalletType.SOLANA),
       apis,

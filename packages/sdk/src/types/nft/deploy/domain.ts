@@ -12,7 +12,6 @@ export type CreateCollectionRequest<T extends CreateCollectionBlockchains = Crea
 
 export interface CreateCollectionAsset extends Record<CreateCollectionBlockchains, DeployTokenAsset> {
   [ApiClient.Blockchain.ETHEREUM]: EthereumCreateCollectionAsset
-  [ApiClient.Blockchain.TEZOS]: TezosCreateCollectionTokenAsset
   [ApiClient.Blockchain.SOLANA]: SolanaCreateCollectionTokenAsset
   [ApiClient.Blockchain.APTOS]: AptosCreateCollectionTokenAsset
 }
@@ -21,26 +20,12 @@ export type CreateCollectionBlockchains = SupportedBlockchain
 
 export type DeployTokenAsset =
   | EthereumCreateCollectionAsset
-  | TezosCreateCollectionTokenAsset
   | SolanaCreateCollectionTokenAsset
   | AptosCreateCollectionTokenAsset
 
 export type SolanaCreateCollectionTokenAsset = {
   arguments: {
     metadataURI: string
-  }
-}
-
-export type TezosCreateCollectionTokenAsset = {
-  assetType: "NFT" | "MT"
-  arguments: {
-    name: string
-    description?: string
-    version?: string
-    authors?: string[]
-    license?: string
-    homepage: string
-    isUserToken: boolean
   }
 }
 

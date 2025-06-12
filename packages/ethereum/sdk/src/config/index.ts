@@ -24,9 +24,7 @@ import { rariTestnetConfig } from "./testnet-rari"
 import { rariMainnetConfig } from "./rari"
 import { baseConfig } from "./base"
 import { baseSepoliaConfig } from "./base-sepolia"
-import { xaiConfig } from "./xai"
 import { fiefTestnetConfig } from "./testnet-fief"
-import { xaiTestnetConfig } from "./testnet-xai"
 import { kromaTestnetConfig } from "./testnet-kroma"
 import { kromaConfig } from "./kroma"
 import { celoTestnetConfig } from "./testnet-celo"
@@ -46,8 +44,6 @@ import { alephzeroMainnetConfig } from "./alephzero"
 import { alephzeroTestnetConfig } from "./alephzero-testnet"
 import { matchConfig } from "./match"
 import { matchTestnetConfig } from "./match-testnet"
-import { fivireConfig } from "./fivire"
-import { fivireTestnetConfig } from "./fivire-testnet"
 import { shapeMainnetConfig } from "./shape"
 import { shapeTestnetConfig } from "./shape-testnet"
 import { berachainTestnetConfig } from "./berachain-testnet"
@@ -91,8 +87,6 @@ export const configDictionary: Record<string, EthereumConfig> = {
   "base-sepolia": baseSepoliaConfig,
   "testnet-celo": celoTestnetConfig,
   celo: celoConfig,
-  "testnet-xai": xaiTestnetConfig,
-  xai: xaiConfig,
   "testnet-fief": fiefTestnetConfig,
   "testnet-kroma": kromaTestnetConfig,
   kroma: kromaConfig,
@@ -114,8 +108,6 @@ export const configDictionary: Record<string, EthereumConfig> = {
   "alephzero-testnet": alephzeroTestnetConfig,
   match: matchConfig,
   "match-testnet": matchTestnetConfig,
-  fivire: fivireConfig,
-  "fivire-testnet": fivireTestnetConfig,
   shape: shapeMainnetConfig,
   "shape-testnet": shapeTestnetConfig,
   berachain: berachainConfig,

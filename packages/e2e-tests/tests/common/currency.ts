@@ -1,6 +1,6 @@
 import type { RequestCurrency } from "@rarible/sdk/build/common/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "@rarible/sdk-wallet"
+import { EthereumWallet, FlowWallet, SolanaWallet } from "@rarible/sdk-wallet"
 import { toUnionContractAddress, toEVMAddress } from "@rarible/types"
 import { getTestErc20Contract } from "@rarible/ethereum-sdk-test-common"
 import { getPromiEventConfirmationPromise } from "@rarible/web3-v4-ethereum/build/utils/to-promises"
@@ -32,13 +32,6 @@ export async function getCurrency(
     if (currency === "ETH") {
       return {
         "@type": "ETH",
-      }
-    }
-    throw new Error(`Wrong currency provided=${currency}`)
-  } else if (wallets.seller instanceof TezosWallet && wallets.buyer instanceof TezosWallet) {
-    if (currency === "XTZ") {
-      return {
-        "@type": "XTZ",
       }
     }
     throw new Error(`Wrong currency provided=${currency}`)
