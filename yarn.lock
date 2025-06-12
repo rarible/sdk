@@ -7182,37 +7182,32 @@
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.2.1-beta.3.tgz#77186b927a7250e324b8ea7c0e3f5feae9125234"
   integrity sha512-4dAl3fBNNK4l9cRxS+MhKqa7GCtu3/LEyNNvdJi/FoVxDHcOlDmTKyVS/sRi/GI2XAN1yazZ84TZSNOOKZJ25Q==
 
-"@rarible/fcl-types@^0.6.0-beta.1":
-  version "0.6.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@rarible/fcl-types/-/fcl-types-0.6.0-beta.1.tgz#e03271f063cee877073977e372bf8024df69d715"
-  integrity sha512-cI9Wa/DrpRcjkK++S0eqXm8zXeqhcyUaIgJ2nrggr+14UafCD2kT8TmWU7nEjqLt4oWZA5d2H4i+L9wNFuexpw==
-
-"@rarible/fcl-types@~0.5.56":
-  version "0.5.56"
-  resolved "https://registry.yarnpkg.com/@rarible/fcl-types/-/fcl-types-0.5.56.tgz#2e796a0170458a645f39cab4bcd6d79aa83373ec"
-  integrity sha512-wlw3Z3W6K/I6GreyP2kmWI16rkQJr7flvJiqICbKvtKGWnBP2dB394pax+s9j8CKqduCV6HJripw+5KAO1UTSg==
+"@rarible/fcl-types@^0.6.0-beta.3", "@rarible/fcl-types@~0.6.0-beta.3":
+  version "0.6.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@rarible/fcl-types/-/fcl-types-0.6.0-beta.3.tgz#18943e381e6a062e1bf0bd6278a4e5386a8b3d0a"
+  integrity sha512-mgTW/W/h7OtseusD5niVnl5hVSBZGoGiBWz8iUSP4EaVPE5H1yzyrl/CvpA5Gp+/Y9jv8MwIJxTmmhUI6W5Hjw==
 
 "@rarible/flow-api-client@~0.1.0-alpha.4":
   version "0.1.0-alpha.4"
   resolved "https://registry.yarnpkg.com/@rarible/flow-api-client/-/flow-api-client-0.1.0-alpha.4.tgz#41280bbe7b3255cbb865b8552034a4a2795ac8c9"
   integrity sha512-u4njScMm1Og0E8ccBAsAjeV7hTB3rxJrHCcujeIXUkztJEYzj2X6YAOERqIVvV9bRtRARnb2mTxGoc6G50cYYg==
 
-"@rarible/flow-sdk@~0.6.0-beta.1":
-  version "0.6.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.6.0-beta.1.tgz#17c00d7f1721386f8132c63953e49833d21821e5"
-  integrity sha512-WXYAIXVR2INgPVjD2E7m4mJnlt0Ou/O2iS5LZmLsqjzDbPM9+QN5//FD19uqRuleJ0t0+uUA9DAI/gGrFFlgSg==
+"@rarible/flow-sdk@~0.6.0-beta.3":
+  version "0.6.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.6.0-beta.3.tgz#b3aeeac6be0069d92b64bc519e9b82309973c7f9"
+  integrity sha512-5XYz0suYqxn5H7p8tNgxl76qgnAQQSKbw5qpbSup++KkFfPH8Y6muMEve5NWywU0vDAgdc8hluOwwlM0iivCUw==
   dependencies:
     "@onflow/fcl" "~1.3.2"
     "@onflow/types" "~0.0.5"
-    "@rarible/fcl-types" "^0.6.0-beta.1"
+    "@rarible/fcl-types" "^0.6.0-beta.3"
     "@rarible/flow-api-client" "~0.1.0-alpha.4"
-    "@rarible/types" "^0.10.0-beta.2"
-    "@rarible/utils" "^0.10.0-beta.2"
+    "@rarible/types" "^0.10.5"
+    "@rarible/utils" "^0.10.1"
 
-"@rarible/flow-test-common@~0.6.0-beta.0":
-  version "0.6.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.6.0-beta.0.tgz#b2ff0eb0eabe19ba2e0ae17b328867c95a74911c"
-  integrity sha512-Crl3EXMVgghxQtIkTBnzyiPvLfl+BpPskXxJ2fz2kBAsVpRSu1mqAem5CnoSRkjIxERSuFskzOE7+CMEooVJBw==
+"@rarible/flow-test-common@~0.6.0-beta.3":
+  version "0.6.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.6.0-beta.3.tgz#1caaa0490afa204deb157869638cc736e39b637a"
+  integrity sha512-dQencTV8bNxC9SZ6ryxw/kWa6/pHS/9O/z0SZ4enywmM+uiEWbt7rvZ+4lktA6pZseSEbkqfnmGhxs7M26cruQ==
   dependencies:
     "@onflow/config" "^1.0.5"
     elliptic "^6.5.4"
@@ -7249,33 +7244,17 @@
     ethereumjs-util "^7.1.0"
     ethereumjs-wallet "^1.0.1"
 
-"@rarible/types@0.10.5":
+"@rarible/types@0.10.5", "@rarible/types@^0.10.5":
   version "0.10.5"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.10.5.tgz#649ecf250e0e73443f5008775037a6ec7c061a1f"
   integrity sha512-k2y/tvo1TcrOwxJyzY2qvmnLTpW6KZqJ4L4zlC363jPW5HwFax1kK1w/pXEgebqhfdCbo1+y6uDKJ6S3Rp4A8g==
   dependencies:
     "@rarible/utils" "^0.10.1"
 
-"@rarible/types@^0.10.0-beta.2":
-  version "0.10.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.10.0-beta.2.tgz#19d36899ea826d200f41032640b1706997706f56"
-  integrity sha512-lywiqWjkY5VBscIMPMMj65+kog/dkrfUoDX3V+788MZE86Yd9WGWixyceBCuqf0zFJKkeAoEOFuAJganjgtJPg==
-  dependencies:
-    "@rarible/utils" "^0.10.0-beta.2"
-
 "@rarible/utils@0.10.1", "@rarible/utils@^0.10.1":
   version "0.10.1"
   resolved "http://nexus.rarible.int/repository/npm-all/@rarible/utils/-/utils-0.10.1.tgz#7e1193b837d2a13639e63fda6dbfc6719fe4c39f"
   integrity sha512-vboCELvFcQ2OjQMHMz7W/Ou958SgBizR5wAPuaM+cRqa2zYCoRgyxqV8HwF7DXxSiYohIFwi+tTLqGgzQtZqvA==
-  dependencies:
-    bignumber.js "^9.0.0"
-    generic-type-guard "^3.7.2"
-    ts-custom-error "^3.3.1"
-
-"@rarible/utils@^0.10.0-beta.2":
-  version "0.10.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.10.0-beta.2.tgz#3f4887f90f3bf44c2d325d8ee79f0d7145e89a34"
-  integrity sha512-Tgz8vQg+wUK98j3ty58/BvucX1dNViq1ZB/XTpn0YWqPf6kM8V5ZGveizNxeRacUzZ9h9B4cdERpuVXRDNTw/A==
   dependencies:
     bignumber.js "^9.0.0"
     generic-type-guard "^3.7.2"
