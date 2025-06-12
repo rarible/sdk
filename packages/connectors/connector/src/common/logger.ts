@@ -1,13 +1,6 @@
 import type { LoggableValue } from "@rarible/logger/build/domain"
 import { RemoteLogger } from "@rarible/logger/build"
-import {
-  getBlockchainByConnectorId,
-  isEVMWarning,
-  isInfoLevel,
-  isSolanaWarning,
-  isTezosWarning,
-  retry,
-} from "@rarible/sdk-common"
+import { getBlockchainByConnectorId, isEVMWarning, isInfoLevel, isSolanaWarning, retry } from "@rarible/sdk-common"
 import { BlockchainGroup } from "@rarible/api-client"
 import type { Fingerprint } from "./fingerprint"
 import { getFingerprint } from "./fingerprint"
@@ -55,7 +48,6 @@ export function getErrorLogLevel(error: any, providerId: string | undefined) {
   const blockchain = getBlockchainByConnectorId(providerId)
   if (isInfoLevel(error)) return LogLevelConnector.INFO
   if (blockchain === BlockchainGroup.ETHEREUM && isEVMWarning(error)) return LogLevelConnector.WARNING
-  if (blockchain === BlockchainGroup.TEZOS && isTezosWarning(error)) return LogLevelConnector.WARNING
   if (blockchain === BlockchainGroup.SOLANA && isSolanaWarning(error)) return LogLevelConnector.WARNING
   return LogLevelConnector.ERROR
 }

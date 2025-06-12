@@ -4,7 +4,6 @@ import { Box } from "@mui/material"
 import { WalletType } from "@rarible/sdk-wallet"
 import { useSdkContext } from "../../components/connector/sdk"
 import { EthereumDeployForm } from "./ethereum-deploy-form"
-import { TezosDeployForm } from "./tezos-deploy-form"
 import { SolanaDeployForm } from "./solana-deploy-form"
 import { AptosDeployForm } from "./aptos-deploy-form"
 
@@ -23,8 +22,6 @@ export function DeployForm({ form }: IDeployFormProps) {
   switch (blockchain) {
     case WalletType.ETHEREUM:
       return <EthereumDeployForm form={form} />
-    case WalletType.TEZOS:
-      return <TezosDeployForm form={form} />
     case WalletType.SOLANA:
       return <SolanaDeployForm form={form} />
     case WalletType.APTOS:

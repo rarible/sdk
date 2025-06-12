@@ -31,7 +31,7 @@
   "dependencies": {
     "@ethersproject/keccak256": "^5.6.0",
     "@rarible/action": "~0.9.1",
-    "@rarible/api-client": "1.130.0-PR-update-types-version-2",
+    "@rarible/api-client": "1.136.0-SNAPSHOT-update-types",
     "@rarible/aptos-sdk": "^0.13.117",
     "@rarible/eclipse-sdk": "^0.13.117",
     "@rarible/flow-sdk": "~0.6.0-beta.1",
@@ -43,14 +43,12 @@
     "@rarible/sdk-transaction": "^0.13.117",
     "@rarible/sdk-wallet": "^0.13.117",
     "@rarible/solana-sdk": "^0.13.117",
-    "@rarible/tezos-sdk": "0.1.46",
-    "@rarible/types": "0.10.4",
+    "@rarible/types": "0.10.5",
     "@rarible/utils": "0.10.1",
     "@solana/web3.js": "~1.54.0",
     "bignumber.js": "^9.0.1",
     "callable-instance": "^2.0.0",
     "mime-types": "^2.1.27",
-    "tezos-api-client": "~0.0.19",
     "uuid": "^8.3.1"
   },
   "devDependencies": {
@@ -86,7 +84,7 @@
     "yargs": "^17.2.1"
   },
   "peerDependencies": {
-    "@rarible/api-client": "1.130.0-PR-update-types-version-2",
+    "@rarible/api-client": "1.136.0-SNAPSHOT-update-types",
     "axios": "^0.26.1",
     "tslib": "^2.3.1"
   }

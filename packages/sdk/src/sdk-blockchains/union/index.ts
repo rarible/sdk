@@ -59,7 +59,6 @@ import type { MetaUploadRequest, UploadMetaResponse } from "./meta/domain"
 export function createUnionSdk(
   evm: IRaribleInternalSdk,
   flow: IRaribleInternalSdk,
-  tezos: IRaribleInternalSdk,
   solana: IRaribleInternalSdk,
   eclipse: IRaribleInternalSdk,
   immutablex: IRaribleInternalSdk,
@@ -69,7 +68,6 @@ export function createUnionSdk(
     balances: new UnionBalanceSdk({
       EVM: evm.balances,
       FLOW: flow.balances,
-      TEZOS: tezos.balances,
       SOLANA: solana.balances,
       IMMUTABLEX: immutablex.balances,
       ECLIPSE: eclipse.balances,
@@ -78,7 +76,6 @@ export function createUnionSdk(
     nft: new UnionNftSdk({
       EVM: evm.nft,
       FLOW: flow.nft,
-      TEZOS: tezos.nft,
       SOLANA: solana.nft,
       IMMUTABLEX: immutablex.nft,
       ECLIPSE: eclipse.nft,
@@ -87,7 +84,6 @@ export function createUnionSdk(
     order: new UnionOrderSdk({
       EVM: evm.order,
       FLOW: flow.order,
-      TEZOS: tezos.order,
       SOLANA: solana.order,
       IMMUTABLEX: immutablex.order,
       ECLIPSE: eclipse.order,
@@ -96,7 +92,6 @@ export function createUnionSdk(
     restriction: new UnionRestrictionSdk({
       EVM: evm.restriction,
       FLOW: flow.restriction,
-      TEZOS: tezos.restriction,
       SOLANA: solana.restriction,
       IMMUTABLEX: immutablex.restriction,
       ECLIPSE: eclipse.restriction,
@@ -326,8 +321,6 @@ function getBiddingBlockchain(currencyOrOrder: CurrencyOrOrder): SupportedBlockc
             return Blockchain.SOLANA
           case "ETH":
             return Blockchain.ETHEREUM
-          case "XTZ":
-            return Blockchain.TEZOS
           default:
         }
       }

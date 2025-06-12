@@ -4,7 +4,6 @@ import type { EVMBlockchain } from "@rarible/sdk-common"
 import type { CreateCollectionBlockchains } from "./domain"
 import type { CreateCollectionResponse } from "./domain"
 import type { CreatePublicCollectionArguments } from "./domain"
-import type { TezosCreateCollectionTokenAsset } from "./domain"
 import type { AptosCreateCollectionTokenAsset } from "./domain"
 
 export type ICreateCollectionSimplified = (req: CreateCollectionRequestSimplified) => Promise<CreateCollectionResponse>
@@ -12,7 +11,6 @@ export type ICreateCollectionSimplified = (req: CreateCollectionRequestSimplifie
 export type CreateCollectionRequestSimplified =
   | EthereumCreatePublicCollectionSimplified
   | EthereumCreatePrivateCollectionSimplified
-  | TezosCreatePublicCollectionSimplified
   | SolanaCreateCollectionSimplified
   | AptosCreateCollectionSimplified
 
@@ -39,15 +37,6 @@ export interface EthereumCreatePrivateCollectionSimplified
 export type EthereumCreateCollectionSimplifiedCommon = {
   type: "ERC721" | "ERC1155"
 } & Omit<CreatePublicCollectionArguments, "isUserToken">
-
-/**
- * Tezos
- */
-export type TezosCreatePublicCollectionSimplified = AbstractCreateCollectionSimplified<Blockchain.TEZOS> &
-  Omit<TezosCreateCollectionTokenAsset["arguments"], "isUserToken"> & {
-    type: "NFT" | "MT"
-    isPublic: boolean
-  }
 
 /**
  * Solana

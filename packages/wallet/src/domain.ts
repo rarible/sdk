@@ -1,7 +1,6 @@
 import type Web3 from "web3"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { TypedDataSigner, Signer } from "@ethersproject/abstract-signer"
-import type { TezosProvider } from "@rarible/tezos-sdk"
 import type { Fcl } from "@rarible/fcl-types"
 import type { ImxWallet } from "@rarible/immutable-wallet"
 import type { SolanaSigner } from "@rarible/solana-common"
@@ -11,7 +10,7 @@ import type { BlockchainWallet } from "./wallets"
 
 export type EtherSigner = TypedDataSigner & Signer
 
-export type BlockchainProvider = Ethereum | SolanaSigner | TezosProvider | Fcl
+export type BlockchainProvider = Ethereum | SolanaSigner | Fcl
 
 export type EthereumProvider = Web3 | EtherSigner
 
@@ -38,7 +37,6 @@ export interface AbstractWallet<T extends WalletType> {
 export enum WalletType {
   ETHEREUM = "ETHEREUM",
   SOLANA = "SOLANA",
-  TEZOS = "TEZOS",
   FLOW = "FLOW",
   IMMUTABLEX = "IMMUTABLEX",
   APTOS = "APTOS",

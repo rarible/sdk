@@ -1,11 +1,9 @@
-// eslint-disable-next-line camelcase
-import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
 import * as fcl from "@onflow/fcl"
 import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { getSolanaMockWallet, solanaTestWords } from "@rarible/solana-common/build/tests/wallets"
 import { SolanaKeypairWallet } from "@rarible/solana-wallet"
-import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "./index"
+import { EthereumWallet, FlowWallet, SolanaWallet } from "./index"
 
 describe("test signPersonalMessage", () => {
   const ethereumE2EProvider = createE2eProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
@@ -24,15 +22,6 @@ describe("test signPersonalMessage", () => {
 
   test.skip("flow signPersonalMessage", async () => {
     const wallet = new FlowWallet(fcl)
-    await wallet.signPersonalMessage("Dude, Where Is My Beer?")
-  })
-
-  test("tezos signPersonalMessage", async () => {
-    const provider = in_memory_provider(
-      "edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8",
-      "https://hangzhou.tz.functori.com",
-    )
-    const wallet = new TezosWallet(provider)
     await wallet.signPersonalMessage("Dude, Where Is My Beer?")
   })
 

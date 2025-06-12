@@ -29,7 +29,7 @@ NPM
 ```ts
 import { Connector, InjectedWeb3ConnectionProvider, DappType } from "@rarible/connector"
 import { WalletConnectConnectionProvider } from "@rarible/connector-walletconnect-v2"
-import { mapEthereumWallet, mapFlowWallet, mapTezosWallet } from "@rarible/connector-helper"
+import { mapEthereumWallet, mapFlowWallet } from "@rarible/connector-helper"
 
 // create providers with the required options
 const injected = mapEthereumWallet(new InjectedWeb3ConnectionProvider())
@@ -52,9 +52,8 @@ await connector.connect(options[0]); // connect to selected provider
 ### Usage with Rarible SDK
 
 ```ts
-import { NetworkType as TezosNetwork } from "@airgap/beacon-sdk"
 import Web3 from "web3"
-import { BlockchainWallet, FlowWallet, TezosWallet, EthereumWallet } from "@rarible/sdk-wallet"
+import { BlockchainWallet, FlowWallet, EthereumWallet } from "@rarible/sdk-wallet"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import {
 	Connector,
@@ -65,13 +64,12 @@ import {
 	EthereumProviderConnectionResult,
 } from "@rarible/connector"
 import { FclConnectionProvider, FlowProviderConnectionResult } from "@rarible/connector-fcl"
-import { BeaconConnectionProvider, TezosProviderConnectionResult } from "@rarible/connector-beacon"
 import { TorusConnectionProvider } from "@rarible/connector-torus"
 import { WalletLinkConnectionProvider } from "@rarible/connector-walletlink"
 import { WalletConnectConnectionProviderV2 } from "@rarible/connector-walletconnect-v2"
 import { FortmaticConnectionProvider } from "@rarible/connector-fortmatic"
 import { PortisConnectionProvider } from "@rarible/connector-portis"
-import { mapEthereumWallet, mapFlowWallet, mapTezosWallet } from "@rarible/connector-helper"
+import { mapEthereumWallet, mapFlowWallet } from "@rarible/connector-helper"
 
 const ethereumRpcMap: Record<number, string> = {
 	1: "https://node-mainnet.rarible.com",
@@ -87,11 +85,6 @@ export type WalletAndAddress = {
 
 const injected = mapEthereumWallet(new InjectedWeb3ConnectionProvider())
 
-const beacon = mapTezosWallet(new BeaconConnectionProvider({
-	appName: "Rarible Test",
-	accessNode: "https://tezos-hangzhou-node.rarible.org",
-	network: TezosNetwork.HANGZHOUNET
-}))
 
 const fcl = mapFlowWallet(new FclConnectionProvider({
 	accessNode: "https://access-testnet.onflow.org",
@@ -141,7 +134,6 @@ const connector = Connector
     .create(injected, state) // use ConnectionState for store connector data (last connected provider, etc)
 	.add(torus)
 	.add(walletLink)
-	.add(beacon)
 	.add(fcl)
 	.add(walletConnectV2)
     // .add(portis)
@@ -172,12 +164,6 @@ TorusConnectionProvider
 WalletLinkConnectionProvider
 IframeConnectionProvider
 WalletConnectConnectionProviderV2
-```
-
-Tezos providers
-
-```
-BeaconConnectionProvider
 ```
 
 Flow providers

@@ -79,7 +79,6 @@ Wallet Connector make possible to connect the following providers:
 * MEWConnectionProvider
 * IframeConnectionProvider
 * WalletConnectConnectionProvider
-* BeaconConnectionProvider
 * FclConnectionProvider
 
 [Read more](https://github.com/rarible/sdk/tree/master/packages/connector) about installation and using examples of Rarible SDK Wallet Connector. 
@@ -157,18 +156,6 @@ const { address, tx } = await sdk.nft.createCollection({
 ```
 More information about [solana metadata format](https://docs.metaplex.com/architecture/deep_dive/overview#uri-json-schema)
 
-#### Tezos
-```typescript
-const { address, tx } = await sdk.nft.createCollection({
-    blockchain: Blockchain.TEZOS,
-    type: "NFT",
-    name: "My NFT collection",
-    symbol: "MYNFT",
-    contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
-    isPublic: true,
-})
-```
-
 ### Mint
 
 #### Ethereum
@@ -190,23 +177,6 @@ const { transaction, itemId } = await sdk.nft.mint({
 const { hash, blockchain } = await transaction.wait()
 ```
 
-#### Tezos
-```ts
-const { transaction, itemId } = await sdk.nft.mint({
-  collectionId: toCollectionId("TEZOS:..."),
-  uri: "ipfs://TEZOS_IPFS_METADATA_URI",
-  supply: 12,
-  royalties: [{
-    account: toUnionAddress("TEZOS:..."),
-    value: 1000,
-  }],
-  creators: [{
-    account: toUnionAddress("TEZOS:..."),
-    value: 10000,
-  }],
-})
-const { hash, blockchain } = await transaction.wait()
-```
 
 #### Flow
 ```ts
@@ -220,12 +190,12 @@ const { hash, blockchain } = await transaction.wait()
 > *Notice:* this method has an advanced call `sdk.nft.mint.prepare(...)`
 ```ts
 const {
-  multiple, // it's multiple collection, like ERC-1155, TEZOS-MT and etc.
+  multiple, // it's multiple collection, like ERC-1155 and etc.
   supportsRoyalties,
   supportsLazyMint,
   submit
 } = await sdk.nft.mint.prepare({
-  collectionId: toCollectionId("TEZOS:..."),
+  collectionId: toCollectionId("ETHEREUM:..."),
 })
 const mintResult = await submit({
   uri: "ipfs://IPFS_METADATA_URI",
@@ -261,7 +231,7 @@ await tx.wait()
 const {
   submit,
   maxAmount, // max amount of NFT
-  multiple, // it's multiple token, like ERC-1155, TEZOS-MT and etc.
+  multiple, // it's multiple token, like ERC-1155 and etc.
 } = await sdk.nft.transfer.prepare({
   itemId: toItemId("YOUR_ITEM_ID"),
 })
@@ -291,7 +261,7 @@ if (tx) {
 ```typescript
 const {
   submit,
-  multiple, // it's multiple token, like ERC-1155, TEZOS-MT and etc.
+  multiple, // it's multiple token, like ERC-1155 and etc.
   maxAmount, // max amount of NFT
 } = await sdk.nft.burn.prepare({
   itemId: toItemId("YOUR_ITEM_ID"),

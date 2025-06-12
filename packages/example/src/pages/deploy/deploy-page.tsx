@@ -34,18 +34,6 @@ function getDeployRequest(data: Record<string, any>) {
     } as CreateCollectionRequestSimplified
   }
   switch (data["blockchain"]) {
-    case Blockchain.TEZOS:
-      return {
-        blockchain: data["blockchain"] as CreateCollectionBlockchains,
-        type: data["collection"],
-        name: data["name"],
-        description: data["description"],
-        version: data["version"],
-        authors: data["authors"],
-        license: data["license"],
-        homepage: data["homepage"],
-        isPublic: !data["private"],
-      } as CreateCollectionRequestSimplified
     case WalletType.SOLANA:
       return {
         blockchain: data["blockchain"] as CreateCollectionBlockchains,
@@ -64,12 +52,7 @@ function getDeployRequest(data: Record<string, any>) {
 }
 
 function validateConditions(blockchain: WalletType | undefined): boolean {
-  return (
-    blockchain === WalletType.ETHEREUM ||
-    blockchain === WalletType.TEZOS ||
-    blockchain === WalletType.SOLANA ||
-    blockchain === WalletType.APTOS
-  )
+  return blockchain === WalletType.ETHEREUM || blockchain === WalletType.SOLANA || blockchain === WalletType.APTOS
 }
 
 export function DeployPage() {
@@ -104,7 +87,6 @@ export function DeployPage() {
             {blockchain && (
               <FormSelect form={form} defaultValue={blockchain} name="blockchain" label="Blockchain">
                 <MenuItem value={WalletType.ETHEREUM}>EVM Blockchain</MenuItem>
-                <MenuItem value={WalletType.TEZOS}>{WalletType.TEZOS}</MenuItem>
                 <MenuItem value={Blockchain.SOLANA}>{Blockchain.SOLANA}</MenuItem>
                 <MenuItem value={Blockchain.APTOS}>{Blockchain.APTOS}</MenuItem>
                 {/*<MenuItem value={Blockchain.FLOW}>{Blockchain.FLOW}</MenuItem>*/}

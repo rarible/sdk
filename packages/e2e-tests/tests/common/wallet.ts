@@ -1,11 +1,9 @@
 import type { BlockchainWallet, EthereumWallet } from "@rarible/sdk-wallet"
-import { FlowWallet, SolanaWallet, TezosWallet, WalletType } from "@rarible/sdk-wallet"
+import { FlowWallet, SolanaWallet, WalletType } from "@rarible/sdk-wallet"
 import { initProvider } from "@rarible/sdk/src/sdk-blockchains/ethereum/test/init-providers"
 import fcl from "@onflow/fcl"
 import type { UnionAddress } from "@rarible/types"
 import { toUnionAddress } from "@rarible/types"
-// eslint-disable-next-line camelcase
-import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
 import { SolanaKeypairWallet } from "@rarible/solana-wallet"
 import { createTestAuth, FLOW_TESTNET_ACCOUNT_3, FLOW_TESTNET_ACCOUNT_4 } from "@rarible/flow-test-common"
 import { testsConfig } from "./config"
@@ -32,11 +30,6 @@ export function getEthereumWalletBuyer(): EthereumWallet {
   return getEthereumWallet(testsConfig.variables.ETHEREUM_WALLET_BUYER)
 }
 
-export function getTezosTestWallet(walletNumber: number = 0): TezosWallet {
-  const edsks = [testsConfig.variables.TEZOS_WALLET_1, testsConfig.variables.TEZOS_WALLET_2]
-  return new TezosWallet(in_memory_provider(edsks[walletNumber], testsConfig.variables.TEZOS_WALLET_ENDPOINT))
-}
-
 export function getFlowSellerWallet(): FlowWallet {
   const auth = createTestAuth(fcl, "testnet", FLOW_TESTNET_ACCOUNT_3.address, FLOW_TESTNET_ACCOUNT_3.privKey)
   return new FlowWallet(fcl, auth)
@@ -59,10 +52,6 @@ export async function getWalletAddressFull(wallet: BlockchainWallet): Promise<Wa
     case WalletType.ETHEREUM:
       address = await wallet.ethereum.getFrom()
       addressWithPrefix = "ETHEREUM:" + address
-      break
-    case WalletType.TEZOS:
-      address = await wallet.provider.address()
-      addressWithPrefix = "TEZOS:" + address
       break
     case WalletType.FLOW:
       const auth = wallet.getAuth()

@@ -6,7 +6,6 @@ import { BlockchainGroup } from "@rarible/api-client/build/models/BlockchainGrou
 import * as fcl from "@onflow/fcl"
 import { initProviders } from "../sdk-blockchains/ethereum/test/init-providers"
 import { getWallet } from "../sdk-blockchains/solana/common/test/test-wallets"
-import { createTestWallet } from "../sdk-blockchains/tezos/test/test-wallet"
 import { createSdk } from "../common/test/create-sdk"
 
 const { provider1, provider2 } = initProviders()
@@ -85,13 +84,6 @@ const providers = [
       return getWallet()
     },
     expectedBlockchain: BlockchainGroup.SOLANA,
-  },
-  {
-    name: "Tezos Wallet",
-    getProvider: () => {
-      return createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8", "development")
-    },
-    expectedBlockchain: BlockchainGroup.TEZOS,
   },
   {
     name: "Flow Wallet",

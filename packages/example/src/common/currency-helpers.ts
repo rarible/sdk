@@ -2,7 +2,6 @@ import type {
   EthErc20AssetType,
   EthEthereumAssetType,
   FlowAssetTypeFt,
-  TezosXTZAssetType,
   UnionContractAddress,
 } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
@@ -24,10 +23,6 @@ function getERC20(contract: ContractAddress | UnionContractAddress): EthErc20Ass
     "@type": "ERC20",
     contract: toUnionContractAddress(contract),
   }
-}
-
-const tezosNative: TezosXTZAssetType = {
-  "@type": "XTZ",
 }
 
 const solanaNative: SolanaSolAssetType = {
@@ -92,8 +87,7 @@ export function getCurrency(
     case Blockchain.IMMUTABLEX:
       if (type === "NATIVE") return getEthNative(blockchain)
       throw new Error("Unsupported option subtype")
-    case Blockchain.TEZOS:
-      if (type === "NATIVE") return tezosNative
+
       throw new Error("Unsupported option subtype")
     case Blockchain.SOLANA:
       if (type === "NATIVE") return solanaNative
@@ -383,11 +377,6 @@ export function getCurrencyOptions(
       case Blockchain.IMMUTABLEX:
         if (currency.type === "NATIVE") {
           return { type: "NATIVE", label: "ETH", blockchain: Blockchain.IMMUTABLEX }
-        }
-        return []
-      case Blockchain.TEZOS:
-        if (currency.type === "NATIVE") {
-          return { type: "NATIVE", label: "XTZ", blockchain: Blockchain.TEZOS }
         }
         return []
       case Blockchain.SOLANA:

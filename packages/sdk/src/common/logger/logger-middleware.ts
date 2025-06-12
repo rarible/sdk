@@ -66,18 +66,6 @@ export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<st
       info["wallet.flow.chainId"] = userData?.cid
       break
     }
-    case WalletType.TEZOS: {
-      info["wallet.tezos.kind"] = wallet.provider.kind
-      const [chainIdResult, addressResult] = await Promise.allSettled([
-        wallet.provider.chain_id(),
-        wallet.provider.address(),
-      ])
-      info["wallet.address"] =
-        addressResult.status === "fulfilled" ? addressResult.value : formatDefaultError(addressResult.reason)
-      info["wallet.tezos.chainId"] =
-        chainIdResult.status === "fulfilled" ? chainIdResult.value : formatDefaultError(chainIdResult.reason)
-      break
-    }
     case WalletType.SOLANA: {
       info["wallet.address"] = wallet.provider.publicKey?.toString()
       break

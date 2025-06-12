@@ -13,7 +13,7 @@ import { BatchBuyForm } from "./batch-buy-form"
 import { BatchBuyComment } from "./comments/batch-buy-comment"
 
 function validateConditions(blockchain: WalletType | undefined): boolean {
-  return !!blockchain && [WalletType.ETHEREUM, WalletType.TEZOS].includes(blockchain)
+  return !!blockchain && [WalletType.ETHEREUM].includes(blockchain)
 }
 
 export function BatchBuyPage() {

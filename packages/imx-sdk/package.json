@@ -26,7 +26,7 @@
     "@rarible/immutable-wallet": "^0.13.117"
   },
   "devDependencies": {
-    "@rarible/types": "0.10.4",
+    "@rarible/types": "0.10.5",
     "@rarible/utils": "0.10.1"
   },
   "publishConfig": {

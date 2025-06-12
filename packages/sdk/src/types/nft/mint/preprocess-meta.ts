@@ -1,5 +1,4 @@
 import type { Blockchain } from "@rarible/api-client"
-import type { TezosMetadataResponse } from "../../../sdk-blockchains/tezos/common"
 import type { ISolanaMetadataResponse, ISolanaTokenMetadata } from "../../../sdk-blockchains/solana/domain"
 import type { AptosTokenMetadata } from "../../../sdk-blockchains/aptos/domain"
 
@@ -31,7 +30,7 @@ export type IPreprocessMeta = (meta: PreprocessMetaRequest) => PreprocessMetaRes
 export type PreprocessMetaRequest = GeneralMetaRequest | SolanaMetaRequest | AptosMetaRequest
 
 export type GeneralMetaRequest = {
-  blockchain: Blockchain.ETHEREUM | Blockchain.POLYGON | Blockchain.TEZOS | Blockchain.FLOW
+  blockchain: Blockchain.ETHEREUM | Blockchain.POLYGON | Blockchain.FLOW
 } & CommonTokenMetadata
 
 export type SolanaMetaRequest = {
@@ -42,7 +41,7 @@ export type AptosMetaRequest = {
   blockchain: Blockchain.APTOS
 } & AptosTokenMetadata
 
-export type PreprocessMetaResponse = CommonTokenMetadataResponse | TezosMetadataResponse | ISolanaMetadataResponse
+export type PreprocessMetaResponse = CommonTokenMetadataResponse | ISolanaMetadataResponse
 
 export type TokenMetadataAttribute = {
   key: string

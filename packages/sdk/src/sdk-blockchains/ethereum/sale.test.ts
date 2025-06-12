@@ -6,7 +6,6 @@ import { id32 } from "@rarible/protocol-ethereum-sdk/build/common/id"
 import { toPromises } from "@rarible/web3-ethereum/build/utils/to-promises"
 import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/prepare"
-import { awaitForOwnership } from "../tezos/test/await-for-ownership"
 import { awaitItem } from "../../common/test/await-item"
 import { awaitOrderMakeStock } from "../../common/test/await-order"
 import { OriginFeeSupport } from "../../types/order/fill/domain"
@@ -17,6 +16,7 @@ import { DEV_PK_1 } from "./test/common"
 import { EVMContractsTestSuite } from "./test/suite/contracts"
 import { awaitErc1155Balance } from "./test/await-erc-1155-balance"
 import { createE2eTestProvider, initProviders } from "./test/init-providers"
+import { awaitForOwnership } from "./test/await-ownership"
 
 describe("sale", () => {
   const { web32, ethereum1, ethereum2, ethereumWallet1, ethereumWallet2, wallet1, wallet2 } = initProviders({

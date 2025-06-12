@@ -1,7 +1,6 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Fcl } from "@rarible/fcl-types"
 import { TextEncoder } from "text-encoding"
-import type { TezosProvider } from "@rarible/tezos-sdk"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk"
 import type { ImxWallet } from "@rarible/immutable-wallet"
 import type { SolanaSigner } from "@rarible/solana-common"
@@ -100,38 +99,6 @@ export class FlowWallet implements AbstractWallet<WalletType.FLOW> {
   }
 }
 
-export interface TezosSignatureResult {
-  signature: string
-  edpk: string
-  prefix: string
-}
-
-export class TezosWallet implements AbstractWallet<WalletType.TEZOS> {
-  readonly walletType = WalletType.TEZOS
-
-  constructor(public readonly provider: TezosProvider) {}
-
-  private async sign(p: TezosProvider, message: string, type: "operation" | "message"): Promise<TezosSignatureResult> {
-    type = type || "message"
-    const edpk = await p.public_key()
-    if (typeof edpk === "undefined") throw new Error("cannot get public key from provider")
-    const r = await p.sign(message, type)
-    return { edpk, ...r }
-  }
-
-  async signPersonalMessage(message: string): Promise<UserSignature> {
-    const publicKey = await this.provider.public_key()
-    if (typeof publicKey === "undefined") throw new Error("Public key undefined")
-
-    const result = await this.sign(this.provider, message, "message")
-    return {
-      message,
-      signature: result.signature,
-      publicKey: `${result.edpk}_${result.prefix}`,
-    }
-  }
-}
-
 export class SolanaWallet implements AbstractWallet<WalletType.SOLANA> {
   readonly walletType = WalletType.SOLANA
 
@@ -185,7 +152,6 @@ export function isBlockchainWallet(x: unknown): x is BlockchainWallet {
 export type BlockchainWallet<T extends WalletType = WalletType> = {
   [WalletType.FLOW]: FlowWallet
   [WalletType.ETHEREUM]: EthereumWallet
-  [WalletType.TEZOS]: TezosWallet
   [WalletType.SOLANA]: SolanaWallet
   [WalletType.IMMUTABLEX]: ImmutableXWallet
   [WalletType.APTOS]: AptosWallet
