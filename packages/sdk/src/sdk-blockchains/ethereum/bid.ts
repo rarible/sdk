@@ -121,6 +121,20 @@ export class EthereumBid {
       },
       async res => {
         await res.approveTx?.wait()
+
+        if (this.sdk.stabilityProtocol) {
+          setTimeout(async () => {
+            const address = await this.wallet?.ethereum.getFrom()
+            this.sdk.stabilityProtocol?.sendMessage({
+              wallet: address!,
+              orderId: res.order.hash,
+              blockchain: blockchain,
+              action: "BID",
+              timestamp: Date.now(),
+            })
+          })
+        }
+
         return common.convertEthereumOrderHash(res.order.hash, blockchain)
       },
     )

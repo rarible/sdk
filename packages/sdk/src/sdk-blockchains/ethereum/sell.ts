@@ -91,6 +91,19 @@ export class EthereumSell {
       async order => {
         //todo replace with returned chainId/blockchain
         const blockchain = await getWalletBlockchain(this.wallet)
+
+        if (this.sdk.stabilityProtocol) {
+          setTimeout(async () => {
+            const address = await this.wallet?.ethereum.getFrom()
+            this.sdk.stabilityProtocol?.sendMessage({
+              wallet: address!,
+              orderId: order.hash,
+              blockchain: blockchain,
+              action: "SELL",
+              timestamp: Date.now(),
+            })
+          })
+        }
         return common.convertEthereumOrderHash(order.hash, blockchain)
       },
     )

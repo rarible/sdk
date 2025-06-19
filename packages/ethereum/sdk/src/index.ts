@@ -52,6 +52,7 @@ import { BatchOrderFiller } from "./order/fill-order/batch-purchase/batch-purcha
 import { getRequiredWallet } from "./common/get-required-wallet"
 import { CURRENT_ORDER_TYPE_VERSION } from "./common/order"
 import type { AuctionStartAction, PutAuctionBidAction, BuyoutAuctionAction } from "./auction/types"
+import { StabilityProtocol } from "./stability-protocol/stability-protocol"
 
 export interface RaribleOrderSdk {
   /**
@@ -279,12 +280,26 @@ export interface RaribleAuctionSdk {
   getHash: (auctionId: string) => Promise<string>
 }
 
+export type RaribleStabilityMessage = {
+  wallet: string
+  transaction?: string
+  orderId?: string
+  blockchain: string
+  action: "BUY" | "SELL" | "BID" | "ACCEPT_BID"
+  timestamp: number
+}
+
+export interface RaribleStabilityProtocolSdk {
+  sendMessage: (message: RaribleStabilityMessage) => Promise<void>
+}
+
 export interface RaribleSdk {
   order: RaribleOrderSdk
   nft: RaribleNftSdk
   auction: RaribleAuctionSdk
   apis: RaribleEthereumApis
   balances: RaribleBalancesSdk
+  stabilityProtocol?: RaribleStabilityProtocolSdk
 }
 
 export function createRaribleSdk(
@@ -303,19 +318,21 @@ export function createRaribleSdk(
   })
   const getApis = getApisTemplate.bind(null, ethereum, env, sdkConfig)
 
+  let logger = createRemoteLogger({
+    ethereum,
+    env: getEnvironment(env),
+    sessionId: sdkConfig?.logs?.session,
+    apiKey: sdkConfig?.apiKey,
+  })
   const send = partialCall(
     getSendWithInjects({
       logger: {
-        instance: createRemoteLogger({
-          ethereum,
-          env: getEnvironment(env),
-          sessionId: sdkConfig?.logs?.session,
-          apiKey: sdkConfig?.apiKey,
-        }),
+        instance: logger,
         level: sdkConfig?.logs?.level ?? LogsLevel.DISABLED,
       },
     }),
   )
+
   const checkLazyAssetType = partialCall(order.checkLazyAssetType, getApis)
   const checkLazyAsset = partialCall(order.checkLazyAsset, checkLazyAssetType)
   const checkLazyOrder = order.checkLazyOrder.bind(null, checkLazyAsset)
@@ -397,6 +414,9 @@ export function createRaribleSdk(
       withdrawWei: wethConverter.withdrawWei,
       getWethContractAddress: wethConverter.getWethContractAddress,
     },
+    stabilityProtocol: sdkConfig?.stabilityProtocolApiKey
+      ? new StabilityProtocol(sdkConfig.stabilityProtocolApiKey, sdkConfig.stabilityProtocolDestinationAddress, logger)
+      : undefined,
   }
 }
 
