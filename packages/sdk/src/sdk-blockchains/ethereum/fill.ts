@@ -310,7 +310,22 @@ export class EthereumFill {
         }
         return this.getFillOrderRequest(ethOrder, fillRequest)
       },
-      async tx => new BlockchainEthereumTransaction(tx, await getWalletNetwork(this.wallet)),
+      async tx => {
+        if (this.sdk.stabilityProtocol) {
+          setTimeout(async () => {
+            const address = await this.wallet?.ethereum.getFrom()
+            this.sdk.stabilityProtocol?.sendMessage({
+              wallet: address!,
+              transaction: tx.hash,
+              blockchain: blockchain,
+              action: isBid ? "ACCEPT_BID" : "BUY",
+              timestamp: Date.now(),
+            })
+          })
+        }
+
+        return new BlockchainEthereumTransaction(tx, await getWalletNetwork(this.wallet))
+      },
     )
 
     const nftAssetType = isBid ? order.take.type : order.make.type

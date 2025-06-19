@@ -38,6 +38,8 @@ export function createEthereumSdk(
     params?: ConfigurationParameters
     logs?: { level: LogsLevel; session: string }
     apiKey?: string
+    stabilityProtocolApiKey?: string
+    stabilityProtocolDestinationAddress?: string
   } & IEthereumSdkConfig,
 ): IRaribleInternalSdk {
   const sdkConfig: IRaribleEthereumSdkConfig = {
@@ -55,6 +57,8 @@ export function createEthereumSdk(
     polygon: config[Blockchain.POLYGON],
     marketplaceMarker: config.marketplaceMarker ? toBinary(config.marketplaceMarker) : undefined,
     apiKey: config.apiKey,
+    stabilityProtocolApiKey: config.stabilityProtocolApiKey,
+    stabilityProtocolDestinationAddress: config.stabilityProtocolDestinationAddress,
   }
   const sdk = createRaribleSdk(wallet?.ethereum, network, sdkConfig)
 

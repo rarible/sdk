@@ -30,6 +30,8 @@ export interface IRaribleEthereumSdkConfig {
   rari?: EthereumNetworkConfig
   marketplaceMarker?: Binary
   apiKey?: string
+  stabilityProtocolApiKey?: string
+  stabilityProtocolDestinationAddress?: string
 }
 
 export interface EthereumNetworkConfig {

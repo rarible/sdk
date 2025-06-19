@@ -84,6 +84,8 @@ export interface IRaribleSdkConfig {
    */
   middlewares?: Middleware[]
   apiKey?: string
+  stabilityProtocolApiKey?: string
+  stabilityProtocolDestinationAddress?: string
   /**
    * @deprecated
    */
