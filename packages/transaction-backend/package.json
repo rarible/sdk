@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-transaction-backend",
-  "version": "0.13.118",
+  "version": "0.13.119",
   "private": true,
   "homepage": "",
   "license": "ISC",
@@ -25,8 +25,8 @@
     "verify": "tsc"
   },
   "dependencies": {
-    "@rarible/protocol-ethereum-sdk": "^0.13.118",
-    "@rarible/web3-ethereum": "^0.13.118",
+    "@rarible/protocol-ethereum-sdk": "^0.13.119",
+    "@rarible/web3-ethereum": "^0.13.119",
     "axios": "^0.26.1",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
@@ -39,7 +39,7 @@
     "typescript": "^5.4.5"
   },
   "devDependencies": {
-    "@rarible/ethereum-sdk-test-common": "^0.13.118",
+    "@rarible/ethereum-sdk-test-common": "^0.13.119",
     "@types/body-parser": "^1.19.2",
     "@types/express": "4.17.11",
     "@types/isomorphic-fetch": "~0.0.39",
