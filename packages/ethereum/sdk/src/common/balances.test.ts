@@ -140,17 +140,8 @@ describe("getBalance test", () => {
 
 const randomEvmAddress = toEVMAddress("0xE0c03F1a1a930331D88DaBEd59dc4Ae6d63DDEAD")
 
-const nonWorkingNetworks = [
-  "testnet-rari",
-  "testnet-fief",
-  "dev-polygon",
-  "testnet-celo",
-  "etherlink-testnet",
-  "abstract-testnet",
-  "lisk-sepolia",
-]
-const filteredUnworkingNetworks = ethereumNetworks.filter(network => !nonWorkingNetworks.includes(network))
-describe.each(filteredUnworkingNetworks)("get balances each of environments", (env: EthereumNetwork) => {
+const filteredProductionNetworks = ethereumNetworks.filter(network => !/testnet|dev|sepolia|sei-arctic-1/.test(network))
+describe.each(filteredProductionNetworks)("get balances each of environments", (env: EthereumNetwork) => {
   const sdk = createRaribleSdk(undefined, env, {
     apiKey: getTestAPIKey(env),
   })
