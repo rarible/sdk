@@ -14,6 +14,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.13.200-beta.0](https://github.com/rarible/sdk/compare/v0.13.119...v0.13.200-beta.0) (2025-07-30)
+
+
+### Features
+
+* signature-changes ([5bb5ce9](https://github.com/rarible/sdk/commit/5bb5ce967c19efe9ac9e9edc9a06a9f3442e0aea))
+
+
+
+
+
 ## [0.13.119](https://github.com/rarible/sdk/compare/v0.13.118...v0.13.119) (2025-06-19)
 
 **Note:** Version bump only for package root
