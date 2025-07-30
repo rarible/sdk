@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-transaction",
-  "version": "0.13.119",
+  "version": "0.13.200-beta.0",
   "homepage": "Transaction type",
   "license": "ISC",
   "main": "build/index.js",
@@ -21,7 +21,7 @@
     "@rarible/aptos-sdk": "^0.13.119",
     "@rarible/ethereum-provider": "^0.13.119",
     "@rarible/flow-sdk": "~0.6.0-beta.3",
-    "@rarible/protocol-ethereum-sdk": "^0.13.119",
+    "@rarible/protocol-ethereum-sdk": "^0.13.200-beta.0",
     "@rarible/types": "0.10.5"
   },
   "peerDependencies": {

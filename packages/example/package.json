@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "0.13.119",
+  "version": "0.13.200-beta.0",
   "private": true,
   "scripts": {
     "build": "run-s build:webpack",
@@ -41,7 +41,7 @@
     "@rarible/connector-walletconnect-v2": "^0.13.119",
     "@rarible/connector-walletlink": "^0.13.119",
     "@rarible/flow-sdk": "~0.6.0-beta.3",
-    "@rarible/sdk": "^0.13.119",
+    "@rarible/sdk": "^0.13.200-beta.0",
     "@rarible/web3-ethereum": "^0.13.119",
     "@rixio/atom": "^0.12.1",
     "@rixio/react": "^0.12.1",
