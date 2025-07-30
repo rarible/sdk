@@ -1,6 +1,6 @@
 {
   "name": "@rarible/eclipse-sdk",
-  "version": "0.13.119",
+  "version": "0.13.200-beta.0",
   "keywords": [
     "solana",
     "web3"
@@ -24,13 +24,13 @@
   "dependencies": {
     "@coral-xyz/anchor": "^0.30.1",
     "@rarible/logger": "^0.9.12",
-    "@rarible/solana-common": "^0.13.119",
+    "@rarible/solana-common": "^0.13.200-beta.0",
     "@rarible/utils": "0.10.1",
     "@solana/spl-token": "0.4.9",
     "@solana/web3.js": "1.95.3"
   },
   "devDependencies": {
-    "@rarible/solana-wallet": "^0.13.119"
+    "@rarible/solana-wallet": "^0.13.200-beta.0"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"
