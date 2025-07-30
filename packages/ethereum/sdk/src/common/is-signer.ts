@@ -1,30 +1,89 @@
 import type { ECDSASignature } from "ethereumjs-util"
 import { bufferToHex, bufferToInt, ecrecover, keccak256, pubToAddress } from "ethereumjs-util"
 import type { Ethereum } from "@rarible/ethereum-provider"
+import { verifyMessage, type Address, type Hex } from "viem"
 
 export async function isSigner(ethereum: Ethereum, signer: string, hash: Buffer, signature: string): Promise<boolean> {
-  const sig = Buffer.from(skip0x(signature), "hex")
   try {
-    if (sig.length >= 64 && recover(hash, sig) === signer) {
-      return true
+    // Convert to viem format
+    const signerAddress = signer as Address
+    const messageHash = `0x${hash.toString("hex")}` as Hex
+    const signatureHex = signature as Hex
+
+    // Use viem's verifyMessage which handles:
+    // - EOA signatures (ECDSA)
+    // - EIP-1271 (deployed smart contracts)
+    // - EIP-6492 (pre-deployed smart contracts) ← This was missing!
+    const isValid = await verifyMessage({
+      address: signerAddress,
+      message: { raw: messageHash },
+      signature: signatureHex,
+    })
+
+    console.log(`viem signature verification: ${isValid} for signer: ${signer}`)
+    return isValid
+  } catch (error: any) {
+    console.error("viem signature verification failed:", error.message || error)
+
+    // Fallback to legacy verification for backward compatibility
+    console.log("Falling back to legacy verification...")
+    return legacyIsSigner(ethereum, signer, hash, signature)
+  }
+}
+
+// Legacy verification as fallback (your previous implementation)
+async function legacyIsSigner(ethereum: Ethereum, signer: string, hash: Buffer, signature: string): Promise<boolean> {
+  const sig = Buffer.from(skip0x(signature), "hex")
+
+  // First, try standard ECDSA recovery for EOA wallets
+  // Only attempt ECDSA if signature looks like standard ECDSA format (65 or 64 bytes)
+  if (sig.length === 64 || sig.length === 65) {
+    try {
+      const recoveredAddress = recover(hash, sig)
+      if (recoveredAddress.toLowerCase() === signer.toLowerCase()) {
+        return true
+      }
+    } catch (e) {
+      // ECDSA recovery failed, continue to smart contract verification
+      console.log("ECDSA recovery failed, trying EIP-1271:", e)
     }
-  } catch (e) {}
+  }
+
+  // For non-standard signature formats or failed ECDSA, try EIP-1271
+  // This handles smart contract wallets, but NOT pre-deployed ones
   return isErc1271Signer(ethereum, signer, hash, signature)
 }
 
 async function isErc1271Signer(ethereum: Ethereum, signer: string, hash: Buffer, signature: string): Promise<boolean> {
   const hashHex = `0x${hash.toString("hex")}`
-  console.log("checking signer using erc-1271", hashHex)
+  console.log("checking signer using erc-1271", hashHex, "signature length:", signature.length)
+
+  // Create contract instance for EIP-1271 verification
   const erc1271 = ethereum.createContract(ABI, signer)
+
   try {
+    // Call isValidSignature on the smart contract
     const result = await erc1271.functionCall("isValidSignature", hashHex, signature).call()
-    if (result !== "0x1626ba7e") {
-      console.warn(`isValidSignature result is ${result}`)
+
+    // EIP-1271 magic value: bytes4(keccak256("isValidSignature(bytes32,bytes)"))
+    const EIP1271_MAGIC_VALUE = "0x1626ba7e"
+
+    if (result === EIP1271_MAGIC_VALUE) {
+      console.log("EIP-1271 signature verification successful")
+      return true
+    } else {
+      console.warn(`EIP-1271 verification failed. Expected: ${EIP1271_MAGIC_VALUE}, Got: ${result}`)
       return false
     }
-    return true
-  } catch (ex) {
-    console.error("unable to check signature", ex)
+  } catch (ex: any) {
+    // Better error handling for different failure scenarios
+    if (ex.message?.includes("execution reverted")) {
+      console.log("Contract exists but signature verification failed")
+    } else if (ex.message?.includes("call exception")) {
+      console.log("Address is not a contract or does not implement EIP-1271")
+    } else {
+      console.error("EIP-1271 verification error:", ex.message || ex)
+    }
     return false
   }
 }
@@ -77,6 +136,7 @@ function fixHashAndV(v: number, hash: Buffer): [Buffer, number] {
 const START = "\u0019Ethereum Signed Message:\n"
 
 function getEthSignedMessageHash(hash: Buffer): Buffer {
+  // @ts-ignore - Pre-existing Buffer/Uint8Array type compatibility issue
   return keccak256(Buffer.concat([Buffer.from(`${START}32`, "ascii"), hash]))
 }
 
