@@ -17,7 +17,7 @@ const connector = new MattelConnectionProvider({
 })
 ```
 
-Example of using you (can find there)[https://github.com/rarible/sdk/blob/master/packages/example/src/pages/connect/connect-options.tsx]<br/>
+Example of using you [can find there](https://github.com/rarible/sdk/blob/master/packages/example/src/pages/connect/connect-options.tsx)<br/>
 You can also set empty popup window after connector initialization by
 ```ts
 connector.setPopupConfig({
